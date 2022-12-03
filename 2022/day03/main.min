@@ -1,0 +1,54 @@
+; Splits a string into a quotation of two strings of equal size
+(
+    :item
+    item length :sz
+    (
+        item 0 sz 2 div substr
+        item sz 2 div sz substr
+    ) =>
+) ^divide-str
+
+; Converts a character into its priority value
+(
+    ord (
+        ((dup 97 >=) (96 -))
+        ((true) (38 -))
+    ) case
+) ^get-priority
+
+; Groups elements in a quotations into quotations of the given size
+(
+    symbol group
+    (quot :input int :n ==> quot :result)
+    (
+        (0 input size n div 1 -) => range
+        (
+            input swap n * dup n + 1 - slice
+        ) map @result
+    )
+) operator
+
+; Process the output with a given quotation rule
+(
+    :rule
+
+    "input" fread "\n" split
+    rule ->
+    'get-priority '+ map-reduce
+) ^solve
+
+; part 1
+(
+    (
+        divide-str ("" split) map ->
+        intersection ->
+    ) map
+) solve puts!
+
+; part 2
+(
+    3 group
+    (
+        ("" split) 'intersection map-reduce ->
+    ) map
+) solve puts!
