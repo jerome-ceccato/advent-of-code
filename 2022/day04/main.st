@@ -1,5 +1,5 @@
 Object subclass: Aoc [
-    | pairs |
+    | pairs checksFullOverlap |
 
     readFrom: filename [
         | x input |
@@ -21,7 +21,7 @@ Object subclass: Aoc [
         ^Array with: left with: right
     ]
 
-    doesRange: left contain: right [
+    doesRange: left fullyContain: right [
         | lower upper |
         "Returns whether or not the left range contains the right range"
 
@@ -30,19 +30,42 @@ Object subclass: Aoc [
         ^lower & upper
     ]
 
+    doesRange: left overlap: right [
+        | a1 a2 b1 b2 lower upper |
+        "Returns whether or the two ranges overlap"
+
+        a1 := (left at: 1).
+        a2 := (left at: 2).
+        b1 := (right at: 1).
+        b2 := (right at: 2).
+
+        lower := (a1 <= b1) & (a2 >= b1).
+        upper := (a1 <= b2) & (a2 >= b2).
+        ^lower | upper
+    ]
+
     checkRangeOverlap: ranges [
         | leftContainsRight rightContainsLeft |
         "Returns whether or not a range contains the other"
 
-        leftContainsRight := self doesRange: (ranges at: 1) contain: (ranges at: 2).
-        rightContainsLeft := self doesRange: (ranges at: 2) contain: (ranges at: 1).
-        ^leftContainsRight | rightContainsLeft
+        checksFullOverlap
+            ifTrue: [
+                leftContainsRight := self doesRange: (ranges at: 1) fullyContain: (ranges at: 2).
+                rightContainsLeft := self doesRange: (ranges at: 2) fullyContain: (ranges at: 1).
+                ^leftContainsRight | rightContainsLeft
+            ]
+            ifFalse: [
+                leftContainsRight := self doesRange: (ranges at: 1) overlap: (ranges at: 2).
+                rightContainsLeft := self doesRange: (ranges at: 2) overlap: (ranges at: 1).
+                ^leftContainsRight | rightContainsLeft
+            ]
     ]
 
-    compute [
+    computeFullOverlap: fullOverlap [
         | acc |
-        "Solves part 1"
+        "Solves the puzzle"
 
+        checksFullOverlap := fullOverlap.
         acc := 0.
         pairs do: [ :pair |
             | ranges isContained |
@@ -54,5 +77,6 @@ Object subclass: Aoc [
     ]
 ]
 
-result := (Aoc new) readFrom: 'input'; compute .
-Transcript show: result printString; cr.
+solver := (Aoc new) readFrom: 'input'.
+Transcript show: (solver computeFullOverlap: true) printString; cr.
+Transcript show: (solver computeFullOverlap: false) printString; cr.
