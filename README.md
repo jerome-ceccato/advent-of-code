@@ -10,6 +10,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 2   | [Factor](https://en.wikipedia.org/wiki/Factor_(programming_language))   | [Link](./2022/day02/main.factor)  |
 | 3   | [min](https://min-lang.org/)                                            | [Link](./2022/day03/main.min)     |
 | 4   | [Smalltalk](https://en.wikipedia.org/wiki/Smalltalk)                    | [Link](./2022/day04/main.st)      |
+| 5   | [Julia](https://en.wikipedia.org/wiki/Julia_(programming_language))     | [Link](./2022/day05/main.jl)      |
 
 
 
