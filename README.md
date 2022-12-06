@@ -9,8 +9,9 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 1   | [J](https://en.wikipedia.org/wiki/J_(programming_language))             | [Link](./2022/day01/main.ijs)     |
 | 2   | [Factor](https://en.wikipedia.org/wiki/Factor_(programming_language))   | [Link](./2022/day02/main.factor)  |
 | 3   | [min](https://min-lang.org/)                                            | [Link](./2022/day03/main.min)     |
-| 4   | [Smalltalk](https://en.wikipedia.org/wiki/Smalltalk)                    | [Link](./2022/day04/main.st)      |
+| 4   | [Smalltalk (GNU)](https://en.wikipedia.org/wiki/Smalltalk)              | [Link](./2022/day04/main.st)      |
 | 5   | [Julia](https://en.wikipedia.org/wiki/Julia_(programming_language))     | [Link](./2022/day05/main.jl)      |
+| 6   | [VBA](https://en.wikipedia.org/wiki/Visual_Basic_for_Applications)      | [Link](./2022/day06/main.vba)     |
 
 
 
