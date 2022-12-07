@@ -12,6 +12,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 4   | [Smalltalk (GNU)](https://en.wikipedia.org/wiki/Smalltalk)              | [Link](./2022/day04/main.st)      |
 | 5   | [Julia](https://en.wikipedia.org/wiki/Julia_(programming_language))     | [Link](./2022/day05/main.jl)      |
 | 6   | [VBA](https://en.wikipedia.org/wiki/Visual_Basic_for_Applications)      | [Link](./2022/day06/main.vba)     |
+| 7   | [Scheme (Chez)](https://en.wikipedia.org/wiki/Chez_Scheme)              | [Link](./2022/day07/main.scm)     |
 
 
 
