@@ -172,21 +172,46 @@
 
 ;;; Solution
 
+; total size of a directory, including all its subdirectories and files
 (define (dir-total-size fs dir)
   (+ (fold-left (lambda (acc file) (+ acc (file-size file))) 0 (dir-files dir))
      (fold-left (lambda (acc dirname) 
       (+ acc (dir-total-size fs (get-dir fs (cons dirname (dir-path dir))))))
      0 (dir-subdirs dir))))
 
+; find and add the size of all directories under the limit
 (define (find-small-directories fs limit)
   (let ([dir-size-limited (lambda (dir) 
     (let ([total (dir-total-size fs dir)])
       (if (< total limit) total 0)))])
     (fold-left (lambda (acc dir) (+ acc (dir-size-limited dir))) 0 (fs-dirs fs))))
 
+; return the total size of all distinct directories in the fs
+(define (all-dir-sizes fs)
+  (map (lambda (dir) (dir-total-size fs dir)) (fs-dirs fs)))
+
+; finds the minimum sized directory to delete to meet target size
+(define (free-space sizes root-size target)
+  (letrec ([search (lambda (sizes res) 
+    (cond
+      ((null? sizes) res)
+      (else (search (cdr sizes) 
+        (if (>= (car sizes) target)
+          (min res (car sizes))
+          res)))))])
+    (search sizes root-size)))
+
+
 (let ([fs (build-fs (read-input "input"))])
- (display-fs fs)
- (newline)
- ; part 1
- (display (find-small-directories fs 100000)))
- 
+  (display-fs fs)
+  (newline)
+  ; part 1
+  (display (find-small-directories fs 100000))
+  (newline)
+
+  ; part 2
+  (let ([sizes (all-dir-sizes fs)]
+        [root-size (dir-total-size fs (get-dir fs '("/")))])
+    (let ([target (- 30000000 (- 70000000 root-size))])
+      (display (free-space sizes root-size target))
+      (newline))))
