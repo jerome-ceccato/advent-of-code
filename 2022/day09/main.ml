@@ -6,7 +6,7 @@ module PointSet = Set.Make(
     let compare = compare
   end
 );;
-type rope = {head: point; tail: point};;
+type rope = {head: point; tail: point list};;
 type simulation = {rope: rope; visited: PointSet.t};;
 
 (* i/o *)
@@ -32,28 +32,22 @@ let move_towards h t = match (h, t) with
   | _ when h < t -> t - 1
   | _ -> t;;
 
-let move_tail head tail = 
+let move_one_tail head tail = 
   if (abs (head.x - tail.x) > 1) || (abs (head.y - tail.y) > 1) then
     {x = move_towards head.x tail.x; y = move_towards head.y tail.y}
   else tail;;
+
+let rec move_tail head tail = match tail with
+  | [] -> []
+  | x :: xs -> let new_tail = move_one_tail head x in
+    new_tail :: (move_tail new_tail xs);;
 
 let apply_move simulation vector =
   let new_head = {x = simulation.rope.head.x + vector.x;
                   y = simulation.rope.head.y + vector.y} in
   let new_tail = move_tail new_head simulation.rope.tail in
-  let new_visited = PointSet.add new_tail simulation.visited in
-  begin
-    Printf.printf "head(%d, %d) tail(%d, %d) -> head(%d, %d) tail(%d, %d)\n" 
-      simulation.rope.head.x
-      simulation.rope.head.y
-      simulation.rope.tail.x
-      simulation.rope.tail.y
-      new_head.x
-      new_head.y
-      new_tail.x
-      new_tail.y;
-    {rope = {head = new_head; tail = new_tail}; visited = new_visited}
-  end;;
+  let new_visited = PointSet.add (List.hd (List.rev new_tail)) simulation.visited in
+    {rope = {head = new_head; tail = new_tail}; visited = new_visited};;
 
 let move_rope rope commands =
   let apply_command simulation line =
@@ -64,10 +58,16 @@ let move_rope rope commands =
       | 0 -> sim
       | n -> apply_n (n - 1) (apply_move sim vector) in
       apply_n (int_of_string n) simulation in
-  let simulation = {rope = rope; visited = PointSet.singleton rope.tail} in
+  let simulation = {rope = rope; visited = PointSet.singleton (List.hd (List.rev rope.tail))} in
     List.fold_left apply_command simulation commands;;
 
+let solve n =
+  let rope = {head = {x = 0; y = 0}; tail = List.init n (fun _ -> {x = 0; y = 0}) } in
+  let sim = move_rope rope (read_input "input") in
+    Printf.printf "%d\n" (PointSet.cardinal sim.visited);;
+
 (* part 1 *)
-let rope = {head = {x = 0; y = 0}; tail = {x = 0; y = 0} } in
-let sim = move_rope rope (read_input "input") in
-    print_int (PointSet.cardinal sim.visited);;
+solve 1;;
+
+(* part 2 *)
+solve 9;;
