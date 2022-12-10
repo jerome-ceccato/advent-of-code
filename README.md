@@ -15,6 +15,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 7   | [Scheme (Chez)](https://en.wikipedia.org/wiki/Chez_Scheme)              | [Link](./2022/day07/main.scm)     |
 | 8   | [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language))       | [Link](./2022/day08/main.rs)      |
 | 9   | [OCaml](https://en.wikipedia.org/wiki/OCaml)                            | [Link](./2022/day09/main.ml)      |
+| 10  | [Common Lisp](https://en.wikipedia.org/wiki/Common_Lisp)                | [Link](./2022/day10/main.lisp)    |
 
 
 
