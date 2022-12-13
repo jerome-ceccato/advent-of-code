@@ -58,15 +58,15 @@ class Board
 
   def find_shortest_path
     visited = Set(Point).new
-    stack = Deque(Point).new(1, @start)
+    queue = Deque(Point).new(1, @start)
     steps = 0
 
-    while !stack.includes?(@target)
-      if stack.size == 0
+    while !queue.includes?(@target)
+      if queue.size == 0
         return -1
       end
 
-      stack = stack.flat_map do |item|
+      queue = queue.flat_map do |item|
         next_positions = valid_positions_around(item).reject { |p| visited.includes?(p) }
         next_positions.each { |p| visited.add(p) }
         next_positions
