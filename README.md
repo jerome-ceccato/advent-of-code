@@ -17,6 +17,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 9   | [OCaml](https://en.wikipedia.org/wiki/OCaml)                            | [Link](./2022/day09/main.ml)      |
 | 10  | [Common Lisp](https://en.wikipedia.org/wiki/Common_Lisp)                | [Link](./2022/day10/main.lisp)    |
 | 11  | [Raku](https://en.wikipedia.org/wiki/Raku_(programming_language))       | [Link](./2022/day11/main.raku)    |
+| 12  | [Crystal](https://en.wikipedia.org/wiki/Crystal_(programming_language)) | [Link](./2022/day12/main.cr)      |
 
 
 
