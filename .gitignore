@@ -94,3 +94,6 @@ iOSInjectionProject/
 
 # aoc-cli
 .adventofcode.session
+
+# godot
+.godot

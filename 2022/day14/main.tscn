@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://by44tgn2u0l4g"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_5pupt"]
+[ext_resource type="Texture2D" uid="uid://dv7h1vm1srljy" path="res://sprites.png" id="2_xfxqa"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_urp0p"]
+texture = ExtResource("2_xfxqa")
+0:0/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_276a1"]
+sources/0 = SubResource("TileSetAtlasSource_urp0p")
+
+[node name="Root" type="Node2D"]
+script = ExtResource("1_5pupt")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_276a1")
+format = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2(0.4, 0.4)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
