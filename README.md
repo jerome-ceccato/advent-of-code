@@ -18,6 +18,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 10  | [Common Lisp](https://en.wikipedia.org/wiki/Common_Lisp)                | [Link](./2022/day10/main.lisp)    |
 | 11  | [Raku](https://en.wikipedia.org/wiki/Raku_(programming_language))       | [Link](./2022/day11/main.raku)    |
 | 12  | [Crystal](https://en.wikipedia.org/wiki/Crystal_(programming_language)) | [Link](./2022/day12/main.cr)      |
+| 13  | [JavaScript](https://en.wikipedia.org/wiki/JavaScript)                  | [Link](./2022/day13/main.js)      |
 
 
 
