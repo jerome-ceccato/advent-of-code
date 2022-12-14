@@ -2,11 +2,18 @@ extends Node2D
 
 @onready var input = 'res://input.txt'
 @onready var tileMap = $TileMap
-@onready var timer = $Timer
 
 var _nticks = 0
 var _board = []
 var _spawn = Vector2i.ZERO
+var _has_floor: bool
+var _running = false
+
+var _last_set = Vector2i.ZERO
+
+var ticks_per_draw: int
+
+# Loading input
 
 func _load_paths(): 
 	var contents = FileAccess.get_file_as_string(input)
@@ -27,7 +34,12 @@ func _get_bounds(paths):
 			top_left.y = min(point.y, top_left.y)
 			bottom_right.x = max(point.x, bottom_right.x)
 			bottom_right.y = max(point.y, bottom_right.y)
-	return Rect2i(top_left - Vector2i.ONE, bottom_right - top_left + Vector2i(3, 3))
+	
+	if _has_floor:
+		var size = bottom_right - top_left + Vector2i(3, 3)
+		return Rect2i(top_left - Vector2i.ONE - Vector2i(size.y + 1, 0), size + (2 * Vector2i(size.y + 1, 0)))
+	else:
+		return Rect2i(top_left - Vector2i.ONE, bottom_right - top_left + Vector2i(3, 3))
 
 func _normalized(paths, low_bound):
 	return paths.map(
@@ -52,6 +64,8 @@ func _build_board(paths, size):
 	return board
 
 
+# Tick
+
 func valid(board, vec: Vector2i):
 	return vec.y >= 0 && vec.y < board.size() && vec.x >= 0 && vec.x < board[vec.y].size()
 
@@ -66,34 +80,64 @@ func _tick(board, spawn_point):
 	while valid(board, sand_pos):
 		if at(board, sand_pos + Vector2i.DOWN) == 0:
 			sand_pos += Vector2i.DOWN
-		elif at(board, sand_pos + Vector2i.DOWN) == -1:
+		elif !_has_floor && at(board, sand_pos + Vector2i.DOWN) == -1:
 			return false
 		elif at(board, sand_pos + Vector2i(-1, 1)) == 0:
 			sand_pos += Vector2i(-1, 1)
 		elif at(board, sand_pos + Vector2i(1, 1)) == 0:
 			sand_pos += Vector2i(1, 1)
 		else:
+			_last_set = sand_pos
 			board[sand_pos.y][sand_pos.x] = 2
 			return true
 	return false
 
 
+# Display
+func _draw_one(board, pos):
+	var value = board[pos.y][pos.x]
+	
+	match value:
+		0:
+			tileMap.set_cell(0, pos, -1, Vector2i(-1, -1), -1)
+		1:
+			tileMap.set_cell(0, pos, 0, Vector2i(1, 0))
+		2:
+			tileMap.set_cell(0, pos, 0, Vector2i(0, 0))
+
 func _draw_board(board):
 	for y in range(board.size()):
 		for x in range(board[y].size()):
-			var value = board[y][x]
-			if value == 0:
-				tileMap.set_cell(0, Vector2i(x, y), -1, Vector2i(-1, -1), -1)
-			else:
-				tileMap.set_cell(0, Vector2i(x, y), 0, Vector2i(board[y][x] - 1, 0))
+			_draw_one(board, Vector2i(x, y))
 	queue_redraw()
-
 
 func _setup_camera(size):
 	var center = tileMap.map_to_local(size / 2)
 	$Camera2D.position = center
 
-func _ready():
+func _unhandled_input(event):
+	if event.is_action_pressed('start'):
+		_running = !_running
+
+func _physics_process(delta):
+	if !_running:
+		return
+	
+	for i in range(ticks_per_draw):
+		if _tick(_board, _spawn):
+			_nticks += 1
+			_draw_one(_board, _last_set)
+		elif _running:
+			print(_nticks)
+			_running = false
+
+
+# Main
+
+func _setup(has_floor, speed):
+	_has_floor = has_floor
+	ticks_per_draw = speed
+	
 	var paths = _load_paths()
 	var bounds = _get_bounds(paths)
 	paths = _normalized(paths, bounds.position)
@@ -102,23 +146,10 @@ func _ready():
 	
 	_board = board
 	_spawn = spawn_point
-
+	
 	_draw_board(board)
 	_setup_camera(bounds.size)
-	#timer.start()
-
-func _unhandled_input(event):
-	if event.is_action_pressed('start'):
-		_running = !_running
-
-var _running = false
-func _physics_process(delta):
-	if !_running:
-		return
 	
-	if _tick(_board, _spawn):
-		_nticks += 1
-	else:
-		print(_nticks)
-		_running = false
-	_draw_board(_board)
+
+func _ready():
+	_setup(true, 20) # set to false for part 1
