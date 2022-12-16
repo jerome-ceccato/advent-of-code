@@ -20,6 +20,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 12  | [Crystal](https://en.wikipedia.org/wiki/Crystal_(programming_language)) | [Link](./2022/day12/main.cr)      |
 | 13  | [JavaScript](https://en.wikipedia.org/wiki/JavaScript)                  | [Link](./2022/day13/main.js)      |
 | 14  | [GDScript (Godot 4)](https://en.wikipedia.org/wiki/Godot_(game_engine)) | [Link](./2022/day14/main.gd)      |
+| 15  | [C++](https://en.wikipedia.org/wiki/C%2B%2B)                            | [Link](./2022/day15/main.cpp)     |
 
 
 

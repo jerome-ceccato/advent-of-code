@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <set>
 
 struct Point {
     public:
@@ -16,10 +17,14 @@ struct Point {
         return abs(x - other.x) + abs(y - other.y);
     }
 
-    inline bool operator==(const Point& rhs) {
+    bool operator==(const Point& rhs) {
         return x == rhs.x && y == rhs.y;
     }
 };
+
+bool operator<(const Point& lhs, const Point& rhs) {
+    return lhs.x == rhs.x ? lhs.y < rhs.y : lhs.x < rhs.x;
+}
 
 struct Rect {
     public:
@@ -63,19 +68,17 @@ class TunnelMap {
     Rect get_bounds() {
         Point top_left;
         Point bottom_right;
-        int biggest_range = 0;
 
         for (auto& scanner : _scanners) {
-            top_left.x = std::min(top_left.x, scanner.position.x);
-            top_left.y = std::min(top_left.y, scanner.position.y);
-            bottom_right.x = std::max(bottom_right.x, scanner.position.x);
-            bottom_right.y = std::max(bottom_right.y, scanner.position.y);
-            biggest_range = std::max(biggest_range, scanner.range);
+            top_left.x = std::min(top_left.x, scanner.position.x - scanner.range);
+            top_left.y = std::min(top_left.y, scanner.position.y - scanner.range);
+            bottom_right.x = std::max(bottom_right.x, scanner.position.x + scanner.range);
+            bottom_right.y = std::max(bottom_right.y, scanner.position.y + scanner.range);
         }
 
         return Rect(
-            Point(top_left.x - biggest_range, top_left.y - biggest_range),
-            Point(bottom_right.x - top_left.x + 2 * biggest_range, bottom_right.y - top_left.y + 2 * biggest_range)
+            Point(top_left.x, top_left.y),
+            Point(bottom_right.x - top_left.x, bottom_right.y - top_left.y)
         );
     }
 
@@ -102,12 +105,41 @@ class TunnelMap {
         }
         return true;
     }
+
+    long long int find_beacon() {
+        Point max(4000000, 4000000);
+
+        // Find all points that are exactly outside the range of each beacon
+        // This is extremely slow and inefficient, but it does not involve smart math
+        std::set<Point> candidates;
+        for (auto& scanner : _scanners) {
+            int crange = scanner.range + 1;
+            for (int x = -crange; x <= crange; x++) {
+                int y = crange - abs(x);
+                Point a(scanner.position.x + x, scanner.position.y + y);
+                Point b(scanner.position.x + x, scanner.position.y - y);
+
+                if (a.x >= 0 && a.x <= max.x && a.y >= 0 && a.y <= max.y)
+                    candidates.insert(a);
+                if (b.x >= 0 && b.x <= max.x && b.y >= 0 && b.y <= max.y)
+                    candidates.insert(b);
+            }
+        }
+        
+        for (auto& p : candidates) {
+            if (scan_one(p)) {
+                return 4000000ll * (long long int)p.x + p.y;
+            }
+        }
+        return 0;
+    }
 };
 
 
 int main(void) {
     TunnelMap map("input");
 
-    std::cout << map.scan_row(2000000);
+    std::cout << map.scan_row(2000000) << std::endl;
+    std::cout << map.find_beacon() << std::endl;;
     return 0;
 }
