@@ -3,6 +3,7 @@ import std/sugar
 import std/sequtils
 import std/tables
 import std/strformat
+import std/[times, os]
 import strutils
 
 # Types
@@ -59,18 +60,26 @@ proc totalPressureReleased(self: Network, current: Valve, target: Valve, time: i
     return Simulation(valve: target, duration: 0, score: 0) # Can't reach and open the valve
   return Simulation(valve: target, duration: duration, score: (time - duration) * target.pressure)
 
-proc openValves(self: Network, current: Valve, closed: seq[Valve], time: int): int =
+proc openValves(self: Network, current: Valve, closed: seq[Valve], time: int, depth: int): int =
   if time <= 0 or closed.len == 0:
     return 0
 
   let simulations = closed.map((v) => self.totalPressureReleased(current, v, time))
-  let best = simulations[simulations.map((s) => s.score).maxIndex]
+  let all = simulations.filter((s) => s.score > 0).map do (sim: Simulation) -> int:
+    if depth < 2:
+      echo &"[{depth}] Moving to {sim.valve.name}: score({sim.score}) -> time({sim.duration})"
+    sim.score + self.openValves(sim.valve, closed.filter((v) => v != sim.valve), time - sim.duration, depth + 1)
 
-  echo &"Moving to {best.valve.name}: score({best.score}) -> time({best.duration})"
+  return if all.len > 0: all.max() else: 0
+  #let best = simulations[simulations.map((s) => s.score).maxIndex]
 
-  return best.score + self.openValves(best.valve, closed.filter((v) => v != best.valve), time - best.duration)
+  #echo &"Moving to {best.valve.name}: score({best.score}) -> time({best.duration})"
+
+  #return best.score + self.openValves(best.valve, closed.filter((v) => v != best.valve), time - best.duration)
 
 
 # Main
+let time = cpuTime()
 let network = buildValveNetwork("input")
-echo network.openValves(network["AA"], toSeq(network.values).filter((v) => v.pressure > 0), 30)
+echo network.openValves(network["AA"], toSeq(network.values).filter((v) => v.pressure > 0), 30, 0)
+echo "Time taken: ", cpuTime() - time
