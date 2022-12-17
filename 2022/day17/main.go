@@ -34,6 +34,9 @@ var colorMapping = map[string]string{
 type renderer struct {
 	view lipgloss.Style
 	help lipgloss.Style
+	meta lipgloss.Style
+
+	start time.Time
 }
 
 type board struct {
@@ -41,6 +44,7 @@ type board struct {
 	jetidx int
 	jet    string
 	lines  []string
+	limit  uint64
 }
 
 type model struct {
@@ -71,13 +75,14 @@ func readInput() string {
 	return string(content)
 }
 
-func newModel() model {
+func newModel(limit uint64) model {
 	return model{
 		board: board{
 			jet:    readInput(),
 			lines:  []string{},
 			tick:   0,
 			jetidx: 0,
+			limit:  limit,
 		},
 		renderer: renderer{
 			view: lipgloss.NewStyle().
@@ -87,6 +92,9 @@ func newModel() model {
 				Height(viewportHeight),
 			help: lipgloss.NewStyle().
 				Foreground(lipgloss.Color("241")),
+			meta: lipgloss.NewStyle().
+				Foreground(lipgloss.Color("62")),
+			start: time.Now(),
 		},
 	}
 }
@@ -175,7 +183,7 @@ func (board board) Update() board {
 // Rendering loop
 
 func (e model) Init() tea.Cmd {
-	return nil
+	return tickCmd()
 }
 
 func (e model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -184,14 +192,14 @@ func (e model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c", "esc":
 			return e, tea.Quit
-		case "a":
+		case "s":
 			return e, tickCmd()
 		default:
 			return e, nil
 		}
 	case tickMsg:
 		e.board = e.board.Update()
-		if e.board.tick >= 2022 {
+		if e.board.tick >= e.board.limit {
 			return e, nil
 		}
 		return e, tickCmd()
@@ -201,7 +209,7 @@ func (e model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (e model) View() string {
-	return e.boardView() + e.helpView()
+	return e.boardView() + e.helpView() + e.metaView()
 }
 
 func (r renderer) enlarge(str string) string {
@@ -240,26 +248,26 @@ func (e model) boardView() string {
 }
 
 func (e model) helpView() string {
-	return e.renderer.help.Render(fmt.Sprintf("\n q: Quit\n ticks: %d • height: %d\n", e.board.tick, len(e.board.lines)))
+	return e.renderer.help.Render("\n s: Start • q: Quit")
+}
+
+func (e model) metaView() string {
+	return e.renderer.meta.Render(fmt.Sprintf(
+		"\n\n ticks: %d • height: %d\n\n progress: %.8f%%\n time: %.1f sec",
+		e.board.tick,
+		len(e.board.lines),
+		(float64(e.board.tick) / float64(e.board.limit) * 100),
+		time.Since(e.renderer.start).Seconds()))
 }
 
 func tickCmd() tea.Cmd {
-	return tea.Tick(time.Nanosecond, func(t time.Time) tea.Msg {
+	return tea.Tick(time.Microsecond, func(t time.Time) tea.Msg {
 		return tickMsg(t)
 	})
 }
 
 func main() {
-	if true {
-		if _, err := tea.NewProgram(newModel(), tea.WithAltScreen()).Run(); err != nil {
-			fmt.Println(err)
-		}
+	if _, err := tea.NewProgram(newModel(2022), tea.WithAltScreen()).Run(); err != nil {
+		fmt.Println(err)
 	}
-
-	/*
-		a := newModel()
-		for i := 0; i < 6; i++ {
-			a.board = a.board.Update()
-		}
-	*/
 }
