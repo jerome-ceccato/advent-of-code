@@ -46,6 +46,11 @@ type renderer struct {
 	start time.Time
 }
 
+type pattern struct {
+	tick   uint64
+	height uint64
+}
+
 type board struct {
 	tick  uint64
 	limit uint64
@@ -54,6 +59,8 @@ type board struct {
 	jet         string
 	lines       []byte
 	extraHeight uint64
+
+	memo map[string]pattern
 }
 
 type model struct {
@@ -66,6 +73,7 @@ type tickMsg time.Time
 // Initial data
 
 const viewportHeight = 20
+const updatesPerTick = 20
 
 var raw_shapes = []string{
 	"  #### ",
@@ -114,6 +122,7 @@ func newModel(limit uint64) model {
 			jetidx:      0,
 			limit:       limit,
 			extraHeight: 0,
+			memo:        make(map[string]pattern),
 		},
 		renderer: renderer{
 			view: lipgloss.NewStyle().
@@ -132,7 +141,8 @@ func newModel(limit uint64) model {
 
 // Logic
 
-func ShiftShape(shape []byte, direction byte) ([]byte, bool) {
+// Shift a shape left or right when falling in empty space
+func shiftShape(shape []byte, direction byte) ([]byte, bool) {
 	updated := make([]byte, len(shape))
 
 	for i, current := range shape {
@@ -151,7 +161,8 @@ func ShiftShape(shape []byte, direction byte) ([]byte, bool) {
 	return updated, true
 }
 
-func ShiftInto(shape []byte, into []byte, direction byte) ([]byte, bool) {
+// Shift a shape left/right/down into exiting space if possible
+func shiftInto(shape []byte, into []byte, direction byte) ([]byte, bool) {
 	updated := make([]byte, len(shape))
 	for i := 0; i < len(shape); i++ {
 		shapeidx := len(shape) - 1 - i
@@ -181,8 +192,8 @@ func ShiftInto(shape []byte, into []byte, direction byte) ([]byte, bool) {
 	return updated, true
 }
 
-func Merge(shape []byte, into []byte) []byte {
-	//fmt.Printf("merging:\n%s\ninto:\n%s\n", strings.Join(stringify(shape), "\n"), strings.Join(stringify(into), "\n"))
+// Merge two shapes
+func merge(shape []byte, into []byte) []byte {
 	for i := 0; i < len(shape); i++ {
 		if i < len(into) {
 			shape[len(shape)-1-i] |= into[len(into)-1-i]
@@ -191,79 +202,47 @@ func Merge(shape []byte, into []byte) []byte {
 	return shape
 }
 
+// Add a new shape into the board
 func (board board) Process(shape []byte) board {
-	//fmt.Printf("Process shape:\n%s\n", strings.Join(stringify(shape), "\n"))
-
 	// Initial fall in empty space
 	for i := 0; i < 3; i++ {
-		shape, _ = ShiftShape(shape, board.jet[board.jetidx])
-		//fmt.Printf("shifted %c:\n%s\n", board.jet[board.jetidx], strings.Join(stringify(shape), "\n"))
+		shape, _ = shiftShape(shape, board.jet[board.jetidx])
 		board.jetidx = (board.jetidx + 1) % len(board.jet)
 	}
 
 	// Try to keep falling
 	pos := 0
 	falling := true
-
-	//fmt.Printf("now:\n%s\n", strings.Join(stringify(shape), "\n"))
-	//fmt.Printf("board:\n%s\n", strings.Join(stringify(board.lines), "\n"))
-
 	for falling {
 		low := max(0, pos-len(shape))
 		high := min(len(board.lines), pos+1)
 
-		//fmt.Printf("[%d:%d] (%d)\n", low, high, len(board.lines))
-		//fmt.Printf("will shift into\n%s\n", strings.Join(stringify(board.lines[low:min(len(board.lines), pos)]), "\n"))
-
-		shape, _ = ShiftInto(shape, board.lines[low:min(len(board.lines), pos)], board.jet[board.jetidx])
-
-		//fmt.Printf("shifted %c:\n%s\n", board.jet[board.jetidx], strings.Join(stringify(shape), "\n"))
+		shape, _ = shiftInto(shape, board.lines[low:min(len(board.lines), pos)], board.jet[board.jetidx])
 		board.jetidx = (board.jetidx + 1) % len(board.jet)
 		if pos < len(board.lines) {
-			shape, falling = ShiftInto(shape, board.lines[low:high], 'v')
-			//fmt.Printf("shifted down: %v\n", falling)
+			shape, falling = shiftInto(shape, board.lines[low:high], 'v')
 		} else {
 			break
 		}
 
-		//fmt.Printf("shifted v:\n%s\n", strings.Join(stringify(shape), "\n"))
 		if falling {
 			pos += 1
 		}
 	}
 
-	//fmt.Printf("done falling:\n%s\n", strings.Join(stringify(shape), "\n"))
-	//fmt.Printf("pos: %d\n", pos)
-
 	// Merge the shape into the existing
 	posup := pos - len(shape)
 	low := max(0, posup)
 	high := min(len(board.lines), pos)
+	updated := merge(shape, board.lines[low:high])
 
-	//fmt.Printf("[%d:%d] (%d)\n", low, high, len(board.lines))
-	//fmt.Printf("into:\n%s\n", strings.Join(stringify(board.lines), "\n"))
-
-	//fmt.Printf("[%d:%d] (%d)\n", low, high, len(board.lines))
-	updated := Merge(shape, board.lines[low:high])
-
-	//fmt.Printf("merged shape:\n%s\n", strings.Join(stringify(updated), "\n"))
-
+	// Merge back the updated lines into the board
 	if high-low == len(updated) {
 		for i := low; i < high; i++ {
 			// Cut unreachable lines
 			if updated[i-low] == 0x7F {
 				board.extraHeight += uint64(len(board.lines) - i)
-				/*
-					fmt.Printf("full row:%d\nfrom:\n%s\nto\n%s\n%s\n",
-						board.tick,
-						strings.Join(stringify(cp), "\n"),
-						strings.Join(stringify(pm), "\n"),
-						strings.Join(stringify(updated), "\n"))
-					fmt.Printf("[%d:%d] (%d)\n", low, high, len(board.lines))
-					fmt.Printf("%s\n", strings.Join(stringify(board.lines[0:5]), "\n"))
-				*/
 				board.lines = board.lines[:i]
-				//fmt.Printf("after:\n%s\n", strings.Join(stringify(board.lines), "\n"))
 				return board
 			}
 			board.lines[i] = updated[i-low]
@@ -272,12 +251,38 @@ func (board board) Process(shape []byte) board {
 		board.lines = append(updated, board.lines[high:]...)
 	}
 
-	//fmt.Printf("full board:\n%s\n", strings.Join(stringify(board.lines), "\n"))
-
 	return board
 }
 
+// Generate a string identifier for a given board/jet state
+func (board board) EncodeState() string {
+	return fmt.Sprintf("%d-%v", board.jetidx, string(board.lines))
+}
+
 func (board board) Update() board {
+	// First check if we encountered this pattern before
+	state := board.EncodeState()
+	cached, has := board.memo[state]
+	if has {
+		// Jump ahead
+		loopTicks := board.tick - cached.tick
+		loopHeight := (board.extraHeight + uint64(len(board.lines))) - cached.height
+
+		remainingTicks := board.limit - board.tick
+		jumpAhead := remainingTicks / loopTicks
+		board.extraHeight += jumpAhead * loopHeight
+		board.tick += jumpAhead * loopTicks
+
+		// Reset the memo so we finish manually
+		board.memo = make(map[string]pattern)
+	} else {
+		board.memo[state] = pattern{
+			tick:   board.tick,
+			height: board.extraHeight + uint64(len(board.lines)),
+		}
+	}
+
+	// Process the new shape
 	shapeid := int(board.tick % uint64(len(shapes)))
 	shape := shapes[shapeid]
 	board = board.Process(shape)
@@ -288,7 +293,7 @@ func (board board) Update() board {
 // Rendering loop
 
 func (e model) Init() tea.Cmd {
-	return tickCmd()
+	return nil
 }
 
 func (e model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -297,16 +302,14 @@ func (e model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c", "esc":
 			return e, tea.Quit
-		case "a":
-			e.board = e.board.Update()
-			return e, nil
 		case "s":
+			e.renderer.start = time.Now()
 			return e, tickCmd()
 		default:
 			return e, nil
 		}
 	case tickMsg:
-		for i := 0; i < 1000000 && e.board.tick < e.board.limit; i++ {
+		for i := 0; i < updatesPerTick && e.board.tick < e.board.limit; i++ {
 			e.board = e.board.Update()
 		}
 		if e.board.tick >= e.board.limit {
@@ -322,7 +325,7 @@ func (e model) View() string {
 	return e.boardView() + e.helpView() + e.metaView()
 }
 
-func (r renderer) enlarge(str string) string {
+func enlarge(str string) string {
 	lines := strings.Split(str, "\n")
 	large := []string{}
 
@@ -337,7 +340,7 @@ func (r renderer) enlarge(str string) string {
 	return strings.Join(large, "\n")
 }
 
-func (r renderer) prettify(str string) string {
+func prettify(str string) string {
 	for key, color := range colorMapping {
 		str = strings.ReplaceAll(str, key, fmt.Sprint(termenv.String(" ").Background(colors.Color(color))))
 	}
@@ -372,7 +375,7 @@ func (e model) boardView() string {
 		}
 	}
 
-	return e.renderer.view.Render(e.renderer.prettify(e.renderer.enlarge(slice)))
+	return e.renderer.view.Render(prettify(enlarge(slice)))
 }
 
 func (e model) helpView() string {
@@ -390,25 +393,13 @@ func (e model) metaView() string {
 }
 
 func tickCmd() tea.Cmd {
-	return tea.Tick(time.Microsecond, func(t time.Time) tea.Msg {
+	return tea.Tick(time.Second/20, func(t time.Time) tea.Msg {
 		return tickMsg(t)
 	})
 }
 
 func main() {
-	if true {
-		if _, err := tea.NewProgram(newModel(1000000000000), tea.WithAltScreen()).Run(); err != nil {
-			fmt.Println(err)
-		}
+	if _, err := tea.NewProgram(newModel(1000000000000), tea.WithAltScreen()).Run(); err != nil {
+		fmt.Println(err)
 	}
-
-	/*
-		0.01 -> 45sec
-		45*1/0.0001
-			a := newModel(1000000000000)
-			for i := 0; i < 1000000; i++ {
-				a.board = a.board.Update()
-			}
-			fmt.Printf("-> %d\n", uint64(len(a.board.lines))+a.board.extraHeight)
-	*/
 }
