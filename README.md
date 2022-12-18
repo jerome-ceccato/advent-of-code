@@ -23,6 +23,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 15  | [C++](https://en.wikipedia.org/wiki/C%2B%2B)                            | [Link](./2022/day15/main.cpp)     |
 | 16  | [Nim](https://en.wikipedia.org/wiki/Nim_(programming_language))         | [Link](./2022/day16/main.nim)     |
 | 17  | [Go](https://en.wikipedia.org/wiki/Go_(programming_language))           | [Link](./2022/day17/main.go)      |
+| 18  | [Clojure](https://en.wikipedia.org/wiki/Clojure)                        | [Link](./2022/day18/main.clj)     |
 
 
 
