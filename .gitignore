@@ -12,3 +12,8 @@
 
 # clojure
 .calva
+
+# kotlin
+out
+.idea
+*.iml
