@@ -25,6 +25,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 17  | [Go](https://en.wikipedia.org/wiki/Go_(programming_language))           | [Link](./2022/day17/main.go)      |
 | 18  | [Clojure](https://en.wikipedia.org/wiki/Clojure)                        | [Link](./2022/day18/main.clj)     |
 | 19  | [Kotlin](https://en.wikipedia.org/wiki/Kotlin_(programming_language))   | [Link](./2022/day19/main.kt)      |
+| 20  | [C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))      | [Link](./2022/day20/main.cs)      |
 
 
 
