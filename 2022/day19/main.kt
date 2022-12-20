@@ -1,5 +1,9 @@
 import java.io.File
 import java.lang.Integer.max
+import kotlin.system.exitProcess
+import kotlin.system.measureTimeMillis
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
 // Utils
 
@@ -28,7 +32,7 @@ data class Simulation(
     public override fun clone() = Simulation(resources.toMutableMap(), robots.toMutableMap())
 }
 
-typealias Memo = MutableMap<String, Int>
+typealias Memo = MutableMap<String, Pair<Int, Int>>
 
 fun initialSimulation(): Simulation {
     return Simulation(mutableMapOf(), mutableMapOf(Resource.ORE to 1))
@@ -108,7 +112,7 @@ fun updatedSimulationByPurchasing(blueprint: Blueprint, simulation: Simulation, 
     return nextSimulation
 }
 
-fun encode(simulation: Simulation, timeLeft: Int): String {
+fun encode(simulation: Simulation): String {
     val res = StringBuilder()
     Resource.values().forEach { resource ->
         res.append(simulation.resources.getOrDefault(resource, 0))
@@ -116,29 +120,49 @@ fun encode(simulation: Simulation, timeLeft: Int): String {
         res.append(simulation.robots.getOrDefault(resource, 0))
         res.append("-")
     }
-    res.append(timeLeft)
     return res.toString()
 }
 
 // Finds the max amount of geode possible to obtain with a given blueprint
-fun resolveBlueprint(blueprint: Blueprint, simulation: Simulation, timeLeft: Int, memo: Memo): Int {
+fun resolveBlueprint(blueprint: Blueprint, simulation: Simulation, lastSimulation: Simulation?, timeLeft: Int, memo: Memo): Int {
     if (timeLeft <= 0) {
         return simulation.resources.getOrDefault(Resource.GEODE, 0)
     }
 
+    if (timeLeft > 25) {
+        println("$timeLeft - ${memo.size}")
+    }
+
     // Cache results
-    val identifier = encode(simulation, timeLeft)
-    if (memo.containsKey(identifier)) {
-        return memo[identifier]!!
+    val cacheAfter = 3
+    val identifier = encode(simulation)
+    if (timeLeft >= cacheAfter && memo.containsKey(identifier)) {
+        val best = memo[identifier]!!
+        // If there's a cached result with more time left, we can't possibly beat it
+        if (best.first >= timeLeft) {
+           return best.second
+        }
     }
 
     // If we can buy a geode making robot, there's no way to do better than that
     if (canPurchase(blueprint, simulation, Resource.GEODE)) {
         earnResources(simulation)
         val nextSimulation = updatedSimulationByPurchasing(blueprint, simulation, listOf(Resource.GEODE))
-        val total = resolveBlueprint(blueprint, nextSimulation, timeLeft - 1, memo)
-        memo[identifier] = total
+        val total = resolveBlueprint(blueprint, nextSimulation, simulation, timeLeft - 1, memo)
+        if (timeLeft >= cacheAfter) {
+            if (memo.containsKey(identifier)) {
+                val best = memo[identifier]!!
+                // We can get the same result in less time
+                if (timeLeft > best.first) {
+                    memo[identifier] = Pair(timeLeft, total)
+                }
+            } else {
+                memo[identifier] = Pair(timeLeft, total)
+            }
+        }
         return total
+
+
     }
 
     // Calculate possible purchases, then apply earnings
@@ -148,30 +172,98 @@ fun resolveBlueprint(blueprint: Blueprint, simulation: Simulation, timeLeft: Int
     // Continue assuming we've purchased one of the possible robot
     var total = purchases.maxOfOrNull {
         val nextSimulation = updatedSimulationByPurchasing(blueprint, simulation, listOf(it))
-        resolveBlueprint(blueprint, nextSimulation, timeLeft - 1, memo)
+        resolveBlueprint(blueprint, nextSimulation, simulation, timeLeft - 1, memo)
     } ?: 0
 
-    // if no purchases and no stockpile, continue by not purchasing anything
-    if (purchases.size < 4) {
-        total = max(total, resolveBlueprint(blueprint, simulation, timeLeft - 1, memo))
+    // if our purchase choice didn't change, there's no way we can do better than the last branch
+    // otherwise, also try buying nothing
+    if ((lastSimulation == null) || (purchases != possiblePurchases(blueprint, lastSimulation))) {
+        total = max(total, resolveBlueprint(blueprint, simulation, lastSimulation, timeLeft - 1, memo))
     }
 
-    memo[identifier] = total
+    if (timeLeft >= cacheAfter) {
+        if (memo.containsKey(identifier)) {
+            val best = memo[identifier]!!
+            // We can get the same result in less time
+            if (timeLeft > best.first) {
+                memo[identifier] = Pair(timeLeft, total)
+            }
+        } else {
+            memo[identifier] = Pair(timeLeft, total)
+        }
+    }
+
+
     return total
 }
 
 fun qualityLevelFromBlueprints(blueprints: List<Blueprint>): Int {
+    val expected = mapOf(
+        1 to 0,
+        2 to 1,
+        3 to 0,
+        4 to 0,
+        5 to 1,
+        6 to 2,
+        7 to 2,
+        8 to 11,
+        9 to 0,
+        10 to 12,
+        11 to 0,
+        12 to 0,
+        13 to 0,
+        14 to 0,
+        15 to 0,
+        16 to 3,
+        17 to 0,
+        18 to 2,
+        19 to 3,
+        20 to 5,
+        21 to 2,
+        22 to 2,
+        23 to 4,
+        24 to 1,
+        25 to 9,
+        26 to 12,
+        27 to 3,
+        28 to 0,
+        29 to 4,
+        30 to 0
+    )
+
     return blueprints.map { blueprint ->
-        val quality = resolveBlueprint(blueprint, initialSimulation(), 24, mutableMapOf())
+        val quality = resolveBlueprint(blueprint, initialSimulation(), null,24, mutableMapOf())
         println("Blueprint ${blueprint.id}: $quality")
+        if (expected[blueprint.id]!! != quality) {
+            println("Wrong answer, expected: ${expected[blueprint.id]!!}")
+            exitProcess(1)
+        }
         return@map quality * blueprint.id
     }.sum()
 }
 
+fun geodesFromTopBlueprints(blueprints: List<Blueprint>): Int {
+    return blueprints.take(3).map { blueprint ->
+        val geodes = resolveBlueprint(blueprint, initialSimulation(), null,32, mutableMapOf())
+        println("Blueprint ${blueprint.id}: $geodes")
+        return@map geodes
+    }.reduce { a,b -> a * b }
+}
+
 // Main
 
+@OptIn(ExperimentalTime::class)
 fun main() {
     val blueprints = parseInput("input")
-    println("Testing ${blueprints.size} blueprints...")
-    println("Total: ${qualityLevelFromBlueprints(blueprints)}")
+    val elapsed = measureTime {
+        println("Testing ${blueprints.size} blueprints...")
+        //println("Part 1: ${qualityLevelFromBlueprints(blueprints)}")
+        println("Part 2: ${geodesFromTopBlueprints(blueprints)}")
+    }
+    println("Time: $elapsed")
+
+    //Blueprint  1: 11
+    //Blueprint 2: 22
+    //Blueprint 3: 17
+    //Part 2: 4114
 }
