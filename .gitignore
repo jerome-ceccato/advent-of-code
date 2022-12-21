@@ -22,3 +22,7 @@ out
 bin
 obj
 .config
+
+# Haskell
+dist-newstyle
+generated.hs
