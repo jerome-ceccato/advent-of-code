@@ -6,26 +6,27 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Day | Language  | Solution |
 | --- | ---       | ---    |
-| 1   | [J](https://en.wikipedia.org/wiki/J_(programming_language))             | [Link](./2022/day01/main.ijs)     |
-| 2   | [Factor](https://en.wikipedia.org/wiki/Factor_(programming_language))   | [Link](./2022/day02/main.factor)  |
-| 3   | [min](https://min-lang.org/)                                            | [Link](./2022/day03/main.min)     |
-| 4   | [Smalltalk (GNU)](https://en.wikipedia.org/wiki/Smalltalk)              | [Link](./2022/day04/main.st)      |
-| 5   | [Julia](https://en.wikipedia.org/wiki/Julia_(programming_language))     | [Link](./2022/day05/main.jl)      |
-| 6   | [VBA](https://en.wikipedia.org/wiki/Visual_Basic_for_Applications)      | [Link](./2022/day06/main.vba)     |
-| 7   | [Scheme (Chez)](https://en.wikipedia.org/wiki/Chez_Scheme)              | [Link](./2022/day07/main.scm)     |
-| 8   | [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language))       | [Link](./2022/day08/main.rs)      |
-| 9   | [OCaml](https://en.wikipedia.org/wiki/OCaml)                            | [Link](./2022/day09/main.ml)      |
-| 10  | [Common Lisp](https://en.wikipedia.org/wiki/Common_Lisp)                | [Link](./2022/day10/main.lisp)    |
-| 11  | [Raku](https://en.wikipedia.org/wiki/Raku_(programming_language))       | [Link](./2022/day11/main.raku)    |
-| 12  | [Crystal](https://en.wikipedia.org/wiki/Crystal_(programming_language)) | [Link](./2022/day12/main.cr)      |
-| 13  | [JavaScript](https://en.wikipedia.org/wiki/JavaScript)                  | [Link](./2022/day13/main.js)      |
-| 14  | [GDScript (Godot 4)](https://en.wikipedia.org/wiki/Godot_(game_engine)) | [Link](./2022/day14/main.gd)      |
-| 15  | [C++](https://en.wikipedia.org/wiki/C%2B%2B)                            | [Link](./2022/day15/main.cpp)     |
-| 16  | [Nim](https://en.wikipedia.org/wiki/Nim_(programming_language))         | [Link](./2022/day16/main.nim)     |
-| 17  | [Go](https://en.wikipedia.org/wiki/Go_(programming_language))           | [Link](./2022/day17/main.go)      |
-| 18  | [Clojure](https://en.wikipedia.org/wiki/Clojure)                        | [Link](./2022/day18/main.clj)     |
-| 19  | [Kotlin](https://en.wikipedia.org/wiki/Kotlin_(programming_language))   | [Link](./2022/day19/main.kt)      |
-| 20  | [C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))      | [Link](./2022/day20/main.cs)      |
+| 1   | [J](https://en.wikipedia.org/wiki/J_(programming_language))             | [main.ijs](./2022/day01/main.ijs)         |
+| 2   | [Factor](https://en.wikipedia.org/wiki/Factor_(programming_language))   | [main.factor](./2022/day02/main.factor)   |
+| 3   | [min](https://min-lang.org/)                                            | [main.min](./2022/day03/main.min)         |
+| 4   | [Smalltalk (GNU)](https://en.wikipedia.org/wiki/Smalltalk)              | [main.st](./2022/day04/main.st)           |
+| 5   | [Julia](https://en.wikipedia.org/wiki/Julia_(programming_language))     | [main.jl](./2022/day05/main.jl)           |
+| 6   | [VBA](https://en.wikipedia.org/wiki/Visual_Basic_for_Applications)      | [main.vba](./2022/day06/main.vba)         |
+| 7   | [Scheme (Chez)](https://en.wikipedia.org/wiki/Chez_Scheme)              | [main.scm](./2022/day07/main.scm)         |
+| 8   | [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language))       | [main.rs](./2022/day08/main.rs)           |
+| 9   | [OCaml](https://en.wikipedia.org/wiki/OCaml)                            | [main.ml](./2022/day09/main.ml)           |
+| 10  | [Common Lisp](https://en.wikipedia.org/wiki/Common_Lisp)                | [main.lisp](./2022/day10/main.lisp)       |
+| 11  | [Raku](https://en.wikipedia.org/wiki/Raku_(programming_language))       | [main.raku](./2022/day11/main.raku)       |
+| 12  | [Crystal](https://en.wikipedia.org/wiki/Crystal_(programming_language)) | [main.cr](./2022/day12/main.cr)           |
+| 13  | [JavaScript](https://en.wikipedia.org/wiki/JavaScript)                  | [main.js](./2022/day13/main.js)           |
+| 14  | [GDScript (Godot 4)](https://en.wikipedia.org/wiki/Godot_(game_engine)) | [main.gd](./2022/day14/main.gd)           |
+| 15  | [C++](https://en.wikipedia.org/wiki/C%2B%2B)                            | [main.cpp](./2022/day15/main.cpp)         |
+| 16  | [Nim](https://en.wikipedia.org/wiki/Nim_(programming_language))         | [main.nim](./2022/day16/main.nim)         |
+| 17  | [Go](https://en.wikipedia.org/wiki/Go_(programming_language))           | [main.go](./2022/day17/main.go)           |
+| 18  | [Clojure](https://en.wikipedia.org/wiki/Clojure)                        | [main.clj](./2022/day18/main.clj)         |
+| 19  | [Kotlin](https://en.wikipedia.org/wiki/Kotlin_(programming_language))   | [main.kt](./2022/day19/main.kt)           |
+| 20  | [C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))      | [main.cs](./2022/day20/main.cs)           |
+| 21  | [Haskell](https://en.wikipedia.org/wiki/Haskell) + [Powershell](https://en.wikipedia.org/wiki/PowerShell)   | [main.hs](./2022/day21/main.hs), [run.ps1](./2022/day21/run.ps1)     |
 
 
 
