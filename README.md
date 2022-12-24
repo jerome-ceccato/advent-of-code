@@ -27,6 +27,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 19  | [Kotlin](https://en.wikipedia.org/wiki/Kotlin_(programming_language))   | [main.kt](./2022/day19/main.kt)           |
 | 20  | [C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))      | [main.cs](./2022/day20/main.cs)           |
 | 21  | [Haskell](https://en.wikipedia.org/wiki/Haskell) + [Powershell](https://en.wikipedia.org/wiki/PowerShell)   | [main.hs](./2022/day21/main.hs), [run.ps1](./2022/day21/run.ps1)     |
+| 22  | [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language))     | [main.swift](./2022/day22/main.swift)     |
 
 
 
