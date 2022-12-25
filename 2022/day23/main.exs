@@ -57,26 +57,6 @@ defmodule Aoc do
     end)
   end
 
-  def elves_contain(elves, elf) do
-    Enum.find_index(elves, fn e ->
-      Point.compare(e, elf)
-    end) != nil
-  end
-
-  def has_elves_at(elves, elf, offsets) do
-    Enum.find_index(offsets, fn offset ->
-      elves_contain(elves, Point.add(elf, offset))
-    end) != nil
-  end
-
-  # def has_elves_around(elves, elf) do
-  #  Enum.find_index(offsets_at([:n, :s, :w, :e]), fn offset ->
-  #    Enum.find_index(fn e ->
-  #      Point.compare(e, Point.add(elf, offset))
-  #    end) != nil
-  #  end) != nil
-  # end
-
   def move_elf(elf, direction) do
     offset =
       case direction do
@@ -89,39 +69,54 @@ defmodule Aoc do
     Point.add(elf, offset)
   end
 
+  def elves_dict(elves) do
+    Enum.reduce(elves, MapSet.new(), fn a, set ->
+      MapSet.put(set, a)
+    end)
+  end
+
+  def elves_contain(elves, elf) do
+    Enum.find_index(elves, fn e ->
+      Point.compare(e, elf)
+    end) != nil
+  end
+
+  def has_elves_at(elves_dict, elf, offsets) do
+    Enum.find_index(offsets, fn offset ->
+      MapSet.member?(elves_dict, Point.add(elf, offset))
+    end) != nil
+  end
+
   def gen_proposals(elves, directions) do
+    dict = elves_dict(elves)
+
     Enum.map(elves, fn elf ->
-      if !has_elves_at(elves, elf, offsets_at(directions)) do
+      if !has_elves_at(dict, elf, offsets_at(directions)) do
         elf
       else
         Enum.find_value(directions, elf, fn dir ->
-          if !has_elves_at(elves, elf, offsets_at([dir])) do
-            # IO.puts(~s(Elf #{elf.x},#{elf.y} moves #{dir}))
+          if !has_elves_at(dict, elf, offsets_at([dir])) do
             move_elf(elf, dir)
-          else
-            # IO.puts(~s(Elf #{elf.x},#{elf.y} can't move #{dir}))
-            # IO.inspect(offsets_at([dir]))
-            nil
           end
         end)
       end
     end)
   end
 
-  def is_proposal_unique(proposals, p) do
-    Enum.count(proposals, fn x -> Point.compare(x, p) end) == 1
+  def compile_proposals(proposals) do
+    Enum.reduce(proposals, %{}, fn p, dict ->
+      Map.put(dict, p, Map.get(dict, p, 0) + 1)
+    end)
   end
 
   def apply_proposals(elves, proposals) do
+    compiled = compile_proposals(proposals)
+
     Enum.with_index(elves)
     |> Enum.map(fn {elf, i} ->
       p = Enum.at(proposals, i)
 
-      if is_proposal_unique(proposals, p) do
-        p
-      else
-        elf
-      end
+      if Map.get(compiled, p, 0) == 1, do: p, else: elf
     end)
   end
 
@@ -134,7 +129,24 @@ defmodule Aoc do
     end).elves
   end
 
-  def display(elves) do
+  def full_run(round, n) do
+    next = %Round{
+      elves: apply_proposals(round.elves, gen_proposals(round.elves, round.directions)),
+      directions: tl(round.directions) ++ [hd(round.directions)]
+    }
+
+    if round.elves == next.elves do
+      n
+    else
+      full_run(next, n + 1)
+    end
+  end
+
+  def run_until_done(elves) do
+    full_run(%Round{elves: elves, directions: [:n, :s, :w, :e]}, 1)
+  end
+
+  def get_bounds(elves) do
     lower =
       Enum.reduce(elves, hd(elves), fn elf, mn ->
         %Point{x: min(elf.x, mn.x), y: min(elf.y, mn.y)}
@@ -145,54 +157,22 @@ defmodule Aoc do
         %Point{x: max(elf.x, mx.x), y: max(elf.y, mx.y)}
       end)
 
-    Enum.each(lower.y..upper.y, fn y ->
-      Enum.each(lower.x..upper.x, fn x ->
-        IO.write(
-          if elves_contain(elves, %Point{x: x, y: y}) do
-            "#"
-          else
-            "."
-          end
-        )
-      end)
-
-      IO.write("\n")
-    end)
+    {lower, upper}
   end
 
   def count_empty(elves) do
-    lower =
-      Enum.reduce(elves, hd(elves), fn elf, mn ->
-        %Point{x: min(elf.x, mn.x), y: min(elf.y, mn.y)}
-      end)
-
-    upper =
-      Enum.reduce(elves, hd(elves), fn elf, mx ->
-        %Point{x: max(elf.x, mx.x), y: max(elf.y, mx.y)}
-      end)
+    {lower, upper} = get_bounds(elves)
 
     Enum.reduce(lower.y..upper.y, 0, fn y, acc ->
       Enum.reduce(lower.x..upper.x, acc, fn x, acc2 ->
-        if elves_contain(elves, %Point{x: x, y: y}) do
-          acc2
-        else
-          acc2 + 1
-        end
+        if elves_contain(elves, %Point{x: x, y: y}), do: acc2, else: acc2 + 1
       end)
     end)
   end
 end
 
-elves = Aoc.parse_input("input")
-IO.inspect(elves)
-# IO.puts("Elves:")
-# Aoc.display(elves)
-# IO.puts("\nProposal:")
-# props = Aoc.gen_proposals(elves, [:n, :s, :w, :e])
-# Aoc.display(props)
-# IO.puts("\nResult:")
-# Aoc.display(Aoc.apply_proposals(elves, props))
-elves = Aoc.run(elves, 10)
-Aoc.display(elves)
-IO.inspect(Aoc.count_empty(elves))
-# IO.inspect(elves)
+part1 = Aoc.run(Aoc.parse_input("input"), 10)
+IO.inspect(Aoc.count_empty(part1))
+
+part2 = Aoc.run_until_done(Aoc.parse_input("input"))
+IO.inspect(part2)
