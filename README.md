@@ -28,6 +28,9 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 20  | [C#](https://en.wikipedia.org/wiki/C_Sharp_(programming_language))      | [main.cs](./2022/day20/main.cs)           |
 | 21  | [Haskell](https://en.wikipedia.org/wiki/Haskell) + [Powershell](https://en.wikipedia.org/wiki/PowerShell)   | [main.hs](./2022/day21/main.hs), [run.ps1](./2022/day21/run.ps1)     |
 | 22  | [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language))     | [main.swift](./2022/day22/main.swift)     |
+| 23  | [Elixir](https://en.wikipedia.org/wiki/Elixir_(programming_language))   | [main.exs](./2022/day23/main.exs)         |
+| 24  | [Python](https://en.wikipedia.org/wiki/Python_(programming_language))   |                                           |
+| 25  | [C](https://en.wikipedia.org/wiki/C_(programming_language))             | [main.c](./2022/day25/main.c) (p1)        |
 
 
 
