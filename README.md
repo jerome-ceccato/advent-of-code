@@ -30,7 +30,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 22  | [Swift](https://en.wikipedia.org/wiki/Swift_(programming_language))     | [main.swift](./2022/day22/main.swift)     |
 | 23  | [Elixir](https://en.wikipedia.org/wiki/Elixir_(programming_language))   | [main.exs](./2022/day23/main.exs)         |
 | 24  | [Python](https://en.wikipedia.org/wiki/Python_(programming_language))   | [main.py](./2022/day24/main.py)           |
-| 25  | [C](https://en.wikipedia.org/wiki/C_(programming_language))             | [main.c](./2022/day25/main.c) (p1)        |
+| 25  | [C](https://en.wikipedia.org/wiki/C_(programming_language))             | [main.c](./2022/day25/main.c)             |
 
 
 
