@@ -73,29 +73,25 @@ class Board:
                        Point(-1, 0),
                        Point(1, 0)]
         candidates = [(position + offset) for offset in all_offsets]
-        return filter(lambda p: p.x >= 0 and p.x < self.width and p.y >= 0 and p.y < self.height and len(blizzards[p.y][p.x]) == 0, candidates)
+        special_positions = [Point(0, -1), Point(self.width - 1, self.height)]
+        return filter(lambda p: (p in special_positions) or (p.x >= 0 and p.x < self.width and p.y >= 0 and p.y < self.height and len(blizzards[p.y][p.x]) == 0), candidates)
 
-    def run(self):
+    def run(self, destinations):
         round = 0
-        start = Point(0, -1)
-        end = Point(self.width - 1, self.height - 1)
         all_boards = self.cache_blizzards()
-        queue = {start}
+        queue = {Point(0, -1)}
 
-        print(f"Cached {len(all_boards)} boards")
-        while not (end in queue) and not len(queue) == 0:
-            print(f"Round {round}, queue size: {len(queue)}")
-            next = all_boards[(round + 1) % len(all_boards)]
-            next_queue = set()
-            for pos in queue:
-                next_queue.update(self.possible_positions(next, pos))
-            next_queue.add(start)
-            queue = next_queue
-            round += 1
+        for end in destinations:
+            while not (end in queue):
+                next = all_boards[(round + 1) % len(all_boards)]
+                next_queue = set()
+                for pos in queue:
+                    next_queue.update(self.possible_positions(next, pos))
+                queue = next_queue
+                round += 1
+            queue = {end}
 
-        if len(queue) == 0:
-            return -1
-        return round + 1
+        return round
 
 
 def read_input():
@@ -107,11 +103,11 @@ def read_input():
 
 
 if __name__ == '__main__':
-    board = read_input()
-    print(f"w:{board.width}, h:{board.height}")
-    # for c in board.cache_blizzards():
-    #    print(c)
-    # print(board.initial_blizzards)
-    # print(board.update_blizzards(board.initial_blizzards))
-    # print(board.cache_blizzards())
-    print(board.run())
+    part1 = read_input()
+    print(part1.run([Point(part1.width - 1, part1.height)]))
+
+    part2 = read_input()
+    print(part2.run([
+        Point(part2.width - 1, part2.height),
+        Point(0, -1),
+        Point(part2.width - 1, part2.height)]))
