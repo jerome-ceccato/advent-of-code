@@ -77,35 +77,46 @@ final class Day22: AOCDay {
     
     func part2(rawInput: String) -> CustomStringConvertible {
         let input = parseInput(rawInput)
-        let rebootInstructions = input.filter { !isInsideInitArea(instruction: $0) }
+        let rebootInstructions = input
         var board = [Instruction]()
         
-        func findOverlap(board: [Instruction], target: Instruction) -> Int? {
+        // returns the intersection of both cubes, with a reversed state
+        func intersection(left: Instruction, right: Instruction) -> Instruction? {
+            func intersectionRange(left: ClosedRange<Int>, right: ClosedRange<Int>) -> ClosedRange<Int>? {
+                let lower = max(left.lowerBound, right.lowerBound)
+                let upper = min(left.upperBound, right.upperBound)
+                
+                return lower <= upper ? lower ... upper : nil
+            }
+            
+            if let rx = intersectionRange(left: left.x, right: right.x),
+               let ry = intersectionRange(left: left.y, right: right.y),
+               let rz = intersectionRange(left: left.z, right: right.z) {
+                return Instruction(state: !left.state, x: rx, y: ry, z: rz)
+            }
+            
             return nil
-        }
-        
-        // remove overlap from left by splitting it into sub cubes
-        func explodeLeft(left: Instruction, right: Instruction) -> [Instruction] {
-            return [left]
         }
         
         func countActive(board: [Instruction]) -> Int {
             return board.reduce(0) { acc, instruction in
-                return acc + [instruction.x, instruction.y, instruction.z].map { $0.count }.reduce(1, *)
+                return acc + [instruction.x, instruction.y, instruction.z].map { $0.count }.reduce(instruction.state ? 1 : -1, *)
             }
         }
         
         rebootInstructions.forEach { instruction in
-            while let overlapIndex = findOverlap(board: board, target: instruction) {
-                let exploded = explodeLeft(left: board[overlapIndex], right: instruction)
-                board.remove(at: overlapIndex)
-                board.append(contentsOf: exploded)
-                if instruction.state {
-                    board.append(instruction)
+            var next = [Instruction]()
+            for existing in board {
+                if let intesect = intersection(left: existing, right: instruction) {
+                    next.append(intesect)
                 }
             }
+            if instruction.state {
+                board.append(instruction)
+            }
+            board.append(contentsOf: next)
         }
-        
+
         return countActive(board: board)
     }
 }
