@@ -13,6 +13,12 @@ public extension StringProtocol {
     }
 }
 
+public extension StringProtocol {
+    func index(of char: Character) -> Int? {
+        return firstIndex(of: char)?.utf16Offset(in: self)
+      }
+}
+
 public extension Collection {
     subscript (safe offset: Int) -> Element? {
         let index = index(startIndex, offsetBy: offset)

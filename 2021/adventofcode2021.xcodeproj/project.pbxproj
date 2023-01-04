@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0233203C2965AFA3009A7373 /* day23.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 023F5DFE2965ABCC00CCA0E5 /* day23.txt */; };
+		023F5DFD2965ABAA00CCA0E5 /* day23.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023F5DFC2965ABAA00CCA0E5 /* day23.swift */; };
 		029DBF67275EAE69008963AA /* day02.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029DBF55275EAE69008963AA /* day02.swift */; };
 		029DBF68275EAE69008963AA /* day01.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029DBF59275EAE69008963AA /* day01.swift */; };
 		029DBF69275EAE69008963AA /* day04.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029DBF5D275EAE69008963AA /* day04.swift */; };
@@ -64,6 +66,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				0233203C2965AFA3009A7373 /* day23.txt in CopyFiles */,
 				029DBFE1276E2C50008963AA /* day09.txt in CopyFiles */,
 				029DBFE2276E2C50008963AA /* day10.txt in CopyFiles */,
 				029DBFE3276E2C50008963AA /* day11.txt in CopyFiles */,
@@ -92,6 +95,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		023F5DFC2965ABAA00CCA0E5 /* day23.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day23.swift; sourceTree = "<group>"; };
+		023F5DFE2965ABCC00CCA0E5 /* day23.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day23.txt; sourceTree = "<group>"; };
 		029DBF48275EAE3A008963AA /* adventofcode2021 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = adventofcode2021; sourceTree = BUILT_PRODUCTS_DIR; };
 		029DBF53275EAE69008963AA /* day02.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day02.txt; sourceTree = "<group>"; };
 		029DBF54275EAE69008963AA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -177,9 +182,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		023F5DFB2965AB9800CCA0E5 /* day23 */ = {
+			isa = PBXGroup;
+			children = (
+				023F5DFC2965ABAA00CCA0E5 /* day23.swift */,
+				023F5DFE2965ABCC00CCA0E5 /* day23.txt */,
+			);
+			path = day23;
+			sourceTree = "<group>";
+		};
 		029DBF3F275EAE3A008963AA = {
 			isa = PBXGroup;
 			children = (
+				023F5DFB2965AB9800CCA0E5 /* day23 */,
 				029DBF6D275EAE8E008963AA /* main.swift */,
 				029DBF6C275EAE78008963AA /* lib */,
 				029DBF88276E27F0008963AA /* scripts */,
@@ -533,6 +548,7 @@
 				029DBFDB276E2C16008963AA /* day21.swift in Sources */,
 				029DBFD4276E2C16008963AA /* day09.swift in Sources */,
 				029DBFD8276E2C16008963AA /* day17.swift in Sources */,
+				023F5DFD2965ABAA00CCA0E5 /* day23.swift in Sources */,
 				029DBFD9276E2C16008963AA /* day14.swift in Sources */,
 				029DBF69275EAE69008963AA /* day04.swift in Sources */,
 				029DBFDD276E2C16008963AA /* day13.swift in Sources */,
