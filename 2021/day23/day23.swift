@@ -9,7 +9,7 @@ import Foundation
 
 
 final class Day23: AOCDay {
-    enum Amphipod: Character {
+    enum Amphipod: Character, Equatable {
         case amber = "A"
         case bronze = "B"
         case copper = "C"
@@ -80,6 +80,26 @@ final class Day23: AOCDay {
                 return [(to: .firstRight, steps: 1)]
             }
         }
+        
+        var isInMainRoom: Bool {
+            return rawValue <= Position.secondDesert.rawValue
+        }
+        
+        var currentDestination: Int? {
+            return isInMainRoom ? rawValue / 2 : nil
+        }
+        
+        var isInFirstRoomOfMain: Bool {
+            return isInMainRoom && (rawValue % 2 == 0)
+        }
+        
+        var isInSecondRoomOfMain: Bool {
+            return isInMainRoom && (rawValue % 2 == 1)
+        }
+        
+        func offset(_ o: Int) -> Position? {
+            return Position(rawValue: rawValue + o)
+        }
     }
     
     struct Burrow: CustomStringConvertible {
@@ -135,10 +155,8 @@ final class Day23: AOCDay {
         return Burrow(cells: newCells)
     }
     
-    func allMoves(from burrow: Burrow, pos: Position) -> [Move] {
+    func reachablePositions(from burrow: Burrow, starting pos: Position) -> [Route] {
         var available = [Route]()
-        
-        // This is all wrong, we need to respect all the conditions
         
         var queue = pos.linked.map { [$0] }
         while !queue.isEmpty {
@@ -151,9 +169,42 @@ final class Day23: AOCDay {
             
             queue.remove(at: 0)
         }
-        return available.map { item in
-            (burrow: nextBurrow(from: burrow, moving: pos, to: item.to), cost: item.steps)
+        return available
+    }
+    
+    func allMoves(from burrow: Burrow, pos: Position) -> [Move] {
+        let amphipod = burrow.cells[pos]!
+        
+        var routes = [Route]()
+        if pos.isInMainRoom {
+            // Already in correct position
+            if amphipod.destination == pos.currentDestination
+                && (pos.isInSecondRoomOfMain || burrow.cells[pos.offset(1)!] == amphipod) {
+                return []
+            }
+            routes = reachablePositions(from: burrow, starting: pos)
         }
+        // Is in a side room, can only go to destination
+        else {
+            routes = reachablePositions(from: burrow, starting: pos).filter { route in
+                return route.to.currentDestination == amphipod.destination
+                    && (route.to.isInSecondRoomOfMain || burrow.cells[route.to.offset(1)!] == amphipod)
+            }
+        }
+        
+        return routes
+            .sorted(by: { lhs, rhs in
+                if lhs.to.currentDestination == amphipod.destination {
+                    return true
+                }
+                else if rhs.to.currentDestination == amphipod.destination {
+                    return false
+                }
+                return lhs.steps > rhs.steps
+            })
+            .map { route in
+                return (burrow: nextBurrow(from: burrow, moving: pos, to: route.to), cost: route.steps)
+            }
     }
     
     func resolve(burrow: Burrow, currentCost: Int, memo: Memo) -> Int {
