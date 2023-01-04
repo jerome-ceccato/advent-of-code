@@ -24,38 +24,90 @@ final class Day23: AOCDay {
         }
     }
     
-    struct Room {
-        var first: Amphipod?
-        var second: Amphipod?
+    typealias Route = (to: Position, steps: Int)
+    
+    enum Position: Int, Equatable {
+        case firstAmber
+        case secondAmber
+        case firstBronze
+        case secondBronze
+        case firstCopper
+        case secondCopper
+        case firstDesert
+        case secondDesert
         
-        static func empty() -> Room {
-            Room(first: nil, second: nil)
+        case secondLeft
+        case firstLeft
+        
+        case firstHallway
+        case secondHallway
+        case thirdHallway
+        
+        case firstRight
+        case secondRight
+        
+        var linked: [Route] {
+            switch self {
+            case .firstAmber:
+                return [(to: .secondLeft, steps: 2), (to: .firstHallway, steps: 2)]
+            case .secondAmber:
+                return [(to: .firstAmber, steps: 1)]
+            case .firstBronze:
+                return [(to: .firstHallway, steps: 2), (to: .secondHallway, steps: 2)]
+            case .secondBronze:
+                return [(to: .firstBronze, steps: 1)]
+            case .firstCopper:
+                return [(to: .secondHallway, steps: 2), (to: .thirdHallway, steps: 2)]
+            case .secondCopper:
+                return [(to: .firstCopper, steps: 1)]
+            case .firstDesert:
+                return [(to: .thirdHallway, steps: 2), (to: .firstRight, steps: 2)]
+            case .secondDesert:
+                return [(to: .firstDesert, steps: 1)]
+            case .secondLeft:
+                return [(to: .firstLeft, steps: 1)]
+            case .firstLeft:
+                return [(to: .firstAmber, steps: 2), (to: .firstHallway, steps: 2)]
+            case .firstHallway:
+                return [(to: .firstAmber, steps: 2), (to: .firstBronze, steps: 2), (to: .firstLeft, steps: 2), (to: .secondHallway, steps: 2)]
+            case .secondHallway:
+                return [(to: .firstBronze, steps: 2), (to: .firstCopper, steps: 2), (to: .firstHallway, steps: 2), (to: .thirdHallway, steps: 2)]
+            case .thirdHallway:
+                return [(to: .firstCopper, steps: 2), (to: .firstDesert, steps: 2), (to: .secondHallway, steps: 2), (to: .firstRight, steps: 2)]
+            case .firstRight:
+                return [(to: .firstDesert, steps: 2), (to: .thirdHallway, steps: 2)]
+            case .secondRight:
+                return [(to: .firstRight, steps: 1)]
+            }
         }
     }
     
     struct Burrow: CustomStringConvertible {
-        let left: Room
-        let right: Room
+        let cells: [Position: Amphipod]
         
-        let main: [Room]
-        let hallway: [Amphipod?]
+        init(main: [(first: Amphipod, second: Amphipod)]) {
+            var items = [Position: Amphipod]()
+            main.enumerated().forEach { index, elements in
+                items[Position(rawValue: index * 2)!] = elements.first
+                items[Position(rawValue: index * 2 + 1)!] = elements.second
+            }
+            self.cells = items
+        }
         
-        init(main: [Room]) {
-            self.left = .empty()
-            self.right = .empty()
-            self.main = main
-            self.hallway = [nil, nil, nil]
+        init(cells: [Position: Amphipod]) {
+            self.cells = cells
+        }
+        
+        private func char(at pos: Position) -> Character {
+            cells[pos].map { $0.rawValue } ?? "."
         }
         
         var description: String {
-            let pod: (Amphipod?) -> Character = { a in
-                a.map { $0.rawValue } ?? "."
-            }
             let lines = [
                 "#############",
-                "#\(pod(left.second))\(pod(left.first)).\(pod(hallway[0])).\(pod(hallway[1])).\(pod(hallway[2])).\(pod(right.first))\(pod(right.second))#",
-                "###\(pod(main[0].first))#\(pod(main[1].first))#\(pod(main[2].first))#\(pod(main[3].first))###",
-                "  #\(pod(main[0].second))#\(pod(main[1].second))#\(pod(main[2].second))#\(pod(main[3].second))#",
+                "#\(char(at: .secondLeft))\(char(at: .firstLeft)).\(char(at: .firstHallway)).\(char(at: .secondHallway)).\(char(at: .thirdHallway)).\(char(at: .firstRight))\(char(at: .secondRight))#",
+                "###\(char(at: .firstAmber))#\(char(at: .firstBronze))#\(char(at: .firstCopper))#\(char(at: .firstDesert))###",
+                "  #\(char(at: .secondAmber))#\(char(at: .secondBronze))#\(char(at: .secondCopper))#\(char(at: .secondDesert))#",
                 "  #########"
             ]
 
@@ -63,12 +115,10 @@ final class Day23: AOCDay {
         }
         
         var isSolved: Bool {
-            return !(0 ..< 4).contains(where: { x in
-                if let first = main[x].first, let second = main[x].second {
-                    return first.destination != x || second.destination != x
-                }
-                return false
-            })
+            return cells[.firstAmber] == .amber && cells[.secondAmber] == .amber
+            && cells[.firstBronze] == .bronze && cells[.secondBronze] == .bronze
+            && cells[.firstCopper] == .copper && cells[.secondCopper] == .copper
+            && cells[.firstDesert] == .desert && cells[.secondDesert] == .desert
         }
     }
     
@@ -76,12 +126,34 @@ final class Day23: AOCDay {
         var best: Int = Int.max
     }
     
-    func availableAmphipods(from burrow: Burrow) -> [Amphipod] {
-        return []
+    typealias Move = (burrow: Burrow, cost: Int)
+    
+    func nextBurrow(from burrow: Burrow, moving from: Position, to: Position) -> Burrow {
+        var newCells = burrow.cells
+        newCells[to] = newCells[from]
+        newCells.removeValue(forKey: from)
+        return Burrow(cells: newCells)
     }
     
-    func allMoves(from burrow: Burrow, amphipod: Amphipod) -> [(Burrow, Int)] {
-        return []
+    func allMoves(from burrow: Burrow, pos: Position) -> [Move] {
+        var available = [Route]()
+        
+        // This is all wrong, we need to respect all the conditions
+        
+        var queue = pos.linked.map { [$0] }
+        while !queue.isEmpty {
+            let item = queue.first!
+            
+            if burrow.cells[item.last!.to] == nil, !available.contains(where: { $0.to == item.last!.to }) {
+                available.append((to: item.last!.to, steps: item.reduce(0, { $0 + $1.steps })))
+                queue.append(contentsOf: item.last!.to.linked.map { item + [$0] })
+            }
+            
+            queue.remove(at: 0)
+        }
+        return available.map { item in
+            (burrow: nextBurrow(from: burrow, moving: pos, to: item.to), cost: item.steps)
+        }
     }
     
     func resolve(burrow: Burrow, currentCost: Int, memo: Memo) -> Int {
@@ -91,30 +163,32 @@ final class Day23: AOCDay {
         
         if burrow.isSolved {
             memo.best = currentCost
+            print("!!!!!")
             return currentCost
         }
         
-        let pods = availableAmphipods(from: burrow)
-        for pod in pods {
-            let possibilities = allMoves(from: burrow, amphipod: pod)
-        }
+        print(currentCost)
+        //print(burrow)
         
-        return Int.max
+        return burrow.cells.keys.map { pos in
+            let possibilities = allMoves(from: burrow, pos: pos)
+            return possibilities.map { move in
+                resolve(burrow: move.burrow, currentCost: currentCost + move.cost, memo: memo)
+            }.min() ?? Int.max
+        }.min() ?? Int.max
     }
     
     func parseInput(_ raw: String) -> Burrow {
         let lines = raw.components(separatedBy: "\n")
         let rooms = [3, 5, 7, 9].map { x in
-            Room(first: Amphipod(rawValue: lines[2][x]), second: Amphipod(rawValue: lines[3][x]))
+            (first: Amphipod(rawValue: lines[2][x])!, second: Amphipod(rawValue: lines[3][x])!)
         }
         return Burrow(main: rooms)
     }
     
     func part1(rawInput: String) -> CustomStringConvertible {
         let burrow = parseInput(rawInput)
-        
-        print(burrow)
-        return 0
+        return resolve(burrow: burrow, currentCost: 0, memo: Memo())
     }
     
     func part2(rawInput: String) -> CustomStringConvertible {
