@@ -27,12 +27,23 @@ final class Day23: AOCDay {
     enum Position: Int, Equatable {
         case firstAmber
         case secondAmber
+        case thirdAmber
+        case fourthAmber
+        
         case firstBronze
         case secondBronze
+        case thirdBronze
+        case fourthBronze
+        
         case firstCopper
         case secondCopper
+        case thirdCopper
+        case fourthCopper
+        
         case firstDesert
         case secondDesert
+        case thirdDesert
+        case fourthDesert
         
         case secondLeft
         case firstLeft
@@ -49,19 +60,35 @@ final class Day23: AOCDay {
             case .firstAmber:
                 return [(to: .secondLeft, steps: 2), (to: .firstHallway, steps: 2), (to: .secondAmber, steps: 1)]
             case .secondAmber:
-                return [(to: .firstAmber, steps: 1)]
+                return [(to: .firstAmber, steps: 1), (to: .thirdAmber, steps: 1)]
+            case .thirdAmber:
+                return [(to: .secondAmber, steps: 1), (to: .fourthAmber, steps: 1)]
+            case .fourthAmber:
+                return [(to: .thirdAmber, steps: 1)]
             case .firstBronze:
                 return [(to: .firstHallway, steps: 2), (to: .secondHallway, steps: 2), (to: .secondBronze, steps: 1)]
             case .secondBronze:
-                return [(to: .firstBronze, steps: 1)]
+                return [(to: .firstBronze, steps: 1), (to: .thirdBronze, steps: 1)]
+            case .thirdBronze:
+                return [(to: .secondBronze, steps: 1), (to: .fourthBronze, steps: 1)]
+            case .fourthBronze:
+                return [(to: .thirdBronze, steps: 1)]
             case .firstCopper:
                 return [(to: .secondHallway, steps: 2), (to: .thirdHallway, steps: 2), (to: .secondCopper, steps: 1)]
             case .secondCopper:
-                return [(to: .firstCopper, steps: 1)]
+                return [(to: .firstCopper, steps: 1), (to: .thirdCopper, steps: 1)]
+            case .thirdCopper:
+                return [(to: .secondCopper, steps: 1), (to: .fourthCopper, steps: 1)]
+            case .fourthCopper:
+                return [(to: .thirdCopper, steps: 1)]
             case .firstDesert:
                 return [(to: .thirdHallway, steps: 2), (to: .firstRight, steps: 2), (to: .secondDesert, steps: 1)]
             case .secondDesert:
-                return [(to: .firstDesert, steps: 1)]
+                return [(to: .firstDesert, steps: 1), (to: .thirdDesert, steps: 1)]
+            case .thirdDesert:
+                return [(to: .secondDesert, steps: 1), (to: .fourthDesert, steps: 1)]
+            case .fourthDesert:
+                return [(to: .thirdDesert, steps: 1)]
             case .secondLeft:
                 return [(to: .firstLeft, steps: 1)]
             case .firstLeft:
@@ -80,19 +107,15 @@ final class Day23: AOCDay {
         }
         
         var isInMainRoom: Bool {
-            return rawValue <= Position.secondDesert.rawValue
+            return rawValue <= Position.fourthDesert.rawValue
         }
         
         var currentDestination: Int? {
-            return isInMainRoom ? rawValue / 2 : nil
+            return isInMainRoom ? rawValue / 4 : nil
         }
         
-        var isInFirstRoomOfMain: Bool {
-            return isInMainRoom && (rawValue % 2 == 0)
-        }
-        
-        var isInSecondRoomOfMain: Bool {
-            return isInMainRoom && (rawValue % 2 == 1)
+        var nextInRoom: [Position] {
+            return ((rawValue % 4 + 1) ..< 4).compactMap { Position(rawValue: ((rawValue / 4) * 4) + $0) }
         }
         
         func offset(_ o: Int) -> Position? {
@@ -103,11 +126,43 @@ final class Day23: AOCDay {
     struct Burrow: Hashable, CustomStringConvertible {
         let cells: [Position: Amphipod]
         
-        init(main: [(first: Amphipod, second: Amphipod)]) {
+        static let extraItemsFolded: [Position: Amphipod] = [
+            .secondAmber: .desert,
+            .thirdAmber: .desert,
+            .secondBronze: .copper,
+            .thirdBronze: .bronze,
+            .secondCopper: .bronze,
+            .thirdCopper: .amber,
+            .secondDesert: .amber,
+            .thirdDesert: .copper,
+        ]
+        
+        static let extraItemsFill: [Position: Amphipod] = [
+            .thirdAmber: .amber,
+            .fourthAmber: .amber,
+            .thirdBronze: .bronze,
+            .fourthBronze: .bronze,
+            .thirdCopper: .copper,
+            .fourthCopper: .copper,
+            .thirdDesert: .desert,
+            .fourthDesert: .desert,
+        ]
+        
+        init(main: [(first: Amphipod, second: Amphipod)], folded: Bool) {
             var items = [Position: Amphipod]()
             main.enumerated().forEach { index, elements in
-                items[Position(rawValue: index * 2)!] = elements.first
-                items[Position(rawValue: index * 2 + 1)!] = elements.second
+                items[Position(rawValue: index * 4)!] = elements.first
+                items[Position(rawValue: index * 4 + (folded ? 3 : 1))!] = elements.second
+            }
+            
+            if folded {
+                for (p, a) in Burrow.extraItemsFolded {
+                    items[p] = a
+                }
+            } else {
+                for (p, a) in Burrow.extraItemsFill {
+                    items[p] = a
+                }
             }
             self.cells = items
         }
@@ -127,6 +182,8 @@ final class Day23: AOCDay {
                 "#\(char(at: .secondLeft))\(char(at: .firstLeft)).\(char(at: .firstHallway)).\(char(at: .secondHallway)).\(char(at: .thirdHallway)).\(char(at: .firstRight))\(char(at: .secondRight))#",
                 "###\(char(at: .firstAmber))#\(char(at: .firstBronze))#\(char(at: .firstCopper))#\(char(at: .firstDesert))###",
                 "  #\(char(at: .secondAmber))#\(char(at: .secondBronze))#\(char(at: .secondCopper))#\(char(at: .secondDesert))#",
+                "  #\(char(at: .thirdAmber))#\(char(at: .thirdBronze))#\(char(at: .thirdCopper))#\(char(at: .thirdDesert))#",
+                "  #\(char(at: .fourthAmber))#\(char(at: .fourthBronze))#\(char(at: .fourthCopper))#\(char(at: .fourthDesert))#",
                 "  #########",
                 "",
             ]
@@ -135,10 +192,21 @@ final class Day23: AOCDay {
         }
         
         var isSolved: Bool {
-            return cells[.firstAmber] == .amber && cells[.secondAmber] == .amber
-            && cells[.firstBronze] == .bronze && cells[.secondBronze] == .bronze
-            && cells[.firstCopper] == .copper && cells[.secondCopper] == .copper
-            && cells[.firstDesert] == .desert && cells[.secondDesert] == .desert
+            let expected: [Amphipod: [Position]] = [
+                .amber: [.firstAmber, .secondAmber, .thirdAmber, .fourthAmber],
+                .bronze: [.firstBronze, .secondBronze, .thirdBronze, .fourthBronze],
+                .copper: [.firstCopper, .secondCopper, .thirdCopper, .fourthCopper],
+                .desert: [.firstDesert, .secondDesert, .thirdDesert, .fourthDesert],
+            ]
+            
+            for (amphipod, positions) in expected {
+                for pos in positions {
+                    if cells[pos] != amphipod {
+                        return false
+                    }
+                }
+            }
+            return true
         }
     }
     
@@ -176,14 +244,25 @@ final class Day23: AOCDay {
         return available
     }
     
+    func mainRoomPosition(_ pos: Position, isCorrectForAmphipod amphipod: Amphipod, in burrow: Burrow) -> Bool {
+        if pos.isInMainRoom, amphipod.destination == pos.currentDestination {
+            for next in pos.nextInRoom {
+                if burrow.cells[next] != amphipod {
+                    return false
+                }
+            }
+            return true
+        }
+        return false
+    }
+    
     func allowedNextPositions(from burrow: Burrow, starting pos: Position, sideRoomsAllowed: Bool) -> [Route] {
         let amphipod = burrow.cells[pos]!
         
         return reachablePositions(from: burrow, starting: pos).filter { route in
             if route.to.isInMainRoom {
                 // Can only go to their dedicated main room, can't block another pod who needs to move
-                return route.to.currentDestination == amphipod.destination
-                    && (route.to.isInSecondRoomOfMain || burrow.cells[route.to.offset(1)!] == amphipod)
+                return mainRoomPosition(route.to, isCorrectForAmphipod: amphipod, in: burrow)
             } else {
                 return sideRoomsAllowed
             }
@@ -196,8 +275,7 @@ final class Day23: AOCDay {
         var routes = [Route]()
         if pos.isInMainRoom {
             // Already in correct position
-            if amphipod.destination == pos.currentDestination
-                && (pos.isInSecondRoomOfMain || burrow.cells[pos.offset(1)!] == amphipod) {
+            if mainRoomPosition(pos, isCorrectForAmphipod: amphipod, in: burrow) {
                 return []
             }
             routes = allowedNextPositions(from: burrow, starting: pos, sideRoomsAllowed: true)
@@ -232,7 +310,6 @@ final class Day23: AOCDay {
             
             if current.currentCost < memo.best {
                 if current.burrow.isSolved {
-                    print("-> \(current.currentCost)")
                     memo.best = current.currentCost
                 } else {
                     let possibilities = current.burrow.cells.keys.flatMap { pos in
@@ -247,31 +324,21 @@ final class Day23: AOCDay {
         return memo.best
     }
     
-    func parseInput(_ raw: String) -> Burrow {
+    func parseInput(_ raw: String, extraFold: Bool) -> Burrow {
         let lines = raw.components(separatedBy: "\n")
         let rooms = [3, 5, 7, 9].map { x in
             (first: Amphipod(rawValue: lines[2][x])!, second: Amphipod(rawValue: lines[3][x])!)
         }
-        return Burrow(main: rooms)
+        return Burrow(main: rooms, folded: extraFold)
     }
     
     func part1(rawInput: String) -> CustomStringConvertible {
-        let burrow = parseInput(rawInput)
-        
-        /*
-        burrow = nextBurrow(from: burrow, moving: .firstCopper, to: .firstHallway)
-        burrow = nextBurrow(from: burrow, moving: .firstBronze, to: .firstCopper)
-        burrow = nextBurrow(from: burrow, moving: .secondBronze, to: .secondHallway)
-        burrow = nextBurrow(from: burrow, moving: .firstHallway, to: .secondBronze)
-        burrow = nextBurrow(from: burrow, moving: .firstAmber, to: .firstBronze)
-        print(reachablePositions(from: burrow, starting: .firstAmber))
-*/
-        print(burrow)
-        
+        let burrow = parseInput(rawInput, extraFold: false)
         return resolve(burrow: burrow)
     }
     
     func part2(rawInput: String) -> CustomStringConvertible {
-        return 0
+        let burrow = parseInput(rawInput, extraFold: true)
+        return resolve(burrow: burrow)
     }
 }
