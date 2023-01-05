@@ -24,8 +24,6 @@ final class Day23: AOCDay {
         }
     }
     
-    typealias Route = (to: Position, steps: Int)
-    
     enum Position: Int, Equatable {
         case firstAmber
         case secondAmber
@@ -49,25 +47,25 @@ final class Day23: AOCDay {
         var linked: [Route] {
             switch self {
             case .firstAmber:
-                return [(to: .secondLeft, steps: 2), (to: .firstHallway, steps: 2)]
+                return [(to: .secondLeft, steps: 2), (to: .firstHallway, steps: 2), (to: .secondAmber, steps: 1)]
             case .secondAmber:
                 return [(to: .firstAmber, steps: 1)]
             case .firstBronze:
-                return [(to: .firstHallway, steps: 2), (to: .secondHallway, steps: 2)]
+                return [(to: .firstHallway, steps: 2), (to: .secondHallway, steps: 2), (to: .secondBronze, steps: 1)]
             case .secondBronze:
                 return [(to: .firstBronze, steps: 1)]
             case .firstCopper:
-                return [(to: .secondHallway, steps: 2), (to: .thirdHallway, steps: 2)]
+                return [(to: .secondHallway, steps: 2), (to: .thirdHallway, steps: 2), (to: .secondCopper, steps: 1)]
             case .secondCopper:
                 return [(to: .firstCopper, steps: 1)]
             case .firstDesert:
-                return [(to: .thirdHallway, steps: 2), (to: .firstRight, steps: 2)]
+                return [(to: .thirdHallway, steps: 2), (to: .firstRight, steps: 2), (to: .secondDesert, steps: 1)]
             case .secondDesert:
                 return [(to: .firstDesert, steps: 1)]
             case .secondLeft:
                 return [(to: .firstLeft, steps: 1)]
             case .firstLeft:
-                return [(to: .firstAmber, steps: 2), (to: .firstHallway, steps: 2)]
+                return [(to: .firstAmber, steps: 2), (to: .firstHallway, steps: 2), (to: .secondLeft, steps: 1)]
             case .firstHallway:
                 return [(to: .firstAmber, steps: 2), (to: .firstBronze, steps: 2), (to: .firstLeft, steps: 2), (to: .secondHallway, steps: 2)]
             case .secondHallway:
@@ -75,7 +73,7 @@ final class Day23: AOCDay {
             case .thirdHallway:
                 return [(to: .firstCopper, steps: 2), (to: .firstDesert, steps: 2), (to: .secondHallway, steps: 2), (to: .firstRight, steps: 2)]
             case .firstRight:
-                return [(to: .firstDesert, steps: 2), (to: .thirdHallway, steps: 2)]
+                return [(to: .firstDesert, steps: 2), (to: .thirdHallway, steps: 2), (to: .secondRight, steps: 1)]
             case .secondRight:
                 return [(to: .firstRight, steps: 1)]
             }
@@ -102,7 +100,7 @@ final class Day23: AOCDay {
         }
     }
     
-    struct Burrow: CustomStringConvertible {
+    struct Burrow: Hashable, CustomStringConvertible {
         let cells: [Position: Amphipod]
         
         init(main: [(first: Amphipod, second: Amphipod)]) {
@@ -124,11 +122,13 @@ final class Day23: AOCDay {
         
         var description: String {
             let lines = [
+                "",
                 "#############",
                 "#\(char(at: .secondLeft))\(char(at: .firstLeft)).\(char(at: .firstHallway)).\(char(at: .secondHallway)).\(char(at: .thirdHallway)).\(char(at: .firstRight))\(char(at: .secondRight))#",
                 "###\(char(at: .firstAmber))#\(char(at: .firstBronze))#\(char(at: .firstCopper))#\(char(at: .firstDesert))###",
                 "  #\(char(at: .secondAmber))#\(char(at: .secondBronze))#\(char(at: .secondCopper))#\(char(at: .secondDesert))#",
-                "  #########"
+                "  #########",
+                "",
             ]
 
             return lines.joined(separator: "\n")
@@ -142,11 +142,14 @@ final class Day23: AOCDay {
         }
     }
     
-    class Memo {
-        var best: Int = Int.max
-    }
-    
+    typealias Route = (to: Position, steps: Int)
     typealias Move = (burrow: Burrow, cost: Int)
+    typealias State = (burrow: Burrow, currentCost: Int)
+    
+    class Memo {
+        var best = Int.max
+        var lowestCostToState = [Burrow: Int]()
+    }
     
     func nextBurrow(from burrow: Burrow, moving from: Position, to: Position) -> Burrow {
         var newCells = burrow.cells
@@ -161,15 +164,30 @@ final class Day23: AOCDay {
         var queue = pos.linked.map { [$0] }
         while !queue.isEmpty {
             let item = queue.first!
+            let last = item.last!
             
-            if burrow.cells[item.last!.to] == nil, !available.contains(where: { $0.to == item.last!.to }) {
-                available.append((to: item.last!.to, steps: item.reduce(0, { $0 + $1.steps })))
-                queue.append(contentsOf: item.last!.to.linked.map { item + [$0] })
+            if burrow.cells[last.to] == nil, !available.contains(where: { $0.to == last.to }) {
+                available.append((to: last.to, steps: item.reduce(0, { $0 + $1.steps })))
+                queue.append(contentsOf: last.to.linked.map { item + [$0] })
             }
             
             queue.remove(at: 0)
         }
         return available
+    }
+    
+    func allowedNextPositions(from burrow: Burrow, starting pos: Position, sideRoomsAllowed: Bool) -> [Route] {
+        let amphipod = burrow.cells[pos]!
+        
+        return reachablePositions(from: burrow, starting: pos).filter { route in
+            if route.to.isInMainRoom {
+                // Can only go to their dedicated main room, can't block another pod who needs to move
+                return route.to.currentDestination == amphipod.destination
+                    && (route.to.isInSecondRoomOfMain || burrow.cells[route.to.offset(1)!] == amphipod)
+            } else {
+                return sideRoomsAllowed
+            }
+        }
     }
     
     func allMoves(from burrow: Burrow, pos: Position) -> [Move] {
@@ -182,51 +200,51 @@ final class Day23: AOCDay {
                 && (pos.isInSecondRoomOfMain || burrow.cells[pos.offset(1)!] == amphipod) {
                 return []
             }
-            routes = reachablePositions(from: burrow, starting: pos)
+            routes = allowedNextPositions(from: burrow, starting: pos, sideRoomsAllowed: true)
         }
         // Is in a side room, can only go to destination
         else {
-            routes = reachablePositions(from: burrow, starting: pos).filter { route in
-                return route.to.currentDestination == amphipod.destination
-                    && (route.to.isInSecondRoomOfMain || burrow.cells[route.to.offset(1)!] == amphipod)
-            }
+            routes = allowedNextPositions(from: burrow, starting: pos, sideRoomsAllowed: false)
         }
         
         return routes
-            .sorted(by: { lhs, rhs in
-                if lhs.to.currentDestination == amphipod.destination {
-                    return true
-                }
-                else if rhs.to.currentDestination == amphipod.destination {
-                    return false
-                }
-                return lhs.steps > rhs.steps
+            .sorted(by: { a, b in
+                a.to.rawValue < b.to.rawValue // Try to go to the main room first, if possible
             })
             .map { route in
-                return (burrow: nextBurrow(from: burrow, moving: pos, to: route.to), cost: route.steps)
+                return (burrow: nextBurrow(from: burrow, moving: pos, to: route.to), cost: route.steps * amphipod.cost)
             }
     }
     
-    func resolve(burrow: Burrow, currentCost: Int, memo: Memo) -> Int {
-        if currentCost > memo.best {
-            return memo.best
+    func resolve(burrow original: Burrow) -> Int {
+        let memo = Memo()
+        var stack: [State] = [(burrow: original, currentCost: 0)]
+        
+        while !stack.isEmpty {
+            let current = stack.popLast()!
+            
+            if let cached = memo.lowestCostToState[current.burrow], cached <= current.currentCost {
+                // Ignore if we've already found a faster way to get to this state
+                continue
+            } else {
+                memo.lowestCostToState[current.burrow] = current.currentCost
+            }
+            
+            if current.currentCost < memo.best {
+                if current.burrow.isSolved {
+                    print("-> \(current.currentCost)")
+                    memo.best = current.currentCost
+                } else {
+                    let possibilities = current.burrow.cells.keys.flatMap { pos in
+                        allMoves(from: current.burrow, pos: pos)
+                    }
+                    stack.append(contentsOf: possibilities.map({ route in
+                        (burrow: route.burrow, currentCost: current.currentCost + route.cost)
+                    }))
+                }
+            }
         }
-        
-        if burrow.isSolved {
-            memo.best = currentCost
-            print("!!!!!")
-            return currentCost
-        }
-        
-        print(currentCost)
-        //print(burrow)
-        
-        return burrow.cells.keys.map { pos in
-            let possibilities = allMoves(from: burrow, pos: pos)
-            return possibilities.map { move in
-                resolve(burrow: move.burrow, currentCost: currentCost + move.cost, memo: memo)
-            }.min() ?? Int.max
-        }.min() ?? Int.max
+        return memo.best
     }
     
     func parseInput(_ raw: String) -> Burrow {
@@ -239,7 +257,18 @@ final class Day23: AOCDay {
     
     func part1(rawInput: String) -> CustomStringConvertible {
         let burrow = parseInput(rawInput)
-        return resolve(burrow: burrow, currentCost: 0, memo: Memo())
+        
+        /*
+        burrow = nextBurrow(from: burrow, moving: .firstCopper, to: .firstHallway)
+        burrow = nextBurrow(from: burrow, moving: .firstBronze, to: .firstCopper)
+        burrow = nextBurrow(from: burrow, moving: .secondBronze, to: .secondHallway)
+        burrow = nextBurrow(from: burrow, moving: .firstHallway, to: .secondBronze)
+        burrow = nextBurrow(from: burrow, moving: .firstAmber, to: .firstBronze)
+        print(reachablePositions(from: burrow, starting: .firstAmber))
+*/
+        print(burrow)
+        
+        return resolve(burrow: burrow)
     }
     
     func part2(rawInput: String) -> CustomStringConvertible {
