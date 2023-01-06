@@ -43,10 +43,10 @@ All problems were solved in [Swift](https://en.wikipedia.org/wiki/Swift_(program
 | [Day 06](./2021/day06/day06.swift) | [Day 07](./2021/day07/day07.swift) | [Day 08](./2021/day08/day08.swift) | [Day 09](./2021/day09/day09.swift) | [Day 10](./2021/day10/day10.swift) |
 | [Day 11](./2021/day11/day11.swift) | [Day 12](./2021/day12/day12.swift) | [Day 13](./2021/day13/day13.swift) | [Day 14](./2021/day14/day14.swift) | [Day 15](./2021/day15/day15.swift) |
 | [Day 16](./2021/day16/day16.swift) | [Day 17](./2021/day17/day17.swift) | [Day 18](./2021/day18/day18.swift) | [Day 19](./2021/day19/day19.swift) | [Day 20](./2021/day20/day20.swift) |
-| [Day 21](./2021/day21/day21.swift) | [Day 22](./2021/day22/day22.swift) | [Day 23](./2021/day23/day23.swift) |                                    |                                    |
+| [Day 21](./2021/day21/day21.swift) | [Day 22](./2021/day22/day22.swift) | [Day 23](./2021/day23/day23.swift) | [Day 24](./2021/day24/day24.swift) | [Day 25](./2021/day25/day25.swift) |
 
 In 2021, I only finished part 1 of Day 22 and stopped there.
-
+I completed this year after doing AoC 2022.
 
 
 ## 2018
