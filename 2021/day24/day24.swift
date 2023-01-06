@@ -86,122 +86,96 @@ final class Day24: AOCDay {
     }
     
     class Memo {
-        var tested: Set<String> = Set()
+        var tested = [String: Int]()
         
         func identifier(for alu: ALU, instructions: Int) -> String {
             return alu.registries.map { String($0) }.joined(separator: "-") + "-\(instructions)"
         }
     }
     
-    func input(alu: ALU, into: Registry, current: [Int], instructions: [Instruction], memo: Memo) -> [Int]? {
+    func input(alu: ALU, into: Registry, current: [Int], instructions: [Instruction], memo: Memo, reversed: Bool) -> [Int]? {
         var alu = alu
-        if current.count <= 3 {
-            print("input \(current)")
+        
+        // Cleanup the least used elements of the memo so it doesn't quickly become unmanageable
+        if current.count == 3 {
+            for key in memo.tested.keys {
+                if memo.tested[key]! < 3 {
+                    memo.tested.removeValue(forKey: key)
+                }
+            }
         }
-        for input in (1 ... 9).reversed() {
+        
+        let range = reversed ? Array((1 ... 9).reversed()) : Array(1 ... 9)
+        for input in range {
             alu.registries[into.rawValue] = input
-            if let res = resolve(alu: alu, instructions: instructions, current: current + [input], memo: memo) {
+            if let res = resolve(alu: alu, instructions: instructions, current: current + [input], memo: memo, reversed: reversed) {
                 return res
             }
         }
         return nil
     }
     
-    func resolve(alu: ALU, instructions: [Instruction], current: [Int], memo: Memo) -> [Int]? {
+    enum ExecutionState: Equatable {
+        case ok
+        case invalid
+        case input(into: Registry)
+    }
+    
+    func execute(instruction: Instruction, in alu: inout ALU) -> ExecutionState {
+        switch instruction {
+        case .input(let into):
+            return .input(into: into)
+        case .add(let left, let right):
+            alu.registries[left.rawValue] += right.get(with: alu.registries)
+        case .mul(let left, let right):
+            alu.registries[left.rawValue] *= right.get(with: alu.registries)
+        case .div(let left, let right):
+            if right.get(with: alu.registries) == 0 {
+                return .invalid
+            }
+            alu.registries[left.rawValue] /= right.get(with: alu.registries)
+        case .mod(let left, let right):
+            if alu.registries[left.rawValue] < 0 || right.get(with: alu.registries) <= 0 {
+                return .invalid
+            }
+            alu.registries[left.rawValue] %= right.get(with: alu.registries)
+        case .equal(let left, let right):
+            alu.registries[left.rawValue] = alu.registries[left.rawValue] == right.get(with: alu.registries) ? 1 : 0
+        }
+        return .ok
+    }
+    
+    func resolve(alu: ALU, instructions: [Instruction], current: [Int], memo: Memo, reversed: Bool) -> [Int]? {
         var alu = alu
-        //print(current)
+
         for (i, instruction) in instructions.enumerated() {
             
             // If we've already encountered this exact pattern, no need to continue
             let identifier = memo.identifier(for: alu, instructions: instructions.count - i)
-            if memo.tested.contains(identifier) {
+            if let hits = memo.tested[identifier] {
+                memo.tested[identifier] = hits + 1
                 return nil
             }
-            memo.tested.insert(identifier)
+            memo.tested[identifier] = 1
             
-            switch instruction {
+            switch execute(instruction: instruction, in: &alu) {
             case .input(let into):
-                return input(alu: alu, into: into, current: current, instructions: Array(instructions[(i + 1)...]), memo: memo)
-            case .add(let left, let right):
-                alu.registries[left.rawValue] += right.get(with: alu.registries)
-            case .mul(let left, let right):
-                alu.registries[left.rawValue] *= right.get(with: alu.registries)
-            case .div(let left, let right):
-                if right.get(with: alu.registries) == 0 {
-                    return nil
-                }
-                alu.registries[left.rawValue] /= right.get(with: alu.registries)
-            case .mod(let left, let right):
-                if alu.registries[left.rawValue] < 0 || right.get(with: alu.registries) <= 0 {
-                    return nil
-                }
-                alu.registries[left.rawValue] %= right.get(with: alu.registries)
-            case .equal(let left, let right):
-                alu.registries[left.rawValue] = alu.registries[left.rawValue] == right.get(with: alu.registries) ? 1 : 0
+                return input(
+                    alu: alu,
+                    into: into,
+                    current: current,
+                    instructions: Array(instructions[(i + 1)...]),
+                    memo: memo,
+                    reversed: reversed
+                )
+            case .invalid:
+                return nil
+            case .ok:
+                break
             }
         }
         
         return alu.registries[Registry.z.rawValue] == 0 ? current : nil
-    }
-    
-    typealias SingleStep = (alus: Set<ALU>, nextInput: Int)
-    func solveOne(alu original: ALU, instructions: [Instruction]) -> SingleStep {
-        guard let first = instructions.first,
-              case let .input(into) = first else { return (alus: Set(), nextInput: -1) }
-        
-        var result = Set<ALU>()
-        var nextInput = -1
-        for input in (1 ... 9).reversed() {
-            var alu = original
-            var valid = true
-            alu.registries[into.rawValue] = input
-            
-        loop: for i in 1 ..< instructions.count {
-                switch instructions[i] {
-                case .input:
-                    nextInput = i
-                    break loop
-                case .add(let left, let right):
-                    alu.registries[left.rawValue] += right.get(with: alu.registries)
-                case .mul(let left, let right):
-                    alu.registries[left.rawValue] *= right.get(with: alu.registries)
-                case .div(let left, let right):
-                    if right.get(with: alu.registries) == 0 {
-                        valid = false
-                        break loop
-                    }
-                    alu.registries[left.rawValue] /= right.get(with: alu.registries)
-                case .mod(let left, let right):
-                    if alu.registries[left.rawValue] < 0 || right.get(with: alu.registries) <= 0 {
-                        valid = false
-                        break loop
-                    }
-                    alu.registries[left.rawValue] %= right.get(with: alu.registries)
-                case .equal(let left, let right):
-                    alu.registries[left.rawValue] = alu.registries[left.rawValue] == right.get(with: alu.registries) ? 1 : 0
-                }
-            }
-            
-            if valid {
-                result.insert(alu)
-            }
-        }
-        
-        return (alus: result, nextInput: nextInput)
-    }
-    
-    func solveStep(from alu: ALU, instructions: [Instruction]) {
-        let step = solveOne(alu: alu, instructions: instructions)
-        //print("from \(alu), \(step.alus.count) steps")
-        if step.alus.count < 9 {
-            print("from \(alu), \(step.alus.count) steps: \(step.alus)")
-        }
-        if step.nextInput > 0 && step.nextInput < instructions.count {
-            let nextInstructions = Array(instructions[step.nextInput...])
-            for next in step.alus {
-                solveStep(from: next, instructions: nextInstructions)
-            }
-        }
     }
     
     func test(seq: [Int], instructions: [Instruction]) -> Bool {
@@ -209,34 +183,22 @@ final class Day24: AOCDay {
         var seqi = 0
 
         for instruction in instructions {
-            switch instruction {
+            switch execute(instruction: instruction, in: &alu) {
             case .input(let into):
                 alu.registries[into.rawValue] = seq[seqi]
                 seqi += 1
-            case .add(let left, let right):
-                alu.registries[left.rawValue] += right.get(with: alu.registries)
-            case .mul(let left, let right):
-                alu.registries[left.rawValue] *= right.get(with: alu.registries)
-            case .div(let left, let right):
-                if right.get(with: alu.registries) == 0 {
-                    return false
-                }
-                alu.registries[left.rawValue] /= right.get(with: alu.registries)
-            case .mod(let left, let right):
-                if alu.registries[left.rawValue] < 0 || right.get(with: alu.registries) <= 0 {
-                    return false
-                }
-                alu.registries[left.rawValue] %= right.get(with: alu.registries)
-            case .equal(let left, let right):
-                alu.registries[left.rawValue] = alu.registries[left.rawValue] == right.get(with: alu.registries) ? 1 : 0
+            case .invalid:
+                return false
+            case .ok:
+                break
             }
         }
         
         return alu.registries[Registry.z.rawValue] == 0
     }
     
-    func findMonad(instructions: [Instruction]) -> [Int] {
-        return resolve(alu: ALU(), instructions: instructions, current: [], memo: Memo())!
+    func findMonad(reversed: Bool, instructions: [Instruction]) -> [Int] {
+        return resolve(alu: ALU(), instructions: instructions, current: [], memo: Memo(), reversed: reversed)!
     }
     
     func parseInput(_ raw: String) -> [Instruction] {
@@ -245,17 +207,13 @@ final class Day24: AOCDay {
 
     func part1(rawInput: String) -> CustomStringConvertible {
         let input = parseInput(rawInput)
-        //[1, 1, 8, 4, 1, 2, 3, 1, 1, 1, 7, 1, 8, 9]
-        // 11841231117189 too low
-        // input [9, 2, 3]
-        //print(test(seq: [1, 1, 8, 4, 1, 2, 3, 1, 1, 1, 7, 1, 8, 9], instructions: input))
-        //return findMonad(instructions: input)
-        solveStep(from: ALU(), instructions: input)
-        return -1
+
+        return findMonad(reversed: true, instructions: input)
     }
 
     func part2(rawInput: String) -> CustomStringConvertible {
-//        let input = parseInput(rawInput)
-        return -1
+        let input = parseInput(rawInput)
+
+        return findMonad(reversed: false, instructions: input)
     }
 }
