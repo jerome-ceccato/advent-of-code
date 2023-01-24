@@ -89,7 +89,7 @@
   (let* ([locked (~>> possibilities (filter (λ (l) (= 1 (length l)))) (flatten))]
          [pass (map (λ (l)
                       (if (= 1 (length l)) l
-                          (filter (λ (fd) (not (member fd locked))) l))) possibilities)])
+                          (filter-not (λ (fd) (member fd locked)) l))) possibilities)])
     (if (= (length locked) (length possibilities))
         locked
         (reduce-possibilities pass))))
