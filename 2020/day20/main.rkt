@@ -3,8 +3,7 @@
 (require threading)
 
 (define tile-size 10)
-(define image-size 3)
-;(define image-size 12)
+(define image-size 12)
 
 (define (vector-reverse v)
   (~> v (vector->list) (reverse) (list->vector)))
@@ -27,8 +26,8 @@
   (vector-map vector-reverse tile))
 
 (define (rotate-once-clockwise tile)
-  (for/vector ([x (in-range tile-size)])
-    (vector-reverse (for/vector ([y (in-range tile-size)])
+  (for/vector ([x (in-range (vector-length tile))])
+    (vector-reverse (for/vector ([y (in-range (vector-length (vector-ref tile 0)))])
                       (vector-ref (vector-ref tile y) x)))))
 
 (define (rotate tile)
@@ -66,41 +65,23 @@
 ; Returns a list of tuples (id, rotated tile) that would fit in the next position
 (define (all-candidates tilemap remaining solved)
   (let* ([all (map (λ (id) (map (λ (tile) (vector id tile)) (all-orientations (hash-ref tilemap id)))) remaining)]
-         ;all -> [[#(id, tile)]]
          [all-flat (map vector->list (flatten all))])
-    ; all-flat -> [(id, tile)]
-    ; filter out the ones that dont match the previous solved tiles (n-1 (left), n-3 (up))
-    ; if no solved tiles, return all
-    ;(printf "all-candidates ~a -> ~a~n" (length remaining) (length (filter (λ (tr) (tile-fits solved (cadr tr))) all-flat)))
     (filter (λ (tr) (tile-fits solved (cadr tr))) all-flat)))
 
 (define (solve-next tilemap remaining solved solved-ids nextref)
   (let ([filtered-remaining (filter (curry (negate equal?) (car nextref)) remaining)]
         [next-solved (append solved (cdr nextref))]
         [next-solved-ids (append solved-ids (list (car nextref)))])
-    ;(printf "adding ~a~n" (car nextref))
-    (solve-rec tilemap filtered-remaining next-solved next-solved-ids)))
+    (solve tilemap filtered-remaining next-solved next-solved-ids)))
 
 ; Tries all possible tiles in each position (as long as they fit)
-(define (solve-rec tilemap remaining solved solved-ids)
-  (printf "solve-rec ~a (~a)~n" (length solved) (length remaining))
-  ; (if (equal? solved (list p1)) (printf ">>> p1, ~a~n" remaining) #f)
-  ; (if (equal? solved (list p1 p2)) (printf ">>> p1 p2~n") #f)
-  ; (if (equal? solved (list p1 p2 p3)) (printf ">>> p1 p2 p3~n") #f)
+(define (solve tilemap [remaining (hash-keys tilemap)] [solved (list)] [solved-ids (list)])
   (if (empty? remaining)
       (list (map string->number solved-ids) solved)
       (for*/first ([tileref (all-candidates tilemap remaining solved)] ;(id, tile)
                    [recur (list (solve-next tilemap remaining solved solved-ids tileref))]
                    #:when recur)
         recur)))
-
-(define (solve tilemap)
-  (solve-rec
-   tilemap
-   (hash-keys tilemap)
-   ;(list "1951" "2311" "3079" "2729" "1427" "2473" "2971" "1489" "1171")
-   (list)
-   (list)))
 
 (define (get-corners result)
   (*
@@ -123,45 +104,49 @@
               (for/list ([x (in-range image-size)])
                 (vector-ref (list-ref result (+ x (* y image-size))) line)))))))
 
-;;;;
+; empty spaces are #t, monster is #f, so we can bitwise-or to test the whole pattern
+; and bitwise-and to remove the sea monster afterwards
+(define sea-monster-mask
+  #(#(#t #t #t #t #t #t #t #t #t #t #t #t #t #t #t #t #t #t #f #t)
+    #(#f #t #t #t #t #f #f #t #t #t #t #f #f #t #t #t #t #f #f #f)
+    #(#t #f #t #t #f #t #t #f #t #t #f #t #t #f #t #t #f #t #t #t)))
 
-(define (print-tile tile)
-  (for-each (λ (line) (for-each (λ (c) (if c (display "#") (display "."))) (vector->list line)) (display "\n")) (vector->list tile)))
+(define (image-count image)
+  (for*/sum ([line image]
+             [pixel line]
+             #:when pixel)
+    1))
+
+(define (remove-sea-monster! image ix iy)
+  (for* ([y (in-range (vector-length sea-monster-mask))]
+         [x (in-range (vector-length (vector-ref sea-monster-mask 0)))])
+    (vector-set! (vector-ref image (+ iy y)) (+ ix x)
+                 (and (vector-ref (vector-ref sea-monster-mask y) x)
+                      (vector-ref (vector-ref image (+ iy y)) (+ ix x)))))
+  image)
+
+(define (sea-monster-at? image ix iy)
+  (for*/and ([y (in-range (vector-length sea-monster-mask))]
+             [x (in-range (vector-length (vector-ref sea-monster-mask 0)))])
+    (or (vector-ref (vector-ref sea-monster-mask y) x)
+        (vector-ref (vector-ref image (+ iy y)) (+ ix x)))))
+
+(define (remove-sea-monsters image)
+  (let ([mut-image (vector-map vector-copy image)])
+    (for* ([y (in-range (- (vector-length image) (vector-length sea-monster-mask)))]
+           [x (in-range (- (vector-length (vector-ref image y)) (vector-length (vector-ref sea-monster-mask 0))))]
+           #:when (sea-monster-at? mut-image x y))
+      (remove-sea-monster! mut-image x y))
+    mut-image))
+
+(define (size-without-sea-monsters og-image)
+  (for*/first ([image (all-orientations og-image)]
+               [result (list (remove-sea-monsters image))]
+               #:when (not (= (image-count image) (image-count result))))
+    (image-count result)))
+
 
 (define solution (~> "input" (read-input) (solve)))
 (printf "part 1: ~a~n" (~> solution (car) (get-corners)))
 (define image (~> solution (cadr) (map remove-borders _) (build-image) (list->vector)))
-;(printf "part 2: ~a~n" (~> solution (cadr) (build-image)))
-;(for-each (lambda (x) (print-tile x) (display "\n")) (cadr solution))
-(print-tile image)
-; (display (get-corners (list 3457 2857 1987 1553 1327 1531 2837 1723 3919 1871 2129 3709 3631 3371 2141 1303 3011 2243 1277 1933 1319 3373 3389 1373 2897 3343 1823 2153 1657
-;                             3989 3571 3089 3701 2749 2221 1013 1783 3323 2039 3221 2659 2131 2969 1493 2887 3929 3673 3229 1367 3001 1579 1753 1619 1831 3931 3313 2909 1171 3767 2549 3209 1879 2677 1609 3331 3539 3583 1901 2113 3623 1747 3137 2503 1481 2953 3739 1973 1217 1031 1613 1439 3449 2029 2417 2593 1237 2389 2803 1861 2357 3163 1123 1489 2791 3607 3643 2963 2399 1361 3329 2699 1979 2267 3079 3253 1423 2707 1429 2621 1117 2633 1907 1249 2683 1699 1129 1103 3319 2833 2089 3191 3251 3217 2477 2081 3917 1997 1549 3119 3491 1741 3049 1093 2269 2789 1321 1193 2333 3907 2971 3347 3187 1789 2111)))
-;(for-each (lambda (x) (print-tile x) (display "\n")) res)
-;(printf "part 2: ~a~n" (~> "input" (read-input) ))
-
-; (define test (read-input "input"))
-; (define p1 (flip-v (hash-ref test "1951")))
-; (define p2 (flip-v (hash-ref test "2311")))
-; (define p3 (hash-ref test "3079"))
-; (define p4 (flip-v (hash-ref test "2729")))
-; (define p5 (flip-v (hash-ref test "1427")))
-; (define p6 (rotate-once-clockwise (flip-h (hash-ref test "2473"))))
-; (define p7 (flip-v (hash-ref test "2971")))
-
-; (print-tile p1)
-; (display "\n")
-; (print-tile p2)
-; (display "\n")
-; (print-tile p3)
-; (display "\n")
-; (print-tile p4)
-; (display "\n")
-; (print-tile p5)
-; (display "\n")
-; (print-tile p6)
-; (display "\n")
-; (print-tile p7)
-
-; (define next (all-candidates test (list "1427" "2473" "2971" "1489" "1171") (list p1 p2 p3 p4)))
-; (printf "test: ~a~n" next)
-; (for-each (lambda (x) (printf "~a:~n" (car x)) (print-tile (cadr x)) (display "\n")) next)
+(printf "part 2: ~a~n" (~> image (size-without-sea-monsters)))
