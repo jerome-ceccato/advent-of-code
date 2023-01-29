@@ -20,6 +20,6 @@ bool intcode_op_add(int* memory, size_t size, size_t i);
 bool intcode_op_mul(int* memory, size_t size, size_t i);
 
 // Internals
-bool intcode_eval_opcode(int* memory, size_t size, size_t i);
+bool intcode_eval_opcode(int* memory, size_t size, size_t* ip);
 
 #endif
