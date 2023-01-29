@@ -7,18 +7,19 @@
 struct s_intcode_op_def {
     t_intcode_op op;
     bool (*eval)(int*, size_t, size_t);
+    size_t parameters;
 };
 
 static const struct s_intcode_op_def intcode_operations[] = {
-    {1, intcode_op_add},
-    {2, intcode_op_mul},
+    {1, intcode_op_add, 3},
+    {2, intcode_op_mul, 3},
 };
 
 t_intcode_result aoc_intcode_eval(const char* input,
                                   t_intcode_preprocessing preprocessor) {
     size_t size = 0;
     int* memory = NULL;
-    size_t i = 0;
+    size_t ip = 0;
 
     aoc_contents_to_ints(input, ',', &memory, &size);
 
@@ -26,15 +27,14 @@ t_intcode_result aoc_intcode_eval(const char* input,
         (*preprocessor)(memory, size);
     }
 
-    while (i < size && memory[i] != INTCODE_OP_HALT) {
-        if (!intcode_eval_opcode(memory, size, i)) {
-            fprintf(stderr, "intcode failed reading op %d\n", memory[i]);
+    while (ip < size && memory[ip] != INTCODE_OP_HALT) {
+        if (!intcode_eval_opcode(memory, size, &ip)) {
+            fprintf(stderr, "intcode failed reading op %d\n", memory[ip]);
             return (t_intcode_result){INTCODE_RESULT_FAILURE, memory, size};
         }
-        i += 4;
     }
 
-    if ((size_t)i >= size) {
+    if (ip >= size) {
         fprintf(stderr, "intcode reached eof without encountering halt\n");
         return (t_intcode_result){INTCODE_RESULT_FAILURE, memory, size};
     }
@@ -42,12 +42,15 @@ t_intcode_result aoc_intcode_eval(const char* input,
     return (t_intcode_result){INTCODE_RESULT_OK, memory, size};
 }
 
-bool intcode_eval_opcode(int* memory, size_t size, size_t i) {
+bool intcode_eval_opcode(int* memory, size_t size, size_t* ip) {
     for (size_t opi = 0; opi < (sizeof intcode_operations / sizeof(*intcode_operations)); opi++) {
-        if (memory[i] == (int)intcode_operations[opi].op) {
-            return (*intcode_operations[opi].eval)(memory, size, i);
+        if (memory[*ip] == (int)intcode_operations[opi].op) {
+            bool res = (*intcode_operations[opi].eval)(memory, size, *ip);
+            if (res)
+                *ip += 1 + intcode_operations[opi].parameters;
+            return res;
         }
     }
-    fprintf(stderr, "unknown intcode op %d\n", memory[i]);
+    fprintf(stderr, "unknown intcode op %d\n", memory[*ip]);
     return false;
 }
