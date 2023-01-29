@@ -15,9 +15,11 @@ typedef struct {
     { d, day##d##p1, day##d##p2 }
 
 DEFDAY(1)
+DEFDAY(2)
 
 static const t_aoc_day days[] = {
     AOCDAY(1),
+    AOCDAY(2),
 };
 
 void run_all();

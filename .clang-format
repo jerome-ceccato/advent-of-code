@@ -1,0 +1,16 @@
+---
+# options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 0
+SpaceAfterCStyleCast: false
+AllowShortIfStatementsOnASingleLine: false
+AlignTrailingComments: true
+IndentCaseLabels: true
+UseCRLF: false
+BreakBeforeBinaryOperators: NonAssignment
+AlignAfterOpenBracket: Align
+IndentPPDirectives: AfterHash
+PPIndentWidth: 2
