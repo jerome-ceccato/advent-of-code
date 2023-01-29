@@ -13,6 +13,8 @@ char* day1p1(const char* input) {
     for (size_t i = 0; i < size; i++) {
         total += numbers[i] / 3 - 2;
     }
+
+    free(numbers);
     return aoc_asprintf("%d", total);
 }
 
@@ -31,5 +33,7 @@ char* day1p2(const char* input) {
                 total += n;
         }
     }
+
+    free(numbers);
     return aoc_asprintf("%d", total);
 }
