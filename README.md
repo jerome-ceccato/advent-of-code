@@ -105,6 +105,18 @@ I solved this year of AoC during 2023.
 | 24  | [Lobby Layout](https://adventofcode.com/2020/day/24)            | [main.rkt](./2020/day24/main.rkt)   |
 | 25  | [Combo Breaker](https://adventofcode.com/2020/day/25)           | [main.rkt](./2020/day25/main.rkt)   |
 
+
+## 2019
+
+All problems were solved in [C](https://en.wikipedia.org/wiki/C_(programming_language)).
+
+I solved this year of AoC during 2023.
+
+| Day | Problem  | Solution |
+| --- | ---      | ---    |
+| 1   | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1)            | [main.c](./2019/day01/main.c)   |
+
+
 ## 2018
 
 | Day | Language  | Part 1 | Part 2 |

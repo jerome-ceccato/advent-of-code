@@ -28,4 +28,6 @@ dist-newstyle
 generated.hs
 
 # C
+*.o
+*.exe
 *.out
