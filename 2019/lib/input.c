@@ -20,11 +20,7 @@ char* aoc_read_file(const char* filename) {
 }
 
 void aoc_contents_to_ints(const char* data, char sep, int** out_array, size_t* out_size) {
-    size_t number_of_sep = 0;
-    for (int i = 0; data[i]; i++) {
-        if (data[i] == sep)
-            number_of_sep++;
-    }
+    size_t number_of_sep = aoc_occurences_of_char(data, sep);
 
     *out_size = number_of_sep + 1;
     *out_array = malloc(sizeof(int) * *out_size);

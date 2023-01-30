@@ -3,6 +3,12 @@
 #include "run.h"
 #include "aoc.h"
 
+static const t_aoc_day days[] = {
+    AOCDAY(1),
+    AOCDAY(2),
+    AOCDAY(3),
+};
+
 void run(const t_aoc_day* day) {
     char filename[16];
     char* input;

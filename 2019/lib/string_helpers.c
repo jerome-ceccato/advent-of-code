@@ -18,3 +18,12 @@ char* aoc_asprintf(const char* fmt, ...) {
     }
     return strdup(buffer);
 }
+
+size_t aoc_occurences_of_char(const char* str, char c) {
+    size_t n = 0;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] == c)
+            n++;
+    }
+    return n;
+}

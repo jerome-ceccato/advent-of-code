@@ -114,8 +114,10 @@ I solved this year of AoC during 2023.
 
 | Day | Problem  | Solution |
 | --- | ---      | ---    |
-| 1   | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1)            | [main.c](./2019/day01/main.c)   |
-| 2   | [1202 Program Alarm](https://adventofcode.com/2019/day/2)            | [main.c](./2019/day02/main.c)   |
+| 1   | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1)   | [main.c](./2019/day01/main.c)   |
+| 2   | [1202 Program Alarm](https://adventofcode.com/2019/day/2)                   | [main.c](./2019/day02/main.c)   |
+| 3   | [Crossed Wires](https://adventofcode.com/2019/day/3)                        | [main.c](./2019/day03/main.c)   |
+
 
 
 ## 2018

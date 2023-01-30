@@ -5,4 +5,11 @@
 #  define __attribute__(a)
 #endif /* !__GNUC__ */
 
+#ifndef min
+#  define min(x, y) (((x) < (y)) ? (x) : (y))
+#endif
+#ifndef max
+#  define max(x, y) (((x) > (y)) ? (x) : (y))
+#endif
+
 #endif
