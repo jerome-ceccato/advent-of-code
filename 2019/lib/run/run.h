@@ -1,9 +1,9 @@
 #ifndef RUN_H
 #define RUN_H
 
-#define DEFDAY(d)                        \
-    char* day##d##p1(const char* input); \
-    char* day##d##p2(const char* input);
+#define DEFDAY(d)                      \
+  char* day##d##p1(const char* input); \
+  char* day##d##p2(const char* input);
 
 typedef struct {
     int day;
@@ -12,15 +12,11 @@ typedef struct {
 } t_aoc_day;
 
 #define AOCDAY(d) \
-    { d, day##d##p1, day##d##p2 }
+  { d, day##d##p1, day##d##p2 }
 
 DEFDAY(1)
 DEFDAY(2)
-
-static const t_aoc_day days[] = {
-    AOCDAY(1),
-    AOCDAY(2),
-};
+DEFDAY(3)
 
 void run_all();
 void run_one(int target);
