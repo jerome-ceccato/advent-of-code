@@ -3,18 +3,97 @@
 #include "stdbool.h"
 #include "intcode.h"
 
-bool intcode_op_add(int* memory, size_t size, size_t i) {
+bool intcode_op_add(t_intcode_state* state) {
     int lhs, rhs;
-    return (i + 3) < size
-           && intcode_safe_read(memory, size, memory[i + 1], &lhs)
-           && intcode_safe_read(memory, size, memory[i + 2], &rhs)
-           && intcode_safe_write(memory, size, memory[i + 3], lhs + rhs);
+    int op = state->memory.data[state->ip];
+
+    return (state->ip + 3) < state->memory.size
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], lhs + rhs);
 }
 
-bool intcode_op_mul(int* memory, size_t size, size_t i) {
+bool intcode_op_mul(t_intcode_state* state) {
     int lhs, rhs;
-    return (i + 3) < size
-           && intcode_safe_read(memory, size, memory[i + 1], &lhs)
-           && intcode_safe_read(memory, size, memory[i + 2], &rhs)
-           && intcode_safe_write(memory, size, memory[i + 3], lhs * rhs);
+    int op = state->memory.data[state->ip];
+
+    return (state->ip + 3) < state->memory.size
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], lhs * rhs);
+}
+
+bool intcode_op_read(t_intcode_state* state) {
+    int input;
+
+    return (state->ip + 1) < state->memory.size
+           && intcode_safe_read_input(state, &input)
+           && intcode_safe_write(state, state->memory.data[state->ip + 1], input);
+}
+
+bool intcode_op_write(t_intcode_state* state) {
+    int output;
+    int op = state->memory.data[state->ip];
+
+    return (state->ip + 1) < state->memory.size
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &output)
+           && intcode_safe_write_output(state, output);
+}
+
+bool _intcode_jump(t_intcode_state* state, bool expected) {
+    int test, val;
+    int op = state->memory.data[state->ip];
+
+    if ((state->ip + 2) < state->memory.size
+        && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &test)
+        && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &val)) {
+        if (!!test == expected)
+            state->ip = val;
+        else
+            state->ip += 3;
+        return true;
+    }
+    return false;
+}
+
+bool intcode_op_jump_t(t_intcode_state* state) {
+    return _intcode_jump(state, true);
+}
+
+bool intcode_op_jump_f(t_intcode_state* state) {
+    return _intcode_jump(state, false);
+}
+
+enum {
+    INTCODE_CMP_LT,
+    INTCODE_CMP_EQ
+};
+
+int _intcode_cmp_operation(int operation, int lhs, int rhs) {
+    switch (operation) {
+        case INTCODE_CMP_LT:
+            return lhs < rhs;
+        case INTCODE_CMP_EQ:
+            return lhs == rhs;
+    }
+    fprintf(stderr, "intcode invalid cmp %d\n", operation);
+    return 0;
+}
+
+bool _intcode_cmp(t_intcode_state* state, int operation) {
+    int lhs, rhs;
+    int op = state->memory.data[state->ip];
+
+    return (state->ip + 3) < state->memory.size
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], _intcode_cmp_operation(operation, lhs, rhs));
+}
+
+bool intcode_op_lt(t_intcode_state* state) {
+    return _intcode_cmp(state, INTCODE_CMP_LT);
+}
+
+bool intcode_op_eq(t_intcode_state* state) {
+    return _intcode_cmp(state, INTCODE_CMP_EQ);
 }

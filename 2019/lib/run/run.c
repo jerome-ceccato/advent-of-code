@@ -7,6 +7,8 @@ static const t_aoc_day days[] = {
     AOCDAY(1),
     AOCDAY(2),
     AOCDAY(3),
+    AOCDAY(4),
+    AOCDAY(5),
 };
 
 void run(const t_aoc_day* day) {
