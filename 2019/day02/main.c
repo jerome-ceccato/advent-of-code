@@ -7,12 +7,12 @@
 // There are no closures in C, so we improvise...
 static int _day2_noun;
 static int _day2_verb;
-void _day2_setup_memory(int* memory, size_t __attribute__((unused)) size) {
-    memory[1] = _day2_noun;
-    memory[2] = _day2_verb;
+void _day2_setup_memory(t_intcode_state* state) {
+    state->memory.data[1] = _day2_noun;
+    state->memory.data[2] = _day2_verb;
 }
 
-void (*day2_setup_memory_with(int noun, int verb))(int*, size_t) {
+void (*day2_setup_memory_with(int noun, int verb))(t_intcode_state*) {
     _day2_noun = noun;
     _day2_verb = verb;
     return _day2_setup_memory;
@@ -21,7 +21,7 @@ void (*day2_setup_memory_with(int noun, int verb))(int*, size_t) {
 char* day2p1(const char* input) {
     t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(12, 2));
 
-    int res = result.memory[0];
+    int res = result.state.memory.data[0];
 
     intcode_free_result(&result);
     return aoc_asprintf("%d", res);
@@ -31,7 +31,7 @@ char* day2p2(const char* input) {
     for (int noun = 0; noun < 100; noun++) {
         for (int verb = 0; verb < 100; verb++) {
             t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(noun, verb));
-            int ouput = result.memory[0];
+            int ouput = result.state.memory.data[0];
             intcode_free_result(&result);
 
             if (ouput == 19690720) {

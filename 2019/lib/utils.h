@@ -6,10 +6,20 @@
 #endif /* !__GNUC__ */
 
 #ifndef min
-#  define min(x, y) (((x) < (y)) ? (x) : (y))
+#  define min(a, b)     \
+    ({                  \
+__typeof__(a) _a = (a); \
+__typeof__(b) _b = (b); \
+_a < _b ? _a : _b;      \
+    })
 #endif
 #ifndef max
-#  define max(x, y) (((x) > (y)) ? (x) : (y))
+#  define max(a, b)     \
+    ({                  \
+__typeof__(a) _a = (a); \
+__typeof__(b) _b = (b); \
+_a > _b ? _a : _b;      \
+    })
 #endif
 
 #endif

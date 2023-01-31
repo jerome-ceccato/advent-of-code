@@ -1,6 +1,8 @@
 #ifndef AOC_H
 #define AOC_H
 
+#include "intcode.h"
+
 /*
  * Input
  */
@@ -36,31 +38,5 @@ typedef struct {
 t_point2d point2d_make(int x, int y);
 t_point2d point2d_add(t_point2d lhs, t_point2d rhs);
 int point2d_distance(t_point2d lhs, t_point2d rhs);
-
-/*
- * Intcode
- */
-
-typedef enum {
-    INTCODE_RESULT_OK,
-    INTCODE_RESULT_FAILURE
-} t_intcode_result_status;
-
-typedef struct {
-    t_intcode_result_status status;  // Whether or not the program finished correctly
-    int* memory;                     // The final memory state of the incode program
-    size_t memory_size;              // The number of elements in `memory`
-} t_intcode_result;
-
-typedef void (*t_intcode_preprocessing)(int*, size_t);
-
-// Evals an intcode program from a string
-// `preprocessor` is an optional function that runs on the intcode memory before
-// evaluation
-t_intcode_result aoc_intcode_eval(const char* input,
-                                  t_intcode_preprocessing preprocessor);
-
-// Cleans up the memory allocated inside a `t_intcode_result`
-void intcode_free_result(t_intcode_result* res);
 
 #endif

@@ -17,6 +17,8 @@ typedef struct {
 DEFDAY(1)
 DEFDAY(2)
 DEFDAY(3)
+DEFDAY(4)
+DEFDAY(5)
 
 void run_all();
 void run_one(int target);

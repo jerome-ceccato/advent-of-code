@@ -6,7 +6,7 @@ RM := powershell.exe .\clean.ps1
 SRCS := $(wildcard main.c lib/*.c lib/*/*.c day*/*.c)
 
 OBJS = $(SRCS:.c=.o)
-INCLUDES = -Ilib -Ilib/run
+INCLUDES = -Ilib -Ilib/intcode -Ilib/run
 CFLAGS = -std=c11 -D__USE_MINGW_ANSI_STDIO -W -Wall $(INCLUDES)
 
 $(NAME) : $(OBJS)
