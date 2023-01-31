@@ -44,11 +44,14 @@ int day7_sequence_to_signal(const char* input, int* sequence) {
     t_intcode_result states[5];
 
     int output = 0;
+    // Do the loop once to instantiate the intcode states
     for (int i = 0; i < 5; i++) {
         states[i] = aoc_intcode_eval(input, day7_setup_input_with(sequence[i], output));
         output = states[i].state.output.data[states[i].state.output.head - 1];
     }
 
+    // As long as execution didn't finish normally, loop again by replacing the input of each intcode states
+    // and restarting the program
     while (states[4].status == INTCODE_RESULT_FAILURE) {
         for (int i = 0; i < 5; i++) {
             states[i].state.input.data[0] = output;
@@ -59,6 +62,9 @@ int day7_sequence_to_signal(const char* input, int* sequence) {
             output = states[i].state.output.data[states[i].state.output.head - 1];
         }
     }
+
+    for (int i = 0; i < 5; i++)
+        intcode_free_result(states + i);
     return output;
 }
 
