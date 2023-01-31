@@ -117,7 +117,10 @@ I solved this year of AoC during 2023.
 | 1   | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1)   | [main.c](./2019/day01/main.c)   |
 | 2   | [1202 Program Alarm](https://adventofcode.com/2019/day/2)                   | [main.c](./2019/day02/main.c)   |
 | 3   | [Crossed Wires](https://adventofcode.com/2019/day/3)                        | [main.c](./2019/day03/main.c)   |
-
+| 4   | [Secure Container](https://adventofcode.com/2019/day/4)                     | [main.c](./2019/day04/main.c)   |
+| 5   | [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5)     | [main.c](./2019/day05/main.c)   |
+| 6   | [Universal Orbit Map](https://adventofcode.com/2019/day/6)                  | [main.c](./2019/day06/main.c)   |
+| 7   | [Amplification Circuit](https://adventofcode.com/2019/day/7)                | [main.c](./2019/day07/main.c)   |
 
 
 ## 2018

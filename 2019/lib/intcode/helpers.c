@@ -44,7 +44,6 @@ bool intcode_safe_read_input(t_intcode_state* state, int* out) {
         *out = state->input.data[state->input.head++];
         return true;
     }
-    fprintf(stderr, "intcode attempting to read empty input\n");
     return false;
 }
 

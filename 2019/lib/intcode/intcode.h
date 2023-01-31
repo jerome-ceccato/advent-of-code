@@ -57,6 +57,9 @@ typedef void (*t_intcode_preprocessing)(t_intcode_state*);
 t_intcode_result aoc_intcode_eval(const char* input,
                                   t_intcode_preprocessing preprocessor);
 
+// Restarts evaluation of an intcode program that failed (e.g. because it was waiting for an input)
+t_intcode_result aoc_intcode_restart(t_intcode_state state);
+
 // Cleans up the memory allocated inside a `t_intcode_result`
 void intcode_free_result(t_intcode_result* res);
 

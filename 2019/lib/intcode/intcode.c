@@ -38,9 +38,15 @@ t_intcode_result aoc_intcode_eval(const char* input,
         (*preprocessor)(&state);
     }
 
+    return aoc_intcode_restart(state);
+}
+
+t_intcode_result aoc_intcode_restart(t_intcode_state state) {
     while (state.ip < state.memory.size && state.memory.data[state.ip] != INTCODE_OP_HALT) {
         if (!intcode_eval_opcode(&state)) {
-            fprintf(stderr, "intcode failed reading op %d\n", state.memory.data[state.ip]);
+            // Failing a read input op is expected when waiting for an input from somewhere else
+            if ((state.memory.data[state.ip] % 100) != INTCODE_OP_READ)
+                fprintf(stderr, "intcode failed reading op %d\n", state.memory.data[state.ip]);
             return (t_intcode_result){INTCODE_RESULT_FAILURE, state};
         }
     }
