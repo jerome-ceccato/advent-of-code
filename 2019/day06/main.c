@@ -13,6 +13,8 @@ int day6_decode_c(char c) {
 
 int* day6_map_orbits(const char* input) {
     // At most 3 characters [A-Z0-9], can be uniquely encoded into a 0-36^3 int
+    // Technically we should +1 everything to keep 0 as the 'empty' value,
+    // but in practice there are no orbits called "A" in the input.
     int* map = calloc(sizeof(int), (36 * 36 * 36));
 
     int i = 0;
@@ -62,6 +64,7 @@ char* day6p2(const char* input) {
 
     int min_orbits = INT_MAX;
     int san_p = map[san];
+    // Go backwards from each object until a common ancestor is found
     for (int san_i = 0; map[san_p]; san_i++, san_p = map[san_p]) {
         int you_p = map[you];
         for (int you_i = 0; map[you_p]; you_i++, you_p = map[you_p]) {
