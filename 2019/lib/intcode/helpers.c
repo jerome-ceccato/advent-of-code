@@ -73,16 +73,3 @@ bool intcode_safe_write_output(t_intcode_state* state, bigint value) {
     state->output.data[state->output.head++] = value;
     return true;
 }
-
-void intcode_free_result(t_intcode_result* res) {
-    if (res) {
-        free(res->state.memory.data);
-        free(res->state.input.data);
-        free(res->state.output.data);
-    }
-}
-
-void intcode_print_output(const t_intcode_state* state) {
-    for (size_t i = 0; i < state->output.head; i++)
-        printf(BIGINT_FMT "%s", state->output.data[i], (i + 1 < state->output.head) ? " " : "\n");
-}

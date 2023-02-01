@@ -26,6 +26,7 @@ static const struct s_intcode_op_def intcode_operations[] = {
 t_intcode_state intcode_make_state() {
     t_intcode_state state;
     memset(&state, 0, sizeof state);
+    state.settings.available_memory = INTCODE_DEFAULT_AVAILABLE_MEMORY;
     return state;
 }
 
@@ -39,6 +40,7 @@ t_intcode_result aoc_intcode_eval(const char* input,
         (*preprocessor)(&state);
     }
 
+    intcode_upgrade_memory(&state);
     return aoc_intcode_restart(state);
 }
 
@@ -72,4 +74,14 @@ bool intcode_eval_opcode(t_intcode_state* state) {
     }
     fprintf(stderr, "unknown intcode op " BIGINT_FMT "\n", state->memory.data[state->ip]);
     return false;
+}
+
+// Allocate more memory than what's needed for the instructions
+// Hopefully this will be enough and we don't need arbitrary memory addresses
+void intcode_upgrade_memory(t_intcode_state* state) {
+    if (state->memory.size < state->settings.available_memory) {
+        state->memory.data = realloc(state->memory.data, sizeof(*state->memory.data) * state->settings.available_memory);
+        memset(state->memory.data + state->memory.size, 0, sizeof(*state->memory.data) * (state->settings.available_memory - state->memory.size));
+        state->memory.size = state->settings.available_memory;
+    }
 }
