@@ -4,38 +4,52 @@
 #include "intcode.h"
 #include "aoc.h"
 
-int intcode_get_mode(int op, int pos) {
-    op /= 100;
-    while (pos-- != 0) {
+t_intcode_param_mode intcode_get_mode(int op, int pos) {
+    op /= 10;  // Assumes pos starts at 1 for symetry with accessing parameters (ip + pos)
+    while (pos-- > 0)
         op /= 10;
-    }
     return op % 10;
 }
 
-bool intcode_safe_read(t_intcode_state* state, int param, int mode, int* out) {
-    if (mode == 0) {
-        if ((size_t)param < state->memory.size) {
-            *out = state->memory.data[param];
+bool intcode_safe_read(t_intcode_state* state, int param, t_intcode_param_mode mode, int* out) {
+    switch (mode) {
+        case INTCODE_PARAM_MODE_POSITION:
+            if (param >= 0 && (size_t)param < state->memory.size) {
+                *out = state->memory.data[param];
+                return true;
+            } else {
+                fprintf(stderr, "intcode attempting to read oob %d\n", param);
+                return false;
+            }
+        case INTCODE_PARAM_MODE_IMMEDIATE:
+            *out = param;
             return true;
-        } else {
-            fprintf(stderr, "intcode attempting to read oob %d\n", param);
-            return false;
-        }
-    } else if (mode == 1) {
-        *out = param;
-        return true;
-    } else {
-        fprintf(stderr, "intcode unsupported mode %d\n", mode);
-        return false;
+        case INTCODE_PARAM_MODE_RELATIVE:
+            return intcode_safe_read(state, param + state->relative_base, INTCODE_PARAM_MODE_POSITION, out);
     }
+
+    fprintf(stderr, "intcode_safe_read unsupported mode %d\n", mode);
+    return false;
 }
 
-bool intcode_safe_write(t_intcode_state* state, size_t addr, int val) {
-    if (addr < state->memory.size) {
-        state->memory.data[addr] = val;
-        return true;
+bool intcode_safe_write(t_intcode_state* state, int addr, t_intcode_param_mode mode, int val) {
+    switch (mode) {
+        case INTCODE_PARAM_MODE_POSITION:
+            if (addr >= 0 && (size_t)addr < state->memory.size) {
+                state->memory.data[addr] = val;
+                return true;
+            } else {
+                fprintf(stderr, "intcode attempting to write oob %d\n", addr);
+                return false;
+            }
+        case INTCODE_PARAM_MODE_IMMEDIATE:
+            fprintf(stderr, "intcode unsupported immediate mode for write op\n");
+            return false;
+        case INTCODE_PARAM_MODE_RELATIVE:
+            return intcode_safe_write(state, addr + state->relative_base, INTCODE_PARAM_MODE_POSITION, val);
     }
-    fprintf(stderr, "intcode attempting to write oob %zu\n", addr);
+
+    fprintf(stderr, "intcode_safe_write unsupported mode %d\n", mode);
     return false;
 }
 
@@ -66,4 +80,9 @@ void intcode_free_result(t_intcode_result* res) {
         free(res->state.input.data);
         free(res->state.output.data);
     }
+}
+
+void intcode_print_output(const t_intcode_state* state) {
+    for (size_t i = 0; i < state->output.head; i++)
+        printf("%d%s", state->output.data[i], (i + 1 < state->output.head) ? " " : "\n");
 }

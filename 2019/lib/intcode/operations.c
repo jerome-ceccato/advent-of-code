@@ -8,9 +8,9 @@ bool intcode_op_add(t_intcode_state* state) {
     int op = state->memory.data[state->ip];
 
     return (state->ip + 3) < state->memory.size
-           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
-           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
-           && intcode_safe_write(state, state->memory.data[state->ip + 3], lhs + rhs);
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 2), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], intcode_get_mode(op, 3), lhs + rhs);
 }
 
 bool intcode_op_mul(t_intcode_state* state) {
@@ -18,17 +18,18 @@ bool intcode_op_mul(t_intcode_state* state) {
     int op = state->memory.data[state->ip];
 
     return (state->ip + 3) < state->memory.size
-           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
-           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
-           && intcode_safe_write(state, state->memory.data[state->ip + 3], lhs * rhs);
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 2), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], intcode_get_mode(op, 3), lhs * rhs);
 }
 
 bool intcode_op_read(t_intcode_state* state) {
     int input;
+    int op = state->memory.data[state->ip];
 
     return (state->ip + 1) < state->memory.size
            && intcode_safe_read_input(state, &input)
-           && intcode_safe_write(state, state->memory.data[state->ip + 1], input);
+           && intcode_safe_write(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), input);
 }
 
 bool intcode_op_write(t_intcode_state* state) {
@@ -36,7 +37,7 @@ bool intcode_op_write(t_intcode_state* state) {
     int op = state->memory.data[state->ip];
 
     return (state->ip + 1) < state->memory.size
-           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &output)
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &output)
            && intcode_safe_write_output(state, output);
 }
 
@@ -45,8 +46,8 @@ bool _intcode_jump(t_intcode_state* state, bool expected) {
     int op = state->memory.data[state->ip];
 
     if ((state->ip + 2) < state->memory.size
-        && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &test)
-        && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &val)) {
+        && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &test)
+        && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 2), &val)) {
         if (!!test == expected)
             state->ip = val;
         else
@@ -85,9 +86,9 @@ bool _intcode_cmp(t_intcode_state* state, int operation) {
     int op = state->memory.data[state->ip];
 
     return (state->ip + 3) < state->memory.size
-           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 0), &lhs)
-           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 1), &rhs)
-           && intcode_safe_write(state, state->memory.data[state->ip + 3], _intcode_cmp_operation(operation, lhs, rhs));
+           && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &lhs)
+           && intcode_safe_read(state, state->memory.data[state->ip + 2], intcode_get_mode(op, 2), &rhs)
+           && intcode_safe_write(state, state->memory.data[state->ip + 3], intcode_get_mode(op, 3), _intcode_cmp_operation(operation, lhs, rhs));
 }
 
 bool intcode_op_lt(t_intcode_state* state) {
@@ -96,4 +97,16 @@ bool intcode_op_lt(t_intcode_state* state) {
 
 bool intcode_op_eq(t_intcode_state* state) {
     return _intcode_cmp(state, INTCODE_CMP_EQ);
+}
+
+bool intcode_op_adjust_relative_base(t_intcode_state* state) {
+    int offset;
+    int op = state->memory.data[state->ip];
+
+    if ((state->ip + 1) < state->memory.size
+        && intcode_safe_read(state, state->memory.data[state->ip + 1], intcode_get_mode(op, 1), &offset)) {
+        state->relative_base += offset;
+        return true;
+    }
+    return false;
 }

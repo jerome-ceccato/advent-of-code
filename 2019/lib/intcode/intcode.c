@@ -20,6 +20,7 @@ static const struct s_intcode_op_def intcode_operations[] = {
     {INTCODE_OP_JUMP_FALSE, intcode_op_jump_f, 0},
     {INTCODE_OP_LESS_THAN, intcode_op_lt, 3 + 1},
     {INTCODE_OP_EQUALS, intcode_op_eq, 3 + 1},
+    {INTCODE_OP_ADJUST_REL_BASE, intcode_op_adjust_relative_base, 1 + 1},
 };
 
 t_intcode_state intcode_make_state() {

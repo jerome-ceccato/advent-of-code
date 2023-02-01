@@ -13,9 +13,16 @@ typedef enum {
     INTCODE_OP_JUMP_FALSE = 6,
     INTCODE_OP_LESS_THAN = 7,
     INTCODE_OP_EQUALS = 8,
+    INTCODE_OP_ADJUST_REL_BASE = 9,
 
     INTCODE_OP_HALT = 99
 } t_intcode_op;
+
+typedef enum {
+    INTCODE_PARAM_MODE_POSITION = 0,
+    INTCODE_PARAM_MODE_IMMEDIATE = 1,
+    INTCODE_PARAM_MODE_RELATIVE = 2
+} t_intcode_param_mode;
 
 typedef enum {
     INTCODE_RESULT_OK,
@@ -39,6 +46,7 @@ typedef struct {
 typedef struct {
     t_int_array memory;  // Current memory
     size_t ip;           // Instruction pointer
+    int relative_base;   // For relative parameter mode
 
     t_int_stream input;   // Input, should be set during preprocessing
     t_int_stream output;  // Output, will be dynamically created as needed
@@ -68,12 +76,14 @@ void intcode_free_result(t_intcode_result* res);
  */
 
 // Helpers
-int intcode_get_mode(int op, int pos);  // pos is the position of the parameter, starts at 0
+t_intcode_param_mode intcode_get_mode(int op, int pos);  // pos is the position of the parameter, starts at 1
 
-bool intcode_safe_read(t_intcode_state* state, int param, int mode, int* out);
-bool intcode_safe_write(t_intcode_state* state, size_t addr, int val);
+bool intcode_safe_read(t_intcode_state* state, int param, t_intcode_param_mode mode, int* out);
+bool intcode_safe_write(t_intcode_state* state, int addr, t_intcode_param_mode mode, int val);
 bool intcode_safe_read_input(t_intcode_state* state, int* out);
 bool intcode_safe_write_output(t_intcode_state* state, int value);
+
+void intcode_print_output(const t_intcode_state* state);
 
 // Ops
 bool intcode_op_add(t_intcode_state* state);
@@ -84,6 +94,7 @@ bool intcode_op_jump_t(t_intcode_state* state);
 bool intcode_op_jump_f(t_intcode_state* state);
 bool intcode_op_lt(t_intcode_state* state);
 bool intcode_op_eq(t_intcode_state* state);
+bool intcode_op_adjust_relative_base(t_intcode_state* state);
 
 // Internals
 bool intcode_eval_opcode(t_intcode_state* state);
