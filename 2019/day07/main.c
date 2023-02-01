@@ -5,6 +5,13 @@
 #include "aoc.h"
 #include "utils.h"
 
+static t_intcode_result run_intcode(const char* input, bigint setting, bigint signal) {
+    t_intcode_state state = aoc_intcode_boot(input);
+    intcode_set_input2(&state, setting, signal);
+
+    return aoc_intcode_eval(state);
+}
+
 bigint day7_max_signal(const char* input, bigint in, int used) {
     if (used == 0b11111) {
         return in;
@@ -13,7 +20,7 @@ bigint day7_max_signal(const char* input, bigint in, int used) {
     int max_sig = 0;
     for (int i = 0; i < 5; i++) {
         if (!(used & (1 << i))) {
-            t_intcode_result result = aoc_intcode_eval(input, intcode_seed_input2(i, in));
+            t_intcode_result result = run_intcode(input, i, in);
             bigint output = result.state.output.data[0];
             intcode_free_result(&result);
 
@@ -30,7 +37,7 @@ bigint day7_sequence_to_signal(const char* input, int* sequence) {
     bigint output = 0;
     // Do the loop once to instantiate the intcode states
     for (int i = 0; i < 5; i++) {
-        states[i] = aoc_intcode_eval(input, intcode_seed_input2(sequence[i], output));
+        states[i] = run_intcode(input, sequence[i], output);
         output = states[i].state.output.data[states[i].state.output.head - 1];
     }
 
@@ -42,7 +49,7 @@ bigint day7_sequence_to_signal(const char* input, int* sequence) {
             states[i].state.input.head = 0;
             states[i].state.input.size = 1;
 
-            states[i] = aoc_intcode_restart(states[i].state);
+            states[i] = aoc_intcode_eval(states[i].state);
             output = states[i].state.output.data[states[i].state.output.head - 1];
         }
     }
