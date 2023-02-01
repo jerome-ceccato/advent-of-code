@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include "utils.h"
 
-#define INTCODE_DEFAULT_AVAILABLE_MEMORY 4096
-
 typedef enum {
     INTCODE_OP_ADD = 1,
     INTCODE_OP_MUL = 2,
@@ -45,19 +43,14 @@ typedef struct {
     size_t size;
 } t_bigint_stream;
 
-typedef struct {
-    size_t available_memory;  // The size of the memory (in number of bigints), padded to 0 if there are less instructions
-} t_intcode_settings;
-
 // All data representing the intcode computer
 typedef struct {
     t_bigint_array memory;  // Current memory
     size_t ip;              // Instruction pointer
     bigint relative_base;   // For relative parameter mode
 
-    t_bigint_stream input;        // Input, should be set during preprocessing
-    t_bigint_stream output;       // Output, will be dynamically created as needed
-    t_intcode_settings settings;  // Other intcode settings
+    t_bigint_stream input;   // Input, should be set during preprocessing
+    t_bigint_stream output;  // Output, will be dynamically created as needed
 } t_intcode_state;
 
 typedef struct {
@@ -65,16 +58,14 @@ typedef struct {
     t_intcode_state state;           // The final state of the incode program
 } t_intcode_result;
 
-typedef void (*t_intcode_preprocessing)(t_intcode_state*);
+// Creates an intcode_state from a given input. Does not start processing
+t_intcode_state aoc_intcode_boot(const char* input);
 
-// Evals an intcode program from a string
-// `preprocessor` is an optional function that runs on the intcode memory before
-// evaluation
-t_intcode_result aoc_intcode_eval(const char* input,
-                                  t_intcode_preprocessing preprocessor);
+// Evals an intcode program, returning the updated state after running to completion or encountering an error
+t_intcode_result aoc_intcode_eval(t_intcode_state state);
 
-// Restarts evaluation of an intcode program that failed (e.g. because it was waiting for an input)
-t_intcode_result aoc_intcode_restart(t_intcode_state state);
+// Add trailing 0's to the program memory until its size is `available_memory`
+void aoc_intcode_upgrade_memory(t_intcode_state* state, size_t available_memory);
 
 // Cleans up the memory allocated inside a `t_intcode_result`
 void intcode_free_result(t_intcode_result* res);
@@ -82,10 +73,13 @@ void intcode_free_result(t_intcode_result* res);
 // Prints all output numbers separated by ' ' and with a trailing newline
 void intcode_print_output(const t_intcode_state* state);
 
-// Helpers to provide a preprocessing function that sets input data
-t_intcode_preprocessing intcode_seed_input(t_bigint_array input);
-t_intcode_preprocessing intcode_seed_input1(bigint a);
-t_intcode_preprocessing intcode_seed_input2(bigint a, bigint b);
+// Helpers to set input data
+void intcode_set_input(t_intcode_state* state, t_bigint_array input);
+void intcode_set_input1(t_intcode_state* state, bigint a);
+void intcode_set_input2(t_intcode_state* state, bigint a, bigint b);
+
+// Safe accessor for the last value in the state's output
+bigint intcode_last_output(t_intcode_result* result);
 
 /*
  * Private
@@ -112,6 +106,5 @@ bool intcode_op_adjust_relative_base(t_intcode_state* state);
 
 // Internals
 bool intcode_eval_opcode(t_intcode_state* state);
-void intcode_upgrade_memory(t_intcode_state* state);
 
 #endif

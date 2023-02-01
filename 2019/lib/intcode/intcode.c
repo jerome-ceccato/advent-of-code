@@ -26,25 +26,17 @@ static const struct s_intcode_op_def intcode_operations[] = {
 t_intcode_state intcode_make_state() {
     t_intcode_state state;
     memset(&state, 0, sizeof state);
-    state.settings.available_memory = INTCODE_DEFAULT_AVAILABLE_MEMORY;
     return state;
 }
 
-t_intcode_result aoc_intcode_eval(const char* input,
-                                  t_intcode_preprocessing preprocessor) {
+t_intcode_state aoc_intcode_boot(const char* input) {
     t_intcode_state state = intcode_make_state();
 
     aoc_contents_to_bigints(input, ',', &state.memory.data, &state.memory.size);
-
-    if (preprocessor) {
-        (*preprocessor)(&state);
-    }
-
-    intcode_upgrade_memory(&state);
-    return aoc_intcode_restart(state);
+    return state;
 }
 
-t_intcode_result aoc_intcode_restart(t_intcode_state state) {
+t_intcode_result aoc_intcode_eval(t_intcode_state state) {
     while (state.ip < state.memory.size && state.memory.data[state.ip] != INTCODE_OP_HALT) {
         if (!intcode_eval_opcode(&state)) {
             // Failing a read input op is expected when waiting for an input from somewhere else
@@ -78,10 +70,10 @@ bool intcode_eval_opcode(t_intcode_state* state) {
 
 // Allocate more memory than what's needed for the instructions
 // Hopefully this will be enough and we don't need arbitrary memory addresses
-void intcode_upgrade_memory(t_intcode_state* state) {
-    if (state->memory.size < state->settings.available_memory) {
-        state->memory.data = realloc(state->memory.data, sizeof(*state->memory.data) * state->settings.available_memory);
-        memset(state->memory.data + state->memory.size, 0, sizeof(*state->memory.data) * (state->settings.available_memory - state->memory.size));
-        state->memory.size = state->settings.available_memory;
+void aoc_intcode_upgrade_memory(t_intcode_state* state, size_t available_memory) {
+    if (state->memory.size < available_memory) {
+        state->memory.data = realloc(state->memory.data, sizeof(*state->memory.data) * available_memory);
+        memset(state->memory.data + state->memory.size, 0, sizeof(*state->memory.data) * (available_memory - state->memory.size));
+        state->memory.size = available_memory;
     }
 }

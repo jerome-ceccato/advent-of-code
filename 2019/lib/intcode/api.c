@@ -17,35 +17,31 @@ void intcode_print_output(const t_intcode_state* state) {
         printf(BIGINT_FMT "%s", state->output.data[i], (i + 1 < state->output.head) ? " " : "\n");
 }
 
-static t_bigint_array _intcode_input_seed;
-static void _seed_input(t_intcode_state* state) {
+void intcode_set_input(t_intcode_state* state, t_bigint_array input) {
     free(state->input.data);
-    state->input.data = _intcode_input_seed.data;
-    state->input.size = _intcode_input_seed.size;
+    state->input.data = input.data;
+    state->input.size = input.size;
     state->input.head = 0;
-
-    _intcode_input_seed = (t_bigint_array){NULL, 0};
 }
 
-t_intcode_preprocessing intcode_seed_input(t_bigint_array input) {
-    free(_intcode_input_seed.data);
-    _intcode_input_seed = input;
-    return _seed_input;
+void intcode_set_input1(t_intcode_state* state, bigint a) {
+    free(state->input.data);
+    state->input.data = malloc(sizeof(*state->input.data));
+    state->input.size = 1;
+    state->input.data[0] = a;
 }
 
-t_intcode_preprocessing intcode_seed_input1(bigint a) {
-    free(_intcode_input_seed.data);
-    _intcode_input_seed.data = malloc(sizeof(*_intcode_input_seed.data));
-    _intcode_input_seed.size = 1;
-    _intcode_input_seed.data[0] = a;
-    return _seed_input;
+void intcode_set_input2(t_intcode_state* state, bigint a, bigint b) {
+    free(state->input.data);
+    state->input.data = malloc(sizeof(*state->input.data) * 2);
+    state->input.size = 2;
+    state->input.data[0] = a;
+    state->input.data[1] = b;
 }
 
-t_intcode_preprocessing intcode_seed_input2(bigint a, bigint b) {
-    free(_intcode_input_seed.data);
-    _intcode_input_seed.data = malloc(sizeof(*_intcode_input_seed.data) * 2);
-    _intcode_input_seed.size = 2;
-    _intcode_input_seed.data[0] = a;
-    _intcode_input_seed.data[1] = b;
-    return _seed_input;
+bigint intcode_last_output(t_intcode_result* result) {
+    if (result->state.output.data && result->state.output.head > 0)
+        return result->state.output.data[result->state.output.head - 1];
+    fprintf(stderr, "intcode result has no output");
+    return 0;
 }

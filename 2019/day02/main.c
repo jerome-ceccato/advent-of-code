@@ -4,23 +4,16 @@
 #include "aoc.h"
 #include "utils.h"
 
-// There are no closures in C, so we improvise...
-static int _day2_noun;
-static int _day2_verb;
-void _day2_setup_memory(t_intcode_state* state) {
-    state->memory.data[1] = _day2_noun;
-    state->memory.data[2] = _day2_verb;
-}
+static t_intcode_result run_intcode(const char* input, int noun, int verb) {
+    t_intcode_state state = aoc_intcode_boot(input);
+    state.memory.data[1] = noun;
+    state.memory.data[2] = verb;
 
-void (*day2_setup_memory_with(int noun, int verb))(t_intcode_state*) {
-    _day2_noun = noun;
-    _day2_verb = verb;
-    return _day2_setup_memory;
+    return aoc_intcode_eval(state);
 }
 
 char* day2p1(const char* input) {
-    t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(12, 2));
-
+    t_intcode_result result = run_intcode(input, 12, 2);
     bigint res = result.state.memory.data[0];
 
     intcode_free_result(&result);
@@ -30,7 +23,7 @@ char* day2p1(const char* input) {
 char* day2p2(const char* input) {
     for (int noun = 0; noun < 100; noun++) {
         for (int verb = 0; verb < 100; verb++) {
-            t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(noun, verb));
+            t_intcode_result result = run_intcode(input, noun, verb);
             bigint ouput = result.state.memory.data[0];
             intcode_free_result(&result);
 
