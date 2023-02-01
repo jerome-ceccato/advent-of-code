@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include "utils.h"
 
+#define INTCODE_DEFAULT_AVAILABLE_MEMORY 4096
+
 typedef enum {
     INTCODE_OP_ADD = 1,
     INTCODE_OP_MUL = 2,
@@ -43,14 +45,19 @@ typedef struct {
     size_t size;
 } t_bigint_stream;
 
+typedef struct {
+    size_t available_memory;  // The size of the memory (in number of bigints), padded to 0 if there are less instructions
+} t_intcode_settings;
+
 // All data representing the intcode computer
 typedef struct {
     t_bigint_array memory;  // Current memory
     size_t ip;              // Instruction pointer
     bigint relative_base;   // For relative parameter mode
 
-    t_bigint_stream input;   // Input, should be set during preprocessing
-    t_bigint_stream output;  // Output, will be dynamically created as needed
+    t_bigint_stream input;        // Input, should be set during preprocessing
+    t_bigint_stream output;       // Output, will be dynamically created as needed
+    t_intcode_settings settings;  // Other intcode settings
 } t_intcode_state;
 
 typedef struct {
@@ -72,6 +79,14 @@ t_intcode_result aoc_intcode_restart(t_intcode_state state);
 // Cleans up the memory allocated inside a `t_intcode_result`
 void intcode_free_result(t_intcode_result* res);
 
+// Prints all output numbers separated by ' ' and with a trailing newline
+void intcode_print_output(const t_intcode_state* state);
+
+// Helpers to provide a preprocessing function that sets input data
+t_intcode_preprocessing intcode_seed_input(t_bigint_array input);
+t_intcode_preprocessing intcode_seed_input1(bigint a);
+t_intcode_preprocessing intcode_seed_input2(bigint a, bigint b);
+
 /*
  * Private
  */
@@ -83,8 +98,6 @@ bool intcode_safe_read(t_intcode_state* state, bigint param, t_intcode_param_mod
 bool intcode_safe_write(t_intcode_state* state, bigint addr, t_intcode_param_mode mode, bigint val);
 bool intcode_safe_read_input(t_intcode_state* state, bigint* out);
 bool intcode_safe_write_output(t_intcode_state* state, bigint value);
-
-void intcode_print_output(const t_intcode_state* state);
 
 // Ops
 bool intcode_op_add(t_intcode_state* state);
@@ -99,5 +112,6 @@ bool intcode_op_adjust_relative_base(t_intcode_state* state);
 
 // Internals
 bool intcode_eval_opcode(t_intcode_state* state);
+void intcode_upgrade_memory(t_intcode_state* state);
 
 #endif

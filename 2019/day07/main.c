@@ -5,22 +5,6 @@
 #include "aoc.h"
 #include "utils.h"
 
-// This preprocessor function was a terrible idea
-static int _d7_amp_setting;
-static bigint _d7_amp_input;
-void _day7_setup_input(t_intcode_state* state) {
-    state->input.data = malloc(sizeof(*state->input.data) * 2);
-    state->input.size = 2;
-    state->input.data[0] = _d7_amp_setting;
-    state->input.data[1] = _d7_amp_input;
-}
-
-void (*day7_setup_input_with(int amp_setting, bigint amp_input))(t_intcode_state*) {
-    _d7_amp_setting = amp_setting;
-    _d7_amp_input = amp_input;
-    return _day7_setup_input;
-}
-
 bigint day7_max_signal(const char* input, bigint in, int used) {
     if (used == 0b11111) {
         return in;
@@ -29,7 +13,7 @@ bigint day7_max_signal(const char* input, bigint in, int used) {
     int max_sig = 0;
     for (int i = 0; i < 5; i++) {
         if (!(used & (1 << i))) {
-            t_intcode_result result = aoc_intcode_eval(input, day7_setup_input_with(i, in));
+            t_intcode_result result = aoc_intcode_eval(input, intcode_seed_input2(i, in));
             bigint output = result.state.output.data[0];
             intcode_free_result(&result);
 
@@ -46,7 +30,7 @@ bigint day7_sequence_to_signal(const char* input, int* sequence) {
     bigint output = 0;
     // Do the loop once to instantiate the intcode states
     for (int i = 0; i < 5; i++) {
-        states[i] = aoc_intcode_eval(input, day7_setup_input_with(sequence[i], output));
+        states[i] = aoc_intcode_eval(input, intcode_seed_input2(sequence[i], output));
         output = states[i].state.output.data[states[i].state.output.head - 1];
     }
 
