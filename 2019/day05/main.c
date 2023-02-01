@@ -19,17 +19,17 @@ void day5p2_setup_input(t_intcode_state* state) {
 char* day5p1(const char* input) {
     t_intcode_result result = aoc_intcode_eval(input, day5p1_setup_input);
 
-    int res = result.state.output.data[result.state.output.head - 1];
+    bigint res = result.state.output.data[result.state.output.head - 1];
 
     intcode_free_result(&result);
-    return aoc_asprintf("%d", res);
+    return aoc_bigint_to_str(res);
 }
 
 char* day5p2(const char* input) {
     t_intcode_result result = aoc_intcode_eval(input, day5p2_setup_input);
 
-    int res = result.state.output.data[result.state.output.head - 1];
+    bigint res = result.state.output.data[result.state.output.head - 1];
 
     intcode_free_result(&result);
-    return aoc_asprintf("%d", res);
+    return aoc_bigint_to_str(res);
 }

@@ -4,21 +4,21 @@
 #include "intcode.h"
 #include "aoc.h"
 
-t_intcode_param_mode intcode_get_mode(int op, int pos) {
+t_intcode_param_mode intcode_get_mode(bigint op, int pos) {
     op /= 10;  // Assumes pos starts at 1 for symetry with accessing parameters (ip + pos)
     while (pos-- > 0)
         op /= 10;
     return op % 10;
 }
 
-bool intcode_safe_read(t_intcode_state* state, int param, t_intcode_param_mode mode, int* out) {
+bool intcode_safe_read(t_intcode_state* state, bigint param, t_intcode_param_mode mode, bigint* out) {
     switch (mode) {
         case INTCODE_PARAM_MODE_POSITION:
             if (param >= 0 && (size_t)param < state->memory.size) {
                 *out = state->memory.data[param];
                 return true;
             } else {
-                fprintf(stderr, "intcode attempting to read oob %d\n", param);
+                fprintf(stderr, "intcode attempting to read oob " BIGINT_FMT "\n", param);
                 return false;
             }
         case INTCODE_PARAM_MODE_IMMEDIATE:
@@ -32,14 +32,14 @@ bool intcode_safe_read(t_intcode_state* state, int param, t_intcode_param_mode m
     return false;
 }
 
-bool intcode_safe_write(t_intcode_state* state, int addr, t_intcode_param_mode mode, int val) {
+bool intcode_safe_write(t_intcode_state* state, bigint addr, t_intcode_param_mode mode, bigint val) {
     switch (mode) {
         case INTCODE_PARAM_MODE_POSITION:
             if (addr >= 0 && (size_t)addr < state->memory.size) {
                 state->memory.data[addr] = val;
                 return true;
             } else {
-                fprintf(stderr, "intcode attempting to write oob %d\n", addr);
+                fprintf(stderr, "intcode attempting to write oob " BIGINT_FMT "\n", addr);
                 return false;
             }
         case INTCODE_PARAM_MODE_IMMEDIATE:
@@ -53,7 +53,7 @@ bool intcode_safe_write(t_intcode_state* state, int addr, t_intcode_param_mode m
     return false;
 }
 
-bool intcode_safe_read_input(t_intcode_state* state, int* out) {
+bool intcode_safe_read_input(t_intcode_state* state, bigint* out) {
     if (state->input.head < state->input.size) {
         *out = state->input.data[state->input.head++];
         return true;
@@ -61,7 +61,7 @@ bool intcode_safe_read_input(t_intcode_state* state, int* out) {
     return false;
 }
 
-bool intcode_safe_write_output(t_intcode_state* state, int value) {
+bool intcode_safe_write_output(t_intcode_state* state, bigint value) {
     if (state->output.data == NULL) {
         state->output.size = 16;
         state->output.data = malloc(state->output.size * sizeof(*state->output.data));
@@ -84,5 +84,5 @@ void intcode_free_result(t_intcode_result* res) {
 
 void intcode_print_output(const t_intcode_state* state) {
     for (size_t i = 0; i < state->output.head; i++)
-        printf("%d%s", state->output.data[i], (i + 1 < state->output.head) ? " " : "\n");
+        printf(BIGINT_FMT "%s", state->output.data[i], (i + 1 < state->output.head) ? " " : "\n");
 }

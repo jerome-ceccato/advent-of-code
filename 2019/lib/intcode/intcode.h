@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include "utils.h"
 
 typedef enum {
     INTCODE_OP_ADD = 1,
@@ -29,27 +30,27 @@ typedef enum {
     INTCODE_RESULT_FAILURE
 } t_intcode_result_status;
 
-// An int array with its size
+// An bigint array with its size
 typedef struct {
-    int* data;
+    bigint* data;
     size_t size;
-} t_int_array;
+} t_bigint_array;
 
-// Like an int array, but keeping track of its current position
+// Like a bigint array, but keeping track of its current position
 typedef struct {
-    int* data;
+    bigint* data;
     size_t head;
     size_t size;
-} t_int_stream;
+} t_bigint_stream;
 
 // All data representing the intcode computer
 typedef struct {
-    t_int_array memory;  // Current memory
-    size_t ip;           // Instruction pointer
-    int relative_base;   // For relative parameter mode
+    t_bigint_array memory;  // Current memory
+    size_t ip;              // Instruction pointer
+    bigint relative_base;   // For relative parameter mode
 
-    t_int_stream input;   // Input, should be set during preprocessing
-    t_int_stream output;  // Output, will be dynamically created as needed
+    t_bigint_stream input;   // Input, should be set during preprocessing
+    t_bigint_stream output;  // Output, will be dynamically created as needed
 } t_intcode_state;
 
 typedef struct {
@@ -76,12 +77,12 @@ void intcode_free_result(t_intcode_result* res);
  */
 
 // Helpers
-t_intcode_param_mode intcode_get_mode(int op, int pos);  // pos is the position of the parameter, starts at 1
+t_intcode_param_mode intcode_get_mode(bigint op, int pos);  // pos is the position of the parameter, starts at 1
 
-bool intcode_safe_read(t_intcode_state* state, int param, t_intcode_param_mode mode, int* out);
-bool intcode_safe_write(t_intcode_state* state, int addr, t_intcode_param_mode mode, int val);
-bool intcode_safe_read_input(t_intcode_state* state, int* out);
-bool intcode_safe_write_output(t_intcode_state* state, int value);
+bool intcode_safe_read(t_intcode_state* state, bigint param, t_intcode_param_mode mode, bigint* out);
+bool intcode_safe_write(t_intcode_state* state, bigint addr, t_intcode_param_mode mode, bigint val);
+bool intcode_safe_read_input(t_intcode_state* state, bigint* out);
+bool intcode_safe_write_output(t_intcode_state* state, bigint value);
 
 void intcode_print_output(const t_intcode_state* state);
 

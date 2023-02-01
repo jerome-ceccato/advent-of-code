@@ -21,17 +21,17 @@ void (*day2_setup_memory_with(int noun, int verb))(t_intcode_state*) {
 char* day2p1(const char* input) {
     t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(12, 2));
 
-    int res = result.state.memory.data[0];
+    bigint res = result.state.memory.data[0];
 
     intcode_free_result(&result);
-    return aoc_asprintf("%d", res);
+    return aoc_bigint_to_str(res);
 }
 
 char* day2p2(const char* input) {
     for (int noun = 0; noun < 100; noun++) {
         for (int verb = 0; verb < 100; verb++) {
             t_intcode_result result = aoc_intcode_eval(input, day2_setup_memory_with(noun, verb));
-            int ouput = result.state.memory.data[0];
+            bigint ouput = result.state.memory.data[0];
             intcode_free_result(&result);
 
             if (ouput == 19690720) {

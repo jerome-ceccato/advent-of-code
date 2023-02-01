@@ -15,7 +15,7 @@ int* day6_map_orbits(const char* input) {
     // At most 3 characters [A-Z0-9], can be uniquely encoded into a 0-36^3 int
     // Technically we should +1 everything to keep 0 as the 'empty' value,
     // but in practice there are no orbits called "A" in the input.
-    int* map = calloc(sizeof(int), (36 * 36 * 36));
+    int* map = calloc(sizeof(*map), (36 * 36 * 36));
 
     int i = 0;
     while (input[i]) {
