@@ -1,6 +1,7 @@
 #ifndef AOC_H
 #define AOC_H
 
+#include "utils.h"
 #include "intcode.h"
 
 /*
@@ -12,6 +13,7 @@ char* aoc_read_file(const char* filename);
 
 // Parses a string of ints separated by `sep` into an array
 void aoc_contents_to_ints(const char* data, char sep, int** out_array, size_t* out_size);
+void aoc_contents_to_bigints(const char* data, char sep, bigint** out_array, size_t* out_size);
 
 /*
  * String
@@ -19,6 +21,10 @@ void aoc_contents_to_ints(const char* data, char sep, int** out_array, size_t* o
 
 // Returns a new string containing the formatted output
 char* aoc_asprintf(const char* fmt, ...);
+
+// bigint conversion
+bigint str_to_bigint(char* str);
+char* aoc_bigint_to_str(bigint a);
 
 // Count the number of times `c` appears in `str`
 size_t aoc_occurences_of_char(const char* str, char c);

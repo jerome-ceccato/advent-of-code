@@ -10,7 +10,7 @@ static const size_t height = 6;
 static void parse_image(const char* input, unsigned char*** out_layers, size_t* out_nlayers) {
     size_t nlayers = strlen(input) / (width * height);
 
-    unsigned char** layers = malloc(sizeof(int*) * nlayers);
+    unsigned char** layers = malloc(sizeof(*layers) * nlayers);
     for (size_t i = 0; i < nlayers; i++) {
         layers[i] = calloc(width * height, 1);
         for (size_t j = 0; j < (width * height); j++) {

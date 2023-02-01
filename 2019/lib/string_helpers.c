@@ -27,3 +27,11 @@ size_t aoc_occurences_of_char(const char* str, char c) {
     }
     return n;
 }
+
+char* aoc_bigint_to_str(bigint a) {
+    return aoc_asprintf(BIGINT_FMT, a);
+}
+
+bigint str_to_bigint(char* str) {
+    return strtoimax(str, NULL, 10);
+}

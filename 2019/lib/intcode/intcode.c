@@ -33,7 +33,7 @@ t_intcode_result aoc_intcode_eval(const char* input,
                                   t_intcode_preprocessing preprocessor) {
     t_intcode_state state = intcode_make_state();
 
-    aoc_contents_to_ints(input, ',', &state.memory.data, &state.memory.size);
+    aoc_contents_to_bigints(input, ',', &state.memory.data, &state.memory.size);
 
     if (preprocessor) {
         (*preprocessor)(&state);
@@ -47,7 +47,7 @@ t_intcode_result aoc_intcode_restart(t_intcode_state state) {
         if (!intcode_eval_opcode(&state)) {
             // Failing a read input op is expected when waiting for an input from somewhere else
             if ((state.memory.data[state.ip] % 100) != INTCODE_OP_READ)
-                fprintf(stderr, "intcode failed reading op %d\n", state.memory.data[state.ip]);
+                fprintf(stderr, "intcode failed reading op " BIGINT_FMT "\n", state.memory.data[state.ip]);
             return (t_intcode_result){INTCODE_RESULT_FAILURE, state};
         }
     }
@@ -70,6 +70,6 @@ bool intcode_eval_opcode(t_intcode_state* state) {
             return res;
         }
     }
-    fprintf(stderr, "unknown intcode op %d\n", state->memory.data[state->ip]);
+    fprintf(stderr, "unknown intcode op " BIGINT_FMT "\n", state->memory.data[state->ip]);
     return false;
 }

@@ -1,6 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdint.h>
+#include <inttypes.h>
+typedef intmax_t bigint;
+#define BIGINT_FMT "%" PRIdMAX
+
 #if !defined(__GNUC__)
 #  define __attribute__(a)
 #endif /* !__GNUC__ */
