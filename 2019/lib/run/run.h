@@ -24,6 +24,7 @@ DEFDAY(7)
 DEFDAY(8)
 DEFDAY(9)
 DEFDAY(10)
+DEFDAY(11)
 
 void run_all();
 void run_one(int target);
