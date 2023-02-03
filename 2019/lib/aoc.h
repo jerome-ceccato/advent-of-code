@@ -45,4 +45,28 @@ t_point2d point2d_make(int x, int y);
 t_point2d point2d_add(t_point2d lhs, t_point2d rhs);
 int point2d_distance(t_point2d lhs, t_point2d rhs);
 
+/*
+ * 3D
+ */
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+} t_point3d;
+
+#define POINT3D_ZERO \
+  (t_point3d) { 0, 0, 0 }
+
+t_point3d point3d_make(int x, int y, int z);
+t_point3d point3d_add(t_point3d lhs, t_point3d rhs);
+bool point3d_eq(t_point3d lhs, t_point3d rhs);
+
+/*
+ * Math
+ */
+
+bigint aoc_gcd(bigint a, bigint b);
+bigint aoc_lcm(bigint a, bigint b);
+
 #endif
