@@ -29,6 +29,7 @@ void intcode_set_input1(t_intcode_state* state, bigint a) {
     state->input.data = malloc(sizeof(*state->input.data));
     state->input.size = 1;
     state->input.data[0] = a;
+    state->input.head = 0;
 }
 
 void intcode_set_input2(t_intcode_state* state, bigint a, bigint b) {
@@ -37,6 +38,7 @@ void intcode_set_input2(t_intcode_state* state, bigint a, bigint b) {
     state->input.size = 2;
     state->input.data[0] = a;
     state->input.data[1] = b;
+    state->input.head = 0;
 }
 
 bigint intcode_last_output(t_intcode_result* result) {
