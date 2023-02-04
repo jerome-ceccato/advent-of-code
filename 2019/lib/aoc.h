@@ -44,6 +44,7 @@ typedef struct {
 t_point2d point2d_make(int x, int y);
 t_point2d point2d_add(t_point2d lhs, t_point2d rhs);
 int point2d_distance(t_point2d lhs, t_point2d rhs);
+bool point2d_eq(t_point2d lhs, t_point2d rhs);
 
 /*
  * 3D
@@ -68,5 +69,7 @@ bool point3d_eq(t_point3d lhs, t_point3d rhs);
 
 bigint aoc_gcd(bigint a, bigint b);
 bigint aoc_lcm(bigint a, bigint b);
+
+int aoc_random_uniform(int low, int high);
 
 #endif
