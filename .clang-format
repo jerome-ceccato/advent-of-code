@@ -14,3 +14,4 @@ BreakBeforeBinaryOperators: NonAssignment
 AlignAfterOpenBracket: Align
 IndentPPDirectives: AfterHash
 PPIndentWidth: 2
+AllowShortBlocksOnASingleLine: Empty

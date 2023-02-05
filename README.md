@@ -130,6 +130,7 @@ I solved this year of AoC during 2023.
 | 14  | [Space Stoichiometry](https://adventofcode.com/2019/day/14)                 | [main.c](./2019/day14/main.c)                                 |
 | 15  | [Oxygen System](https://adventofcode.com/2019/day/15)                       | [main.c](./2019/day15/main.c), [intcode](./2019/lib/intcode)  |
 | 16  | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16)       | [main.c](./2019/day16/main.c)                                 |
+| 17  | [Set and Forget](https://adventofcode.com/2019/day/17)                      | [main.c](./2019/day17/main.c), [intcode](./2019/lib/intcode)  |
 
 
 ## 2018
