@@ -19,6 +19,7 @@ static const t_aoc_day days[] = {
     AOCDAY(13),
     AOCDAY(14),
     AOCDAY(15),
+    AOCDAY(16),
 };
 
 void run(const t_aoc_day* day) {
