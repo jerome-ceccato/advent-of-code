@@ -72,4 +72,10 @@ bigint aoc_lcm(bigint a, bigint b);
 
 int aoc_random_uniform(int low, int high);
 
+/*
+ * General
+ */
+
+void free_pp(void** pp, size_t size);
+
 #endif

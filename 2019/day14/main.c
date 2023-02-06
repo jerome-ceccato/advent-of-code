@@ -131,12 +131,6 @@ static bigint buy(int** cost_map, bigint* bank, size_t size, int target, bigint 
     return total;
 }
 
-static void free_pp(void** pp, size_t size) {
-    for (size_t i = 0; i < size; i++)
-        free(pp[i]);
-    free(pp);
-}
-
 char* day14p1(const char* input) {
     t_line tmp[100];
     size_t nline = parse_all(input, tmp);
