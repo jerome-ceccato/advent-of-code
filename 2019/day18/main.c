@@ -4,6 +4,8 @@
 #include <time.h>
 #include "aoc.h"
 
+#undef DAY18_STATS
+
 typedef enum {
     DIR_NORTH,
     DIR_EAST,
@@ -49,19 +51,6 @@ static char** parse_map(const char* input, size_t* out_width, size_t* out_height
     *out_width = width;
     *out_height = height;
     return map;
-}
-
-static void print_map(char** map, size_t width, size_t height, t_point2d start) {
-    for (size_t y = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++) {
-            if (start.x == (int)x && start.y == (int)y) {
-                putchar('@');
-            } else {
-                putchar(map[y][x]);
-            }
-        }
-        putchar('\n');
-    }
 }
 
 static t_point2d offset_for_dir(t_dir dir) {
@@ -134,6 +123,7 @@ typedef struct {
     t_memo_path*** paths;  // [height][width][MEMO_PATH_COUNT]
 } t_memo;
 
+#ifdef DAY18_STATS
 struct s_stats {
     clock_t start;
     bigint loops;
@@ -155,6 +145,7 @@ void print_stats() {
     printf("Memo record size: %s\n", aoc_bigint_to_str(g_stats.memo_size));
     printf("=================\n");
 }
+#endif
 
 #define MEMO_PATH_COUNT 10000
 
@@ -178,22 +169,25 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
     int reachable_keys[26] = {0};
     int run_key = encode_keys(map, metadata);
 
+#ifdef DAY18_STATS
     g_stats.loops++;
+#endif
 
     if (!metadata.keys_left)
         return 0;
 
     for (int ek = 0; ek < MEMO_PATH_COUNT; ek++) {
         if (memo->paths[start.y][start.x][ek].keys_left == run_key) {
+#ifdef DAY18_STATS
             g_stats.memo_hit++;
+#endif
             return memo->paths[start.y][start.x][ek].best;
         }
     }
 
+#ifdef DAY18_STATS
     g_stats.real_loops++;
-
-    // printf("%x\n", run_key);
-    //  print_map(map, width, height, start);
+#endif
 
     stack = malloc(sizeof(*stack) * (width * height));
     next = malloc(sizeof(*next) * (width * height));
@@ -205,7 +199,6 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
     int steps;
     for (steps = 0; stack_sz > 0; steps++) {
         for (int i = 0; i < stack_sz; i++) {
-            // printf("(%d,%d)\n", stack[i].x, stack[i].y);
             char stackc = map[stack[i].y][stack[i].x];
             if (tile_type(stackc) == TYPE_KEY) {
                 reachable_keys[stackc - 'a'] = steps;
@@ -267,7 +260,9 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
         if (memo->paths[start.y][start.x][ek].best == 0) {
             memo->paths[start.y][start.x][ek].keys_left = run_key;
             memo->paths[start.y][start.x][ek].best = local_best;
+#ifdef DAY18_STATS
             g_stats.memo_size++;
+#endif
             done = true;
             break;
         }
@@ -277,46 +272,7 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
     return local_best;
 }
 
-char* day18p1(const char* input) {
-    size_t width, height;
-    t_point2d start;
-
-    return NULL;
-    char** map = parse_map(input, &width, &height, &start);
-    t_metadata metadata = build_metadata(map, width, height);
-    t_memo memo;
-    memo.paths = malloc(sizeof(*memo.paths) * height);
-    for (size_t i = 0; i < height; i++) {
-        memo.paths[i] = malloc(sizeof(**memo.paths) * width);
-        for (size_t j = 0; j < width; j++) {
-            memo.paths[i][j] = calloc(MEMO_PATH_COUNT, sizeof(***memo.paths));
-        }
-    }
-
-    memset(&g_stats, 0, sizeof(g_stats));
-    g_stats.start = clock();
-    int fastest = bfs(map, width, height, start, metadata, &memo);
-
-    print_stats();
-
-    free_pp((void**)map, height);
-    free_ppp((void***)memo.paths, height, width);
-    return aoc_asprintf("%d", fastest);
-}
-
-static void split_entrance(char** map, t_point2d start, t_point2d robots[4]) {
-    robots[0] = point2d_add(start, point2d_make(-1, -1));
-    robots[1] = point2d_add(start, point2d_make(1, -1));
-    robots[2] = point2d_add(start, point2d_make(-1, 1));
-    robots[3] = point2d_add(start, point2d_make(1, 1));
-
-    map[start.y][start.x] = '#';
-    map[start.y - 1][start.x] = '#';
-    map[start.y + 1][start.x] = '#';
-    map[start.y][start.x - 1] = '#';
-    map[start.y][start.x + 1] = '#';
-}
-
+// The memo struct needs to be different for p2 to account for the 4 positions instead of 1
 typedef struct {
     int keys_left;
     t_point2d robots[4];
@@ -345,6 +301,8 @@ static bool robot_eq(t_point2d robots[4], t_point2d other[4]) {
     return true;
 }
 
+// This is roughly the same as `bfs` but adapted for 4 positions
+// Run bfs 4 times with the different robots, then try all combinations recursively
 static int bfsp2(char** map, size_t width, size_t height, t_point2d robots[4], t_metadata metadata, t_memo2* memo) {
     t_point2d* stack;
     t_point2d* next;
@@ -355,25 +313,27 @@ static int bfsp2(char** map, size_t width, size_t height, t_point2d robots[4], t
     int run_key = encode_keys(map, metadata);
     int robot_key = encode_robots(robots);
 
+#ifdef DAY18_STATS
     g_stats.loops++;
-
     if (!(g_stats.loops % 100000))
         print_stats();
+#endif
 
     if (!metadata.keys_left)
         return 0;
 
     for (int ek = 0; ek < MEMO_PATH_COUNT; ek++) {
         if (memo->paths[robot_key][ek].keys_left == run_key && robot_eq(memo->paths[robot_key][ek].robots, robots)) {
+#ifdef DAY18_STATS
             g_stats.memo_hit++;
+#endif
             return memo->paths[robot_key][ek].best;
         }
     }
 
+#ifdef DAY18_STATS
     g_stats.real_loops++;
-
-    // printf("key; %x\n", run_key);
-    //  print_map(map, width, height, start);
+#endif
 
     stack = malloc(sizeof(*stack) * (width * height));
     next = malloc(sizeof(*next) * (width * height));
@@ -384,39 +344,29 @@ static int bfsp2(char** map, size_t width, size_t height, t_point2d robots[4], t
     for (int roboti = 0; roboti < 4; roboti++) {
         int stack_sz = 0;
         int next_sz = 0;
-        // printf("- %d\n", roboti);
         for (size_t i = 0; i < height; i++)
             memset(visited[i], 0, width * sizeof(**visited));
 
-        // printf("memset\n");
         stack[stack_sz++] = robots[roboti];
-        // printf("%d,%d\n", stack[0].x, stack[0].y);
         int steps;
         for (steps = 0; stack_sz > 0; steps++) {
-            // printf("] %d\n", steps);
             for (int i = 0; i < stack_sz; i++) {
-                // printf("(%d,%d)\n", stack[i].x, stack[i].y);
                 char stackc = map[stack[i].y][stack[i].x];
-                // printf("stack %c\n", stackc);
                 if (tile_type(stackc) == TYPE_KEY) {
                     reachable_keys[roboti][stackc - 'a'] = steps;
                     order[roboti][orderi[roboti]++] = stackc - 'a';
                 }
-                // printf("key\n");
+
                 for (t_dir dir = DIR_NORTH; dir <= DIR_WEST; dir++) {
                     t_point2d target = point2d_add(stack[i], offset_for_dir(dir));
-                    // printf("target %d,%d\n", target.x, target.y);
-                    // printf("map %c\n", map[target.y][target.x]);
                     if (target.x >= 0 && (size_t)target.x < width
                         && target.y >= 0 && (size_t)target.y < height
                         && !visited[target.y][target.x]
                         && walkable(tile_type(map[target.y][target.x]))) {
-                        // printf("walkable\n");
                         visited[target.y][target.x] = true;
                         next[next_sz++] = target;
                     }
                 }
-                // printf("dir\n");
             }
 
             memcpy(stack, next, sizeof(*next) * next_sz);
@@ -458,25 +408,67 @@ static int bfsp2(char** map, size_t width, size_t height, t_point2d robots[4], t
         }
     }
 
-    bool done = false;
     for (int ek = 0; ek < MEMO_PATH_COUNT; ek++) {
         if (memo->paths[robot_key][ek].keys_left == run_key && robot_eq(memo->paths[robot_key][ek].robots, robots)) {
             memo->paths[robot_key][ek].best = local_best;
-            done = true;
             break;
         }
         if (memo->paths[robot_key][ek].best == 0) {
             memo->paths[robot_key][ek].keys_left = run_key;
             memo->paths[robot_key][ek].best = local_best;
             memcpy(memo->paths[robot_key][ek].robots, robots, sizeof(*robots) * 4);
+#ifdef DAY18_STATS
             g_stats.memo_size++;
-            done = true;
+#endif
             break;
         }
     }
-    if (!done)
-        printf("Memo too small\n");
+
     return local_best;
+}
+
+static void split_entrance(char** map, t_point2d start, t_point2d robots[4]) {
+    robots[0] = point2d_add(start, point2d_make(-1, -1));
+    robots[1] = point2d_add(start, point2d_make(1, -1));
+    robots[2] = point2d_add(start, point2d_make(-1, 1));
+    robots[3] = point2d_add(start, point2d_make(1, 1));
+
+    map[start.y][start.x] = '#';
+    map[start.y - 1][start.x] = '#';
+    map[start.y + 1][start.x] = '#';
+    map[start.y][start.x - 1] = '#';
+    map[start.y][start.x + 1] = '#';
+}
+
+char* day18p1(const char* input) {
+    size_t width, height;
+    t_point2d start;
+
+    return NULL;
+    char** map = parse_map(input, &width, &height, &start);
+    t_metadata metadata = build_metadata(map, width, height);
+    t_memo memo;
+    memo.paths = malloc(sizeof(*memo.paths) * height);
+    for (size_t i = 0; i < height; i++) {
+        memo.paths[i] = malloc(sizeof(**memo.paths) * width);
+        for (size_t j = 0; j < width; j++) {
+            memo.paths[i][j] = calloc(MEMO_PATH_COUNT, sizeof(***memo.paths));
+        }
+    }
+
+#ifdef DAY18_STATS
+    memset(&g_stats, 0, sizeof(g_stats));
+    g_stats.start = clock();
+#endif
+    int fastest = bfs(map, width, height, start, metadata, &memo);
+
+#ifdef DAY18_STATS
+    print_stats();
+#endif
+
+    free_pp((void**)map, height);
+    free_ppp((void***)memo.paths, height, width);
+    return aoc_asprintf("%d", fastest);
 }
 
 char* day18p2(const char* input) {
@@ -489,19 +481,21 @@ char* day18p2(const char* input) {
     split_entrance(map, start, robots);
 
     t_memo2 memo;
-    printf("Let's alloc a lot of memory\n");
     size_t memo_sz = (16 * width * height);
     memo.paths = malloc(sizeof(*memo.paths) * memo_sz);
     for (size_t i = 0; i < memo_sz; i++)
         memo.paths[i] = calloc(MEMO_PATH_COUNT, sizeof(**memo.paths));
 
-    // print_map(map, width, height, point2d_make(-1, -1));
+#ifdef DAY18_STATS
     memset(&g_stats, 0, sizeof(g_stats));
     g_stats.start = clock();
-    printf("Let's goooo\n");
+#endif
+
     int fastest = bfsp2(map, width, height, robots, metadata, &memo);
 
+#ifdef DAY18_STATS
     print_stats();
+#endif
 
     free_pp((void**)map, height);
     free_pp((void**)memo.paths, memo_sz);
