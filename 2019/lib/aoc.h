@@ -77,5 +77,6 @@ int aoc_random_uniform(int low, int high);
  */
 
 void free_pp(void** pp, size_t size);
+void free_ppp(void*** ppp, size_t size1, size_t size2);
 
 #endif
