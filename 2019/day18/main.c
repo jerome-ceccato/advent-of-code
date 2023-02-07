@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "aoc.h"
 
 typedef enum {
@@ -93,6 +94,7 @@ static bool walkable(t_tile_type type) {
     return type == TYPE_EMPTY || type == TYPE_KEY;
 }
 
+// Record the position of all keys and doors so we can look them up in constant time
 static t_metadata build_metadata(char** map, size_t width, size_t height) {
     t_metadata ret;
 
@@ -112,22 +114,53 @@ static t_metadata build_metadata(char** map, size_t width, size_t height) {
                 case TYPE_DOOR:
                     ret.doors[map[y][x] - 'A'] = point2d_make(x, y);
                     break;
+                default:
+                    break;
             }
     return ret;
 }
 
+//
 typedef struct {
     int keys_left;
     int steps;
     int best;
 } t_memo_path;
 
+// Memoize the absolute best result and best sub-times per path
 typedef struct {
     int best;
-    t_memo_path*** paths;  // [height][width][100]
+    // This serves as a makeshift hashtable to encode start position + owned keys => shortest path
+    // Since there are (1<<26) possible key combinations, we use a shorter array and traverse it instead of
+    // having constant access time
+    t_memo_path*** paths;  // [height][width][MEMO_PATH_COUNT]
 } t_memo;
 
-#define YOLO_PATH_MEM 1000
+struct s_stats {
+    clock_t start;
+    bigint loops;
+    bigint real_loops;
+    bigint memo_best_hit;
+    bigint memo_path_hit;
+    bigint memo_size;
+};
+static struct s_stats g_stats;
+
+void print_stats() {
+    clock_t end = clock();
+    double elapsed = (double)(end - g_stats.start) / CLOCKS_PER_SEC;
+
+    printf("=== Stats =======\n");
+    printf("Time: %.6f\n", elapsed);
+    printf("Loops: %s\n", aoc_bigint_to_str(g_stats.loops));
+    printf("Real loops: %s\n", aoc_bigint_to_str(g_stats.real_loops));
+    printf("Memo best hits: %s\n", aoc_bigint_to_str(g_stats.memo_best_hit));
+    printf("Memo path hits: %s\n", aoc_bigint_to_str(g_stats.memo_path_hit));
+    printf("Memo record size: %s\n", aoc_bigint_to_str(g_stats.memo_size));
+    printf("=================\n");
+}
+
+#define MEMO_PATH_COUNT 5000
 
 static int encode_keys(char** map, t_metadata metadata) {
     int key = 0;
@@ -137,6 +170,10 @@ static int encode_keys(char** map, t_metadata metadata) {
     }
     return key;
 }
+
+// TODO: make bfs return the local value and not the accumulated value for better memo usage
+// (e.g. can get that value anytime we're in the same situation)
+// try removing best and acc_steps all together and see if we beat the previous time
 
 static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metadata metadata, int acc_steps, t_memo* memo) {
     t_point2d* stack;
@@ -149,6 +186,10 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
     int reachable_keys[26] = {0};
     int run_key = encode_keys(map, metadata);
 
+    g_stats.loops++;
+    // if (!(g_stats.loops % 1000000))
+    //     print_stats();
+
     if (!metadata.keys_left) {
         if (acc_steps < memo->best) {
             memo->best = acc_steps;
@@ -159,14 +200,18 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
     }
 
     if (acc_steps >= memo->best) {
+        g_stats.memo_best_hit++;
         return INT_MAX;
     }
 
-    for (int ek = 0; ek < YOLO_PATH_MEM; ek++) {
+    for (int ek = 0; ek < MEMO_PATH_COUNT; ek++) {
         if (memo->paths[start.y][start.x][ek].keys_left == run_key && acc_steps >= memo->paths[start.y][start.x][ek].steps) {
+            g_stats.memo_path_hit++;
             return memo->paths[start.y][start.x][ek].best;
         }
     }
+
+    g_stats.real_loops++;
 
     // printf("%x\n", run_key);
     //  print_map(map, width, height, start);
@@ -230,16 +275,36 @@ static int bfs(char** map, size_t width, size_t height, t_point2d start, t_metad
         }
     }
 
-    for (int ek = 0; ek < YOLO_PATH_MEM; ek++) {
+    bool done = false;
+    for (int ek = 0; ek < MEMO_PATH_COUNT; ek++) {
+        if (memo->paths[start.y][start.x][ek].keys_left == run_key) {
+            if (acc_steps < memo->paths[start.y][start.x][ek].steps) {
+                memo->paths[start.y][start.x][ek].steps = acc_steps;
+                memo->paths[start.y][start.x][ek].best = local_best;
+            }
+            done = true;
+            break;
+        }
         if (memo->paths[start.y][start.x][ek].best == 0) {
             memo->paths[start.y][start.x][ek].keys_left = run_key;
             memo->paths[start.y][start.x][ek].steps = acc_steps;
             memo->paths[start.y][start.x][ek].best = local_best;
+            g_stats.memo_size++;
+            done = true;
             break;
         }
     }
+    if (!done)
+        printf("Memo too small for %d,%d\n", start.x, start.y);
     return local_best;
 }
+
+// Ideas
+// - Generate a map for each position (start + all key) of the distance + reqs to reach each other position
+//   Use that for the bfs instead
+//   There might be multiple ways tho that do not need the door
+// ~ Transform the map into a graph to save on traversal cost
+//   Find all intersections and doors, make them into a node, add weight (distance) to branches
 
 char* day18p1(const char* input) {
     size_t width, height;
@@ -249,19 +314,59 @@ char* day18p1(const char* input) {
     t_metadata metadata = build_metadata(map, width, height);
     t_memo memo = (t_memo){.best = INT_MAX};
     memo.paths = malloc(sizeof(*memo.paths) * height);
-    for (int i = 0; i < height; i++) {
+    for (size_t i = 0; i < height; i++) {
         memo.paths[i] = malloc(sizeof(**memo.paths) * width);
-        for (int j = 0; j < width; j++) {
-            memo.paths[i][j] = calloc(YOLO_PATH_MEM, sizeof(***memo.paths));
+        for (size_t j = 0; j < width; j++) {
+            memo.paths[i][j] = calloc(MEMO_PATH_COUNT, sizeof(***memo.paths));
         }
     }
 
+    g_stats.start = clock();
     int fastest = bfs(map, width, height, start, metadata, 0, &memo);
+
+    print_stats();
 
     free_pp((void**)map, height);
     return aoc_asprintf("%d", fastest);
 }
 
+static void split_entrance(char** map, t_point2d start, t_point2d robots[4]) {
+    robots[0] = point2d_add(start, point2d_make(-1, -1));
+    robots[1] = point2d_add(start, point2d_make(1, -1));
+    robots[2] = point2d_add(start, point2d_make(-1, 1));
+    robots[3] = point2d_add(start, point2d_make(1, 1));
+
+    map[start.y][start.x] = '#';
+    map[start.y - 1][start.x] = '#';
+    map[start.y + 1][start.x] = '#';
+    map[start.y][start.x - 1] = '#';
+    map[start.y][start.x + 1] = '#';
+}
+
 char* day18p2(const char* input) {
+    size_t width, height;
+    t_point2d start;
+    t_point2d robots[4];
+
+    char** map = parse_map(input, &width, &height, &start);
+    t_metadata metadata = build_metadata(map, width, height);
+    split_entrance(map, start, robots);
+
+    // print_map(map, width, height, point2d_make(-1, -1));
+
     return NULL;
 }
+
+/**
+
+With fixed memo path (mem 10000)
+=== Stats =======
+Time: 34.883000
+Loops: 673731
+Real loops: 124142
+Memo best hits: 266051
+Memo path hits: 283516
+Memo record size: 46729
+=================
+
+*/
