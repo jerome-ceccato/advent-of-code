@@ -44,6 +44,6 @@ void intcode_set_input2(t_intcode_state* state, bigint a, bigint b) {
 bigint intcode_last_output(t_intcode_result* result) {
     if (result->state.output.data && result->state.output.head > 0)
         return result->state.output.data[result->state.output.head - 1];
-    fprintf(stderr, "intcode result has no output");
+    fprintf(stderr, "intcode result has no output\n");
     return 0;
 }
