@@ -134,6 +134,7 @@ I solved this year of AoC during 2023.
 | 18  | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18)          | [main.c](./2019/day18/main.c)                                 |
 | 19  | [Tractor Beam](https://adventofcode.com/2019/day/19)                        | [main.c](./2019/day19/main.c), [intcode](./2019/lib/intcode)  |
 | 20  | [Donut Maze](https://adventofcode.com/2019/day/20)                          | [main.c](./2019/day20/main.c)                                 |
+| 21  | [Springdroid Adventure](https://adventofcode.com/2019/day/21)               | [main.c](./2019/day21/main.c), [intcode](./2019/lib/intcode)  |
 
 
 ## 2018
