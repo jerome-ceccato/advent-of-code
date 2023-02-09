@@ -135,6 +135,8 @@ I solved this year of AoC during 2023.
 | 19  | [Tractor Beam](https://adventofcode.com/2019/day/19)                        | [main.c](./2019/day19/main.c), [intcode](./2019/lib/intcode)  |
 | 20  | [Donut Maze](https://adventofcode.com/2019/day/20)                          | [main.c](./2019/day20/main.c)                                 |
 | 21  | [Springdroid Adventure](https://adventofcode.com/2019/day/21)               | [main.c](./2019/day21/main.c), [intcode](./2019/lib/intcode)  |
+| 22  | [Slam Shuffle](https://adventofcode.com/2019/day/22)                        | [main.c](./2019/day22/main.c) (p1)                            |
+| 23  | [Category Six](https://adventofcode.com/2019/day/23)                        | [main.c](./2019/day23/main.c), [intcode](./2019/lib/intcode)  |
 
 
 ## 2018
