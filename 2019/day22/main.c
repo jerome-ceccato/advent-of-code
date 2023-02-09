@@ -81,5 +81,6 @@ char *day22p1(const char *input) {
 }
 
 char *day22p2(const char *input) {
+    (void)input;
     return NULL;
 }
