@@ -1,13 +1,22 @@
 # Advent of Code
 My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
+| Year          | Stars     | Language(s)           |
+| ---           | ---       | ---                   |
+| [2022](#2022) | 50 :star: | Various (26 total)    |
+| [2021](#2021) | 50 :star: | Swift                 |
+| [2020](#2020) | 50 :star: | Racket                |
+| [2019](#2019) | 50 :star: | C                     |
+| [2018](#2018) | 27        | Various               |
+
+---
 
 ## 2022
 
 In 2022 I used a different language every day for the second time, but this time I made it to the end.
 
-| Day | Problem  | Language  | Solution |
-| --- | ---      | ---       | ---    |
+| Day | Problem                                                             | Language                                                                | Solution                                  |
+| --- | ---                                                                 | ---                                                                     | ---                                       |
 | 1   | [Calorie Counting](https://adventofcode.com/2022/day/1)             | [J](https://en.wikipedia.org/wiki/J_(programming_language))             | [main.ijs](./2022/day01/main.ijs)         |
 | 2   | [Rock Paper Scissors](https://adventofcode.com/2022/day/2)          | [Factor](https://en.wikipedia.org/wiki/Factor_(programming_language))   | [main.factor](./2022/day02/main.factor)   |
 | 3   | [Rucksack Reorganization](https://adventofcode.com/2022/day/3)      | [min](https://min-lang.org/)                                            | [main.min](./2022/day03/main.min)         |
@@ -42,8 +51,8 @@ All problems were solved in [Swift](https://en.wikipedia.org/wiki/Swift_(program
 In 2021, I only finished part 1 of Day 22 and stopped there. I completed this year after doing AoC 2022.
 
 
-| Day | Problem  | Solution |
-| --- | ---      | ---    |
+| Day | Problem                                                         | Solution                                  |
+| --- | ---                                                             | ---                                       |
 | 1   | [Sonar Sweep](https://adventofcode.com/2021/day/1)              | [day01.swift](./2021/day01/day01.swift)   |
 | 2   | [Dive!](https://adventofcode.com/2021/day/2)                    | [day02.swift](./2021/day02/day02.swift)   |
 | 3   | [Binary Diagnostic](https://adventofcode.com/2021/day/3)        | [day03.swift](./2021/day03/day03.swift)   |
@@ -77,8 +86,8 @@ All problems were solved in [Racket](https://en.wikipedia.org/wiki/Racket_(progr
 
 I solved this year of AoC during 2023.
 
-| Day | Problem  | Solution |
-| --- | ---      | ---    |
+| Day | Problem                                                         | Solution                            |
+| --- | ---                                                             | ---                                 |
 | 1   | [Report Repair](https://adventofcode.com/2020/day/1)            | [main.rkt](./2020/day01/main.rkt)   |
 | 2   | [Password Philosophy](https://adventofcode.com/2020/day/2)      | [main.rkt](./2020/day02/main.rkt)   |
 | 3   | [Toboggan Trajectory](https://adventofcode.com/2020/day/3)      | [main.rkt](./2020/day03/main.rkt)   |
@@ -112,8 +121,8 @@ All problems were solved in [C](https://en.wikipedia.org/wiki/C_(programming_lan
 
 I solved this year of AoC during 2023.
 
-| Day | Problem  | Solution |
-| --- | ---      | ---    |
+| Day | Problem                                                                     | Solution                                                      |
+| --- | ---                                                                         | ---                                                           |
 | 1   | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1)   | [main.c](./2019/day01/main.c)                                 |
 | 2   | [1202 Program Alarm](https://adventofcode.com/2019/day/2)                   | [main.c](./2019/day02/main.c), [intcode](./2019/lib/intcode)  |
 | 3   | [Crossed Wires](https://adventofcode.com/2019/day/3)                        | [main.c](./2019/day03/main.c)                                 |
