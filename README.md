@@ -138,6 +138,7 @@ I solved this year of AoC during 2023.
 | 22  | [Slam Shuffle](https://adventofcode.com/2019/day/22)                        | [main.c](./2019/day22/main.c) (p1)                            |
 | 23  | [Category Six](https://adventofcode.com/2019/day/23)                        | [main.c](./2019/day23/main.c), [intcode](./2019/lib/intcode)  |
 | 24  | [Planet of Discord](https://adventofcode.com/2019/day/24)                   | [main.c](./2019/day24/main.c)                                 |
+| 25  | [Cryostasis ](https://adventofcode.com/2019/day/25)                         | [main.c](./2019/day25/main.c), [intcode](./2019/lib/intcode)  |
 
 
 ## 2018
