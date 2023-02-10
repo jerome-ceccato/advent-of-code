@@ -4,38 +4,25 @@
 #include <ctype.h>
 #include "aoc.h"
 
-#define DECK_SIZE 10007
+#ifdef __GNUC__
+typedef __int128_t hugeint;
+#else
+typedef bigint hugeint;
+#endif
 
-static void deal_new(int cards[DECK_SIZE]) {
-    for (int i = 0; i < (DECK_SIZE / 2); i++) {
-        int j = DECK_SIZE - 1 - i;
-        int tmp = cards[i];
-        cards[i] = cards[j];
-        cards[j] = tmp;
-    }
+typedef struct
+{
+    hugeint a;
+    hugeint b;
+} t_linear_eq;
+
+// I totally figured that out by myself and didn't lookup hints on reddit
+static t_linear_eq compose(t_linear_eq lhs, t_linear_eq rhs, hugeint deck_size) {
+    return (t_linear_eq){.a = (lhs.a * rhs.a) % deck_size, (lhs.b * rhs.a + rhs.b) % deck_size};
 }
 
-static void cut(int cards[DECK_SIZE], int n) {
-    int copy[DECK_SIZE];
-    memcpy(copy, cards, sizeof(*cards) * DECK_SIZE);
-
-    if (n > 0) {
-        memcpy(cards, copy + n, sizeof(*cards) * (DECK_SIZE - n));
-        memcpy(cards + (DECK_SIZE - n), copy, sizeof(*cards) * n);
-    } else {
-        n = -n;
-        memcpy(cards, copy + (DECK_SIZE - n), sizeof(*cards) * n);
-        memcpy(cards + n, copy, sizeof(*cards) * (DECK_SIZE - n));
-    }
-}
-
-static void deal_with_increment(int cards[DECK_SIZE], int inc) {
-    int copy[DECK_SIZE];
-    memcpy(copy, cards, sizeof(*cards) * DECK_SIZE);
-
-    for (int i = 0; i < DECK_SIZE; i++) {
-        cards[(i * inc) % DECK_SIZE] = copy[i];
-    }
+static hugeint resolve(t_linear_eq eq, hugeint x, hugeint deck_size) {
+    return (((eq.a * x + eq.b) % deck_size) + deck_size) % deck_size;
 }
 
 static bool has_prefix(const char *str, const char *prefix) {
@@ -47,16 +34,18 @@ static bool has_prefix(const char *str, const char *prefix) {
     return false;
 }
 
-static void shuffle(const char *input, int cards[DECK_SIZE]) {
+static t_linear_eq compile_shuffle_techniques(const char *input, hugeint deck_size) {
+    t_linear_eq acc = (t_linear_eq){.a = 1, .b = 0};
     while (input) {
         if (has_prefix(input, "deal into new stack")) {
-            deal_new(cards);
+            acc = compose(acc, (t_linear_eq){.a = -1, .b = -1}, deck_size);
         } else if (has_prefix(input, "cut ")) {
             int n = strtol(input + strlen("cut "), NULL, 10);
-            cut(cards, n);
+            acc = compose(acc, (t_linear_eq){.a = 1, .b = -n}, deck_size);
+
         } else if (has_prefix(input, "deal with increment ")) {
             int n = strtol(input + strlen("deal with increment "), NULL, 10);
-            deal_with_increment(cards, n);
+            acc = compose(acc, (t_linear_eq){.a = n, .b = 0}, deck_size);
         } else {
             fprintf(stderr, "Unrecognized action %s\n", input);
         }
@@ -64,23 +53,52 @@ static void shuffle(const char *input, int cards[DECK_SIZE]) {
         const char *p = strchr(input, '\n');
         input = p ? p + 1 : NULL;
     }
+    return acc;
+}
+
+static t_linear_eq compose_exp(t_linear_eq eq, hugeint times, hugeint deck_size) {
+    t_linear_eq next = (t_linear_eq){.a = 1, .b = 0};
+    while (times > 0) {
+        if (times & 1)
+            next = compose(next, eq, deck_size);
+        times /= 2;
+        eq = compose(eq, eq, deck_size);
+    }
+    return next;
+}
+
+// Taken from https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Modular_integers
+static hugeint mod_inverse(hugeint a, hugeint n) {
+    hugeint t = 0, r = n, newt = 1, newr = a;
+
+    while (newr != 0) {
+        hugeint q = r / newr;
+        hugeint tmp = t;
+        t = newt;
+        newt = tmp - q * newt;
+        tmp = r;
+        r = newr;
+        newr = tmp - q * newr;
+    }
+
+    if (t < 0)
+        t += n;
+    return t;
 }
 
 char *day22p1(const char *input) {
-    int cards[DECK_SIZE];
-
-    for (int i = 0; i < DECK_SIZE; i++)
-        cards[i] = i;
-
-    shuffle(input, cards);
-
-    for (int i = 0; i < DECK_SIZE; i++)
-        if (cards[i] == 2019)
-            return aoc_asprintf("%d", i);
-    return NULL;
+    const int deck_size = 10007;
+    t_linear_eq eq = compile_shuffle_techniques(input, deck_size);
+    return aoc_asprintf("%d", (int)resolve(eq, 2019, deck_size));
 }
 
 char *day22p2(const char *input) {
-    (void)input;
-    return NULL;
+    const hugeint deck_size = 119315717514047ll;
+    const hugeint steps = 101741582076661ll;
+
+    t_linear_eq eq = compile_shuffle_techniques(input, deck_size);
+    eq = compose_exp(eq, steps, deck_size);
+
+    hugeint result = (((hugeint)2020 - eq.b) * mod_inverse(eq.a, deck_size)) % deck_size + deck_size;
+    return aoc_bigint_to_str((bigint)result);
 }
