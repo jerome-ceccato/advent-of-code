@@ -26,6 +26,8 @@ obj
 # Haskell
 dist-newstyle
 generated.hs
+*.hi
+dist
 
 # C
 *.o
