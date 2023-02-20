@@ -156,7 +156,7 @@ All problems were solved in [Haskell](https://en.wikipedia.org/wiki/Haskell).
 
 I solved this year of AoC during 2023.
 
-| Day | Problem                                                         | Solution                          |
-| --- | ---                                                             | ---                               |
-| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)      | [main.hs](./2018/day01/main.hs)   |
-
+| Day | Problem                                                             | Solution                          |
+| --- | ---                                                                 | ---                               |
+| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)          | [main.hs](./2018/day01/main.hs)   |
+| 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)  | [main.hs](./2018/day02/main.hs)   |
