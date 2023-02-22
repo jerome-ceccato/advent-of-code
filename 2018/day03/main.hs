@@ -1,11 +1,13 @@
 import Text.ParserCombinators.Parsec
-import Data.Array
+import Data.Map (Map, fromList, unionWith, elems)
+import qualified Data.Map as Map
+
 
 printSolution :: (Show a1, Show a2) => a1 -> a2 -> IO ()
 printSolution p1 p2 = putStrLn $ "Part 1: " ++ show p1 ++ "\n" ++ "Part 2: " ++ show p2
 
 data Point = Point { x :: Int, y :: Int }
-    deriving (Show)
+    deriving (Show, Ord, Eq)
 
 data Entry = Entry {
     id :: Int,
@@ -54,20 +56,16 @@ height = y . size
 
 -- Solution
 
-fabricSize :: Int
-fabricSize = 1000
+fabric :: Entry -> [Point]
+fabric entry = [Point (posx entry + x) (posy entry + y) | x <- [0..width entry - 1], y <- [0..height entry - 1]]
 
-entryOverlaps :: Int -> Int -> Entry -> Bool
-entryOverlaps x y entry = x > posx entry && x <= (posx entry + width entry) &&
-    y > posy entry && y <= (posy entry + height entry)
+countValid :: Map Point Int -> Int
+countValid = length . filter (> 1) . elems
 
-fabric :: [Entry] -> [[Int]]
-fabric entries = [[length . filter (entryOverlaps x y) $ entries | x <- [0..fabricSize]] | y <- [0..fabricSize]]
-
-countValid :: [[Int]] -> Int
-countValid = length . filter (> 1) . concat
+accumulate :: [Entry] -> Map Point Int
+accumulate = foldl1 (unionWith (+)) . map (fromList . map (, 1) . fabric)
 
 main :: IO ()
 main = do
     input <- parseClaim <$> readFile "input"
-    printSolution (countValid . fabric $ input) "(part2 input)"
+    printSolution (countValid . accumulate $ input) "(part2 input)"
