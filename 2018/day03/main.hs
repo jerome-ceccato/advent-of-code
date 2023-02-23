@@ -1,6 +1,8 @@
 import Text.ParserCombinators.Parsec
 import Data.Map (Map, fromList, unionWith, elems)
 import qualified Data.Map as Map
+import Data.List ( find )
+import Data.Maybe ( isNothing, fromJust )
 
 
 printSolution :: (Show a1, Show a2) => a1 -> a2 -> IO ()
@@ -10,7 +12,7 @@ data Point = Point { x :: Int, y :: Int }
     deriving (Show, Ord, Eq)
 
 data Entry = Entry {
-    id :: Int,
+    identifier :: Int,
     pos :: Point,
     size :: Point
 } deriving (Show)
@@ -65,7 +67,19 @@ countValid = length . filter (> 1) . elems
 accumulate :: [Entry] -> Map Point Int
 accumulate = foldl1 (unionWith (+)) . map (fromList . map (, 1) . fabric)
 
+overlaps :: Entry -> Entry -> Bool
+overlaps a b = (posx a >= posx b && posx a <= posx b + width b
+    || posx b >= posx a && posx b <= posx a + width a)
+    && (posy a >= posy b && posy a <= posy b + height b
+    || posy b >= posy a && posy b <= posy a + height a)
+
+doesNotOverlap :: [Entry] -> Entry -> Bool
+doesNotOverlap entries target = isNothing $ find (\x -> identifier target /= identifier x && overlaps target x) entries
+
+findNonOverlapping :: [Entry] -> Entry
+findNonOverlapping entries = fromJust $ find (doesNotOverlap entries) entries
+
 main :: IO ()
 main = do
     input <- parseClaim <$> readFile "input"
-    printSolution (countValid . accumulate $ input) "(part2 input)"
+    printSolution (countValid . accumulate $ input) (identifier . findNonOverlapping $ input)
