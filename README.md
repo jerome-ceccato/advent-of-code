@@ -160,3 +160,5 @@ I solved this year of AoC during 2023.
 | --- | ---                                                                 | ---                               |
 | 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)          | [main.hs](./2018/day01/main.hs)   |
 | 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)  | [main.hs](./2018/day02/main.hs)   |
+| 3   | [No Matter How You Slice It](https://adventofcode.com/2018/day/3)   | [main.hs](./2018/day03/main.hs)   |
+| 4   | [Repose Record](https://adventofcode.com/2018/day/4)                | [main.hs](./2018/day04/main.hs)   |
