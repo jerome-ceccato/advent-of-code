@@ -3,6 +3,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Year          | Stars     | Language(s)           |
 | ---           | ---       | ---                   |
+| [2023](#2023) | ~         | ~                     |
 | [2022](#2022) | 50 :star: | Various (26 total)    |
 | [2021](#2021) | 50 :star: | Swift                 |
 | [2020](#2020) | 50 :star: | Racket                |
@@ -10,6 +11,14 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | [2018](#2018) | ~         | Haskell               |
 
 ---
+## 2023
+
+
+| Day | Problem                                                             | Language                                                                | Solution                                  |
+| --- | ---                                                                 | ---                                                                     | ---                                       |
+| 1   | [Trebuchet?!](https://adventofcode.com/2023/day/1)                  | [Uiua](https://www.uiua.org/)                                           | [main.ua](./2023/day01/main.ua)           |
+
+
 
 ## 2022
 
