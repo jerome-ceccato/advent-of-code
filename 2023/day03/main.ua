@@ -17,30 +17,23 @@ GetPartNumbers ← (
   # Extract numbers near a symbol
   ∵(|1 ×±/∘ ≡(/(+×10))⍉ ⊔)
 )
-# p1 
-# /+ GetPartNumbers Input
 
 # (input) -> [windows with * centered]
-PossibleGearWindows ← ≡(↙3↘2) ▽≡(=@*⊡3_3).☇2◫7_7 Pad 3
-
+PossibleGearWindows ← ≡(↙3↘4) ▽≡(=@*⊡5_5).☇2◫11_11 Pad 5
 # (gear windows) -> (gear windows without additional symbols)
 CleanNonGearSymbols ← ≡(
   # Flatten and remove all symbols
   ∧(⍜⊡(@.;)) ⊚ IsSymbol.♭
   # Add the gear back and revert shape
-  ↯3_7⍜⊡(@*;)10
+  ↯3_11⍜⊡(@*;)16
 )
-
-PossibleGearWindows Input
-?↙10↘10
-
-CleanNonGearSymbols
-≡(
-  ?
+# (windows) -> [gear numbers]
+FindGears ← ≡(
   ▽±.GetPartNumbers
   ×/×:=2⧻.
-  ?
 )
-?
-/+
-# 339311890 too high
+
+# p1 
+/+ GetPartNumbers Input
+# p2
+/+ FindGears CleanNonGearSymbols PossibleGearWindows Input
