@@ -14,11 +14,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 ## 2023
 
 
-| Day | Problem                                                             | Language                      | Solution                                                            |
-| --- | ---                                                                 | ---                           | ---                                                                 |
-| 1   | [Trebuchet?!](https://adventofcode.com/2023/day/1)                  | [Uiua (0.4.1)](https://www.uiua.org/) | [main.ua](./2023/day01/main.ua), [golf.ua](./2023/day01/golf.ua)    |
-| 2   | [Cube Conundrum](https://adventofcode.com/2023/day/2)               | [Uiua (0.4.1)](https://www.uiua.org/) | [main.ua](./2023/day02/main.ua), [golf.ua](./2023/day02/golf.ua)    |
-| 3   | [Gear Ratios](https://adventofcode.com/2023/day/3)                  | [Uiua (0.5.1)](https://www.uiua.org/) | [main.ua](./2023/day03/main.ua), [golf.ua](./2023/day03/golf.ua)    |
+| Day | Problem                                                             | Language                      | Solution                                                                      |
+| --- | ---                                                                 | ---                           | ---                                                                           |
+| 1   | [Trebuchet?!](https://adventofcode.com/2023/day/1)                  | [Uiua (0.4.1)](https://www.uiua.org/) | [main.ua](./2023/day01/main.ua), [golf.ua](./2023/day01/golf.ua)      |
+| 2   | [Cube Conundrum](https://adventofcode.com/2023/day/2)               | [Uiua (0.4.1)](https://www.uiua.org/) | [main.ua](./2023/day02/main.ua), [golf.ua](./2023/day02/golf.ua)      |
+| 3   | [Gear Ratios](https://adventofcode.com/2023/day/3)                  | [Uiua (0.5.1)](https://www.uiua.org/) | [main.ua](./2023/day03/main.ua), [golf.ua](./2023/day03/golf.ua)      |
+| 4   | [Scratchcards](https://adventofcode.com/2023/day/4)                 | [Uiua (0.5.1)](https://www.uiua.org/) | [main.ua](./2023/day04/main.ua), [golf.ua](./2023/day04/golf.ua)      |
 
 
 ## 2022
