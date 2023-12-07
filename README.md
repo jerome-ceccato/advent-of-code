@@ -22,6 +22,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 4   | [Scratchcards](https://adventofcode.com/2023/day/4)                     | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day04/main.ua), [golf.ua](./2023/day04/golf.ua)      |
 | 5   | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)  | [Uiua](https://www.uiua.org/), [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) | [part1.ua](./2023/day05/part1.ua), [part2.py](./2023/day05/part2.py)      |
 | 6   | [Wait For It](https://adventofcode.com/2023/day/6)                      | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day06/main.ua), [golf.ua](./2023/day06/golf.ua)      |
+| 7   | [Camel Cards](https://adventofcode.com/2023/day/7)                      | [Uiua (0.6.1)](https://www.uiua.org/) | [main.ua](./2023/day07/main.ua), [golf.ua](./2023/day07/golf.ua)      |
 
 
 ## 2022
