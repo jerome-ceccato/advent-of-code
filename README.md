@@ -24,6 +24,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 6   | [Wait For It](https://adventofcode.com/2023/day/6)                      | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day06/main.ua), [golf.ua](./2023/day06/golf.ua)      |
 | 7   | [Camel Cards](https://adventofcode.com/2023/day/7)                      | [Uiua (0.6.1)](https://www.uiua.org/) | [main.ua](./2023/day07/main.ua), [golf.ua](./2023/day07/golf.ua)      |
 | 8   | [Haunted Wasteland](https://adventofcode.com/2023/day/8)                | [Nim (2.0.0)](https://nim-lang.org/)  | [main.nim](./2023/day08/main.nim)                                     |
+| 9   | [Mirage Maintenance](https://adventofcode.com/2023/day/9)               | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day09/main.ua), [golf.ua](./2023/day09/golf.ua)      |
 
 
 ## 2022
