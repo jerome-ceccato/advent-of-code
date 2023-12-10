@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://dyve6ch8ugao5"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_oiqcu"]
+[ext_resource type="Script" path="res://camera.gd" id="2_27yen"]
+[ext_resource type="Texture2D" uid="uid://bxdvrkci5reif" path="res://sprites.png" id="2_noqae"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cwv2u"]
+texture = ExtResource("2_noqae")
+texture_region_size = Vector2i(8, 8)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_n4vo2"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_cwv2u")
+
+[node name="main" type="Node2D"]
+script = ExtResource("1_oiqcu")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_n4vo2")
+format = 2
+
+[node name="AnimalTileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_n4vo2")
+format = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("2_27yen")
