@@ -14,17 +14,18 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 ## 2023
 
 
-| Day | Problem                                                                 | Language                              | Solution                                                              |
-| --- | ---                                                                     | ---                                   | ---                                                                   |
-| 1   | [Trebuchet?!](https://adventofcode.com/2023/day/1)                      | [Uiua (0.4.1)](https://www.uiua.org/) | [main.ua](./2023/day01/main.ua), [golf.ua](./2023/day01/golf.ua)      |
-| 2   | [Cube Conundrum](https://adventofcode.com/2023/day/2)                   | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day02/main.ua), [golf.ua](./2023/day02/golf.ua)      |
-| 3   | [Gear Ratios](https://adventofcode.com/2023/day/3)                      | [Uiua (0.5.1)](https://www.uiua.org/) | [main.ua](./2023/day03/main.ua), [golf.ua](./2023/day03/golf.ua)      |
-| 4   | [Scratchcards](https://adventofcode.com/2023/day/4)                     | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day04/main.ua), [golf.ua](./2023/day04/golf.ua)      |
+| Day | Problem                                                                 | Language                                          | Solution                                                              |
+| --- | ---                                                                     | ---                                               | ---                                                                   |
+| 1   | [Trebuchet?!](https://adventofcode.com/2023/day/1)                      | [Uiua (0.4.1)](https://www.uiua.org/)             | [main.ua](./2023/day01/main.ua), [golf.ua](./2023/day01/golf.ua)      |
+| 2   | [Cube Conundrum](https://adventofcode.com/2023/day/2)                   | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day02/main.ua), [golf.ua](./2023/day02/golf.ua)      |
+| 3   | [Gear Ratios](https://adventofcode.com/2023/day/3)                      | [Uiua (0.5.1)](https://www.uiua.org/)             | [main.ua](./2023/day03/main.ua), [golf.ua](./2023/day03/golf.ua)      |
+| 4   | [Scratchcards](https://adventofcode.com/2023/day/4)                     | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day04/main.ua), [golf.ua](./2023/day04/golf.ua)      |
 | 5   | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)  | [Uiua](https://www.uiua.org/), [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) | [part1.ua](./2023/day05/part1.ua), [part2.py](./2023/day05/part2.py)      |
-| 6   | [Wait For It](https://adventofcode.com/2023/day/6)                      | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day06/main.ua), [golf.ua](./2023/day06/golf.ua)      |
-| 7   | [Camel Cards](https://adventofcode.com/2023/day/7)                      | [Uiua (0.6.1)](https://www.uiua.org/) | [main.ua](./2023/day07/main.ua), [golf.ua](./2023/day07/golf.ua)      |
-| 8   | [Haunted Wasteland](https://adventofcode.com/2023/day/8)                | [Nim (2.0.0)](https://nim-lang.org/)  | [main.nim](./2023/day08/main.nim)                                     |
-| 9   | [Mirage Maintenance](https://adventofcode.com/2023/day/9)               | [Uiua](https://www.uiua.org/)         | [main.ua](./2023/day09/main.ua), [golf.ua](./2023/day09/golf.ua)      |
+| 6   | [Wait For It](https://adventofcode.com/2023/day/6)                      | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day06/main.ua), [golf.ua](./2023/day06/golf.ua)      |
+| 7   | [Camel Cards](https://adventofcode.com/2023/day/7)                      | [Uiua (0.6.1)](https://www.uiua.org/)             | [main.ua](./2023/day07/main.ua), [golf.ua](./2023/day07/golf.ua)      |
+| 8   | [Haunted Wasteland](https://adventofcode.com/2023/day/8)                | [Nim (2.0.0)](https://nim-lang.org/)              | [main.nim](./2023/day08/main.nim)                                     |
+| 9   | [Mirage Maintenance](https://adventofcode.com/2023/day/9)               | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day09/main.ua), [golf.ua](./2023/day09/golf.ua)      |
+| 10  | [Pipe Maze](https://adventofcode.com/2023/day/10)                       | [GDScript (Godot 4.2)](https://godotengine.org/)  | [main.gd](./2023/day10/main.gd), [Demo](./2023/day10/demo.mp4)        |
 
 
 ## 2022
