@@ -29,3 +29,4 @@ func _unhandled_input(event):
 			_dragging = false
 	elif event is InputEventMouseMotion and _dragging:
 		position = Vector2(1.0/zoom.x, 1.0/zoom.y) * (_mouse_start_pos - event.position) + _drag_original_pos
+		print(position)

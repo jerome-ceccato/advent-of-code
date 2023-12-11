@@ -28,6 +28,24 @@ texture_region_size = Vector2i(8, 8)
 4:2/0 = 0
 5:2/0 = 0
 6:2/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+0:1/0 = 0
+0:2/0 = 0
+0:3/0 = 0
+0:4/0 = 0
+8:1/0 = 0
+8:2/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_n4vo2"]
 tile_size = Vector2i(8, 8)
@@ -45,4 +63,44 @@ tile_set = SubResource("TileSet_n4vo2")
 format = 2
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(550, 540)
 script = ExtResource("2_27yen")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Screenshot" type="TextureRect" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Len" type="Label" parent="UI"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 33.0
+text = "Path length: "
+
+[node name="Farthest" type="Label" parent="UI"]
+offset_left = 210.0
+offset_top = 10.0
+offset_right = 336.0
+offset_bottom = 33.0
+text = "Farthest point: ?"
+
+[node name="Inside count" type="Label" parent="UI"]
+offset_left = 421.0
+offset_top = 10.0
+offset_right = 547.0
+offset_bottom = 33.0
+
+[node name="Final" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = 10.0
+offset_right = 22.0
+offset_bottom = 33.0
+grow_horizontal = 2
