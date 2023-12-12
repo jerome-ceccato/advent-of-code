@@ -27,6 +27,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 9   | [Mirage Maintenance](https://adventofcode.com/2023/day/9)               | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day09/main.ua), [golf.ua](./2023/day09/golf.ua)      |
 | 10  | [Pipe Maze](https://adventofcode.com/2023/day/10)                       | [GDScript (Godot 4.2)](https://godotengine.org/)  | [main.gd](./2023/day10/main.gd), [Demo](./2023/day10/demo.mp4)        |
 | 11  | [Cosmic Expansion](https://adventofcode.com/2023/day/11)                | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day11/main.nim)                                     |
+| 12  | [Hot Springs](https://adventofcode.com/2023/day/12)                     | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day12/main.nim)                                     |
 
 
 ## 2022
