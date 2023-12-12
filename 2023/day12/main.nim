@@ -1,5 +1,6 @@
 import std/strutils
 import std/sequtils
+import std/tables
 
 type Row = tuple
     springs: string
@@ -11,33 +12,6 @@ proc parseLine(line: string): Row =
 
 proc parseInput(): seq[Row] =
     readFile("input").splitLines().map(parseLine)
-
-proc isRowValid(row: Row): bool =
-    var currentGroup = newSeq[int]()
-    var current = 0
-    for c in row.springs:
-        if c == '.' and current > 0:
-            currentGroup.add(current)
-            current = 0
-        elif c == '#':
-            current += 1
-    if current > 0:
-        currentGroup.add(current)
-    currentGroup == row.groups
-
-proc countValidArrangements(springs: var string, groups: seq[int], p: int): int =
-    if p >= springs.len():
-        return if isRowValid((springs, groups)): 1 else: 0
-    if springs[p] == '?':
-        # Avoid making copies since we're doing dfs
-        springs[p] = '.'
-        let lhs = countValidArrangements(springs, groups, p + 1)
-        springs[p] = '#'
-        let rhs = countValidArrangements(springs, groups, p + 1)
-        springs[p] = '?'
-        return lhs + rhs
-    else:
-        return countValidArrangements(springs, groups, p + 1)
 
 proc unfold(rows: seq[Row]): seq[Row] =
     let unfoldSprings = proc(springs: string): string =
@@ -55,13 +29,52 @@ proc unfold(rows: seq[Row]): seq[Row] =
     
     rows.map(proc(row: Row): Row = (unfoldSprings(row.springs), unfoldGroups(row.groups)))
 
+proc canFitGroup(springs: string, group: int): bool =
+    if springs.len() < group:
+        return false
+    for n in 0..<group:
+        if springs[n] == '.':
+            return false
+    
+    return group == springs.len() or springs[group] != '#'
+
+proc countValidArrangements(springs: var string, groups: seq[int], memo: TableRef[(string, seq[int]), int]): int =
+    springs.removePrefix('.')
+
+    if memo.contains((springs, groups)):
+        return memo[(springs, groups)]
+    
+    if groups.len() == 0:
+        let res = if springs.contains('#'): 0 else: 1
+        memo[(springs, groups)] = res
+        return res
+    elif springs.len() == 0:
+        return 0
+    
+    var total = 0
+    # Try skipping the first ?
+    if springs[0] == '?':
+        var next = springs.substr(1)
+        total += countValidArrangements(next, groups, memo)
+    if canFitGroup(springs, groups[0]):
+        # +1 to consume the . or ? as a separator
+        var next = if springs.len() == groups[0]: "" else: springs.substr(groups[0] + 1)
+        total += countValidArrangements(next, groups[1..high(groups)], memo)
+
+    memo[(springs, groups)] = total
+    return total
+
 proc solve(rows: seq[Row]): int =
     var count = 0
+    # Aggressively memoize things across all arrangements
+    var memo = newTable[(string, seq[int]), int]()
     for row in rows:
         var springs = row.springs
-        let res = countValidArrangements(springs, row.groups, 0)
-        echo row.springs, " (", row.groups , "): ", res
+        let res = countValidArrangements(springs, row.groups, memo)
+        # echo row.springs, " (", row.groups , "): ", res
         count += res
     count
 
-echo (unfold(parseInput()))[0]
+let input = parseInput()
+echo solve(input)
+echo solve(unfold(input))
