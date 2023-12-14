@@ -29,6 +29,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 11  | [Cosmic Expansion](https://adventofcode.com/2023/day/11)                | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day11/main.nim)                                     |
 | 12  | [Hot Springs](https://adventofcode.com/2023/day/12)                     | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day12/main.nim)                                     |
 | 13  | [Point of Incidence](https://adventofcode.com/2023/day/13)              | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day13/main.ua), [golf.ua](./2023/day13/golf.ua)      |
+| 14  | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)        | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day14/main.ua), [golf.ua](./2023/day14/golf.ua)      |
 
 
 ## 2022
