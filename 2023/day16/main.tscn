@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3 uid="uid://2juxa1f3sib8"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_oiqcu"]
+[ext_resource type="Script" path="res://camera.gd" id="2_27yen"]
+[ext_resource type="Texture2D" uid="uid://rvv65w3ffcui" path="res://sprites.png" id="2_noqae"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dg47d"]
+texture = ExtResource("2_noqae")
+texture_region_size = Vector2i(8, 8)
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+0:0/0 = 0
+5:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_yr8om"]
+tile_size = Vector2i(8, 8)
+sources/0 = SubResource("TileSetAtlasSource_dg47d")
+
+[node name="main" type="Node2D"]
+script = ExtResource("1_oiqcu")
+
+[node name="BeamTileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_yr8om")
+format = 2
+
+[node name="BoardTileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_yr8om")
+format = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(38, 42)
+zoom = Vector2(5, 5)
+script = ExtResource("2_27yen")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Header" type="Label" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 33.0
+grow_horizontal = 2
