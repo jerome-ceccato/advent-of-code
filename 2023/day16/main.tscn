@@ -31,17 +31,13 @@ sources/0 = SubResource("TileSetAtlasSource_dg47d")
 [node name="main" type="Node2D"]
 script = ExtResource("1_oiqcu")
 
-[node name="BeamTileMap" type="TileMap" parent="."]
+[node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_yr8om")
 format = 2
-
-[node name="BoardTileMap" type="TileMap" parent="."]
-tile_set = SubResource("TileSet_yr8om")
-format = 2
+layer_0/z_index = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(38, 42)
-zoom = Vector2(5, 5)
+position = Vector2(400, 400)
 script = ExtResource("2_27yen")
 
 [node name="UI" type="CanvasLayer" parent="."]

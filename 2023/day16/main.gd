@@ -2,13 +2,12 @@ extends Node2D
 
 @onready var input = 'res://input.txt'
 @onready var header_label = $UI/Header
-@onready var beam_tile_map = $BeamTileMap
-@onready var board_tile_map = $BoardTileMap
+@onready var tile_map = $TileMap
 
 var data: Array[String]
 var beams: Array[Beam]
 var global_beam_id = 0
-var beam_colors = [Color.AQUA, Color.BISQUE, Color.CORAL]
+var found_positions: Dictionary
 
 var paused = true
 var state = State.Start
@@ -59,41 +58,23 @@ func _load_map():
 	var contents = FileAccess.get_file_as_string(input)
 	data.assign(Array(contents.split("\n", false)))
 
-func build_beam_tilesets():
-	var base_beam_color = Color("d95763")
-	
-	
-	var base_image: Image = load("res://sprites.png").get_image()
-	var images: Array[Image] = []
-	for _c in beam_colors:
-		images.push_back(base_image.duplicate(true))
-	
-	# Tint images
-	for y in base_image.get_height():
-		for x in base_image.get_width():
-			if base_image.get_pixel(x, y) == base_beam_color:
-				for i in beam_colors.size():
-					images[i].set_pixel(x, y, beam_colors[i])
-	
-	for image in images:
-		var source = TileSetAtlasSource.new()
-		source.texture = ImageTexture.create_from_image(image)
-		source.texture_region_size = Vector2i(8, 8)
-		for y in [1, 2]:
-			for x in [0,1,2,3,4]:
-				source.create_tile(Vector2i(x, y))
-		beam_tile_map.tile_set.add_source(source)
+func _setup_layers():
+	var color_codes = ["73464c", "ab5675", "ee6a7c", "ffa7a5", "ffe07e", "ffe7d6", "72dcbb", "34acba"]
+
+	for code in color_codes:
+		tile_map.add_layer(-1)
+		tile_map.set_layer_modulate(-1, Color(code))
 
 func rerender_board():
 	# Clear and add borders for visual interest
 	for y in data.size() + 2:
 		for x in data[0].length() + 2:
-			board_tile_map.set_cell(0, Vector2i(x-1, y-1), 0, Vector2i(5, 0), 0)
+			tile_map.set_cell(0, Vector2i(x-1, y-1), 0, Vector2i(5, 0), 0)
 	
 	for y in data.size():
 		for x in data[y].length():
 			var tile_id = "./\\|-".find(data[y][x])
-			board_tile_map.set_cell(0, Vector2i(x, y), 0, Vector2i(tile_id, 0), 0)
+			tile_map.set_cell(0, Vector2i(x, y), 0, Vector2i(tile_id, 0), 0)
 	queue_redraw()
 
 func atlas_id(head: BeamPoint) -> Vector2i:
@@ -122,18 +103,14 @@ func atlas_id(head: BeamPoint) -> Vector2i:
 
 func render_beam_head(beam: Beam):
 	var head = beam.body.back()
-	var source = beam.id % (beam_colors.size() + 1)
-	beam_tile_map.set_cell(0, head.pos, source, atlas_id(head), 0)
+	var layer = 1 + (beam.id % (tile_map.get_layers_count() - 1))
+	tile_map.set_cell(layer, head.pos, 0, atlas_id(head), 0)
 
 func in_bounds(pos):
 	return pos.y >= 0 and pos.y < data.size() and pos.x >= 0 and pos.x < data[pos.y].length()
 
 func is_new_path(point: BeamPoint) -> bool:
-	for beam in beams:
-		for other in beam.body:
-			if other.pos == point.pos and other.direction == point.direction:
-				return false
-	return true
+	return not (found_positions.has(point.pos) and found_positions[point.pos].has(point.direction))
 
 func tick_once():
 	if paused:
@@ -145,7 +122,9 @@ func tick_once():
 		State.Fill:
 			for _i in beam_per_tick:
 				tick_beams()
+			header_label.text = "Energized: %d" % found_positions.size()
 		State.BeamsStopped:
+			print(found_positions.size())
 			state = State.DoNothing
 
 func tick_beams():
@@ -155,8 +134,17 @@ func tick_beams():
 	for beam in beams:
 		if beam.active:
 			active_count += 1
+			
 			render_beam_head(beam)
 			var head = beam.body.back()
+			
+			if found_positions.has(head.pos):
+				if found_positions[head.pos].has(head.direction):
+					found_positions[head.pos][head.direction] += 1
+				else:
+					found_positions[head.pos][head.direction] = 1
+			else:
+				found_positions[head.pos] = {head.direction: 1}
 			
 			if (data[head.pos.y][head.pos.x] == '|' and head.dir_id() in [1, 3]) or (data[head.pos.y][head.pos.x] == '-' and head.dir_id() in [0, 2]):
 				# Split
@@ -193,7 +181,6 @@ func tick_beams():
 				else:
 					beam.active = false
 	
-	print("ticking %d beams (%d)" % [active_count, beams.size()])
 	beams.append_array(new_beams)
 	if active_count == 0:
 		state = State.BeamsStopped
@@ -201,12 +188,12 @@ func tick_beams():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	_load_map()
-	build_beam_tilesets()
+	_setup_layers()
 	rerender_board()
 	
 
-const process_per_tick = 10
-const beam_per_tick = 1
+const process_per_tick = 1
+const beam_per_tick = 2
 var current_tick = 0
 func _physics_process(_delta):
 	current_tick += 1
