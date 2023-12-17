@@ -5,8 +5,8 @@ import std/sets
 
 type Point = tuple[x: int, y: int]
 type Path = object
-    points: seq[Point]
-    direction: Point
+    point: Point
+    last3Dir: seq[Point]
     loss: int
 
 let ZERO: Point = (x: 0, y: 0)
@@ -33,41 +33,40 @@ proc parseInput(): seq[seq[int]] =
 proc inBounds(point: Point, board: seq[seq[int]]): bool =
     point.y >= low(board) and point.y <= high(board) and point.x >= low(board[point.y]) and point.x <= high(board[point.y])
 
-proc getLast3Dir(path: Path): array[3, Point] =
-    if path.points.len() < 4:
-        [ZERO, ZERO, ZERO]
-    else:
-        [path.points[^1] - path.points[^2],
-        path.points[^2] - path.points[^3],
-        path.points[^3] - path.points[^4]]
-
 proc explore(board: seq[seq[int]]): int =
     let target: Point = (x: high(board[high(board)]), y: high(board))
     var queue = initHeapQueue[Path]()
-    queue.push(Path(points: @[ZERO], direction: RIGHT, loss: 0))
-    queue.push(Path(points: @[ZERO], direction: DOWN, loss: 0))
-    var visited = initHashSet[Point]()
+    var visited = initHashSet[(Point, seq[Point])]()
 
+    queue.push(Path(point: ZERO, last3Dir: @[], loss: 0))
+    
+    var steps = 0
     while queue.len() > 0:
-        let current = queue.pop()
-        let lastPoint = current.points[^1]
+        let current: Path = queue.pop()
         
-        if lastPoint == target:
+        steps += 1
+        if current.point == target:
+            echo "steps: ", steps
             return current.loss
-        visited.incl(lastPoint)
 
-        let last3Directions = getLast3Dir(current)
-        for dir in [RIGHT, DOWN, LEFT, UP]:
-            let next = lastPoint + dir
-            if inBounds(next, board) and 
-                not visited.contains(next) and
-                dir != -current.direction and
-                not last3Directions.allIt(it == dir):
-                var nextPath = current
-                nextPath.points.add(next)
-                nextPath.direction = dir
-                nextPath.loss += board[next.y][next.x]
-                queue.push(nextPath)
+        if not visited.contains((current.point, current.last3Dir)):
+            visited.incl((current.point, current.last3Dir))
+
+            for dir in [RIGHT, DOWN, LEFT, UP]:
+                let next = current.point + dir
+                if inBounds(next, board) and 
+                    (current.last3Dir.len() == 0 or dir != -current.last3Dir[^1]) and
+                    not (current.last3Dir.len() == 3 and current.last3Dir.allIt(it == dir)):
+                    
+                    var nextDirs = current.last3Dir
+                    nextDirs.add(dir)
+                    if nextDirs.len() > 3:
+                        nextDirs.delete(0)
+
+                    queue.push(Path(
+                        point: next, 
+                        last3Dir: nextDirs, 
+                        loss: current.loss + board[next.y][next.x]))
     -1
 
 echo explore(parseInput())
