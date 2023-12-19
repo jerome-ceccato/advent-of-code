@@ -34,6 +34,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 16  | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)          | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day16/main.gd), [demo](./2023/day16/demo.mp4), [gif](./2023/day16/demo.gif) |
 | 17  | [Clumsy Crucible](https://adventofcode.com/2023/day/17)                 | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day17/main.nim)                                     |
 | 18  | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                 | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day18/main.gd), [demo](./2023/day18/demo.mp4), [gif](./2023/day18/demo.gif) |
+| 19  | [Aplenty](https://adventofcode.com/2023/day/19)                         | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day19/main.nim)                                     |
 
 
 ## 2022
