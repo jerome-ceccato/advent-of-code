@@ -33,6 +33,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 15  | [Lens Library](https://adventofcode.com/2023/day/15)                    | [Uiua](https://www.uiua.org/), [Nim](https://nim-lang.org/) | [part1.ua](./2023/day15/part1.ua), [part2.nim](./2023/day15/part2.nim)      |
 | 16  | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)          | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day16/main.gd), [demo](./2023/day16/demo.mp4), [gif](./2023/day16/demo.gif) |
 | 17  | [Clumsy Crucible](https://adventofcode.com/2023/day/17)                 | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day17/main.nim)                                     |
+| 18  | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                 | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day18/main.gd), [demo](./2023/day18/demo.mp4), [gif](./2023/day18/demo.gif) |
 
 
 ## 2022
