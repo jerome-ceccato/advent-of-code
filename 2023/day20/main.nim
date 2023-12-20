@@ -2,7 +2,6 @@ import std/strutils
 import std/sequtils
 import std/tables
 import std/deques
-import std/sets
 import std/math
 
 type ModuleKind = enum
@@ -60,24 +59,6 @@ method receive(self: FinalModule, action: Action): seq[Action] =
         self.done = true
     @[]
 
-method debugValue(self: Module): string {.base.} =
-    "  "
-
-method debugValue(self: FlipFlopModule): string =
-    if self.state:
-        "# "
-    else:
-        ". "
-
-method debugValue(self: ConjunctionModule): string =
-    var on = self.state.values.toSeq.countIt(it)
-    var output = $on
-    if output.len() == 1:
-        output &= " "
-    if on == self.state.len():
-        output = "[]"
-    output
-
 proc makeModule(label: string, kind: ModuleKind, destinations: seq[string]): Module =
     case kind
     of flipflop: FlipFlopModule(label: label, kind: kind, destinations: destinations)
@@ -125,7 +106,6 @@ proc press(network: TableRef[string, Module]): array[2, int] =
     var pulse_count = [0, 0]
     while queue.len() > 0:
         let action = queue.popFirst()
-        #echo action.source, " ", (if action.pulse: "-high" else: "-low"), " -> ", action.destination
         pulse_count[ord(action.pulse)] += 1
         let next = network[action.destination].receive(action)
         for item in next:
@@ -140,7 +120,11 @@ proc warmUp(network: TableRef[string, Module]): int =
         pulse_count[1] += results[1]
     pulse_count[0] * pulse_count[1]
 
-proc press2(network: TableRef[string, Module], step: int, period: TableRef[string, int]) =
+# All 4 modules (and their dependents) from the broadcaster only contain `kl` and `rx` in common
+# kl is a conjunction to pulse rx
+# So we can analyze all 4 loops separately, find when they send a high pulse to kl, and infer the answer that way
+# It also turns out all loops are perfectly periodic, so it's day08 with extra steps 
+proc pressAndRecordPeriod(network: TableRef[string, Module], step: int, period: TableRef[string, int]) =
     var queue = [Action(pulse: false, source: "button", destination: "broadcaster")].toDeque
     while queue.len() > 0:
         let action = queue.popFirst()
@@ -158,92 +142,9 @@ proc startRx(network: TableRef[string, Module]): int =
     let targetCount = network[target].inputs.len()
     while period.len() != targetCount:
         steps += 1
-        press2(network, steps, period)
+        pressAndRecordPeriod(network, steps, period)
     
     period.values.toSeq().foldl(lcm(a, b))
 
-#echo warmUp(parseInput())
+echo warmUp(parseInput())
 echo startRx(parseInput())
-
-
-proc sendPulse(network: TableRef[string, Module], pulse: Action) =
-    var queue = [pulse].toDeque
-    while queue.len() > 0:
-        let action = queue.popFirst()
-        let next = network[action.destination].receive(action)
-        for item in next:
-            queue.addLast(item)
-
-# var network = parseInput()
-# var state = false
-# var loops = 0
-# while true:
-#     sendPulse(network, Action(pulse: false, source: "broadcaster", destination: "gz"))
-#     loops += 1
-#     if cast[ConjunctionModule](network["kl"]).state["xt"] != state:
-#         state = not state
-#         echo "Changed state after ", loops, "(", state, ")"
-#     if loops mod 10000 == 0:
-#         echo loops
-    
-
-# All 4 loops from the broadcaster are only contain `kl` and `rx` in common
-# kl is a conjunction to pulse rx
-# So we can analyze all 4 loops separately, find when they send a high pulse to kl, and infer the answer that way
-
-proc getLinks(network: TableRef[string, Module], origin: string): HashSet[string] =
-    var links = initHashSet[string]();
-    var queue = [origin].toDeque()
-    links.incl(origin)
-    while queue.len() > 0:
-        let current = queue.popFirst()
-        for dest in network[current].destinations:
-            if not links.contains(dest):
-                links.incl(dest)
-                queue.addLast(dest)
-    links
-
-proc dump(network: TableRef[string, Module], showNames: bool) = 
-    const sorted_labels = ["kl", "gv", "xt", "gz", "mz", "ps", "kx", "ss", "lq", "tz", "qh", "vk", "gk", "lb", "gx"]
-    var names = ""
-    var values = ""
-    for label in sorted_labels:
-        let lb = if label == "broadcaster": ">>" else: label
-        let value = network[label].debugValue()
-        
-        names &= " | " & lb
-        values &= " | " & value
-    if showNames:
-        echo names
-    echo values
-
-# let links = getLinks(network, "gz")
-# var snetwork = newTable[string, Module]()
-# for label in links:
-#     snetwork[label] = network[label]
-
-
-# snetwork.dump(true)
-# for i in 1..(2^13):
-#     sendPulse(snetwork, Action(pulse: false, source: "broadcaster", destination: "gz"))
-#     #snetwork.dump(false)
-# snetwork.dump(true)
-# for _ in 1..(2^11-1):
-#     sendPulse(snetwork, Action(pulse: false, source: "broadcaster", destination: "gz"))
-# snetwork.dump(false)
-# echo "----------"
-# for _ in 1..(2^11-2):
-#     sendPulse(snetwork, Action(pulse: false, source: "broadcaster", destination: "gz"))
-
-# sendPulse(snetwork, Action(pulse: false, source: "broadcaster", destination: "gz"))
-# snetwork.dump(false)
-# sendPulse(snetwork, Action(pulse: false, source: "broadcaster", destination: "gz"))
-# snetwork.dump(false)
-# for dest in network["broadcaster"].destinations:
-#     let res = getLinks(network, dest)
-#     echo res
-#     for dest2 in network["broadcaster"].destinations:
-#         if dest != dest2:
-#             echo "intersect(", dest2, "): ", res.intersection(getLinks(network, dest2))
-
-# higher than 3085000
