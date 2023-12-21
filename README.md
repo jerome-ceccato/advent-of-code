@@ -36,6 +36,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 18  | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                 | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day18/main.gd), [demo](./2023/day18/demo.mp4), [gif](./2023/day18/demo.gif) |
 | 19  | [Aplenty](https://adventofcode.com/2023/day/19)                         | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day19/main.nim)                                     |
 | 20  | [Pulse Propagation](https://adventofcode.com/2023/day/20)               | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day20/main.nim)                                     |
+| 21  | [Step Counter](https://adventofcode.com/2023/day/21)                    | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day21/main.nim)                                     |
 
 
 ## 2022
