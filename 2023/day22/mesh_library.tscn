@@ -1,0 +1,62 @@
+[gd_scene load_steps=13 format=3 uid="uid://fyof1a7mqsdj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_30cfi"]
+albedo_color = Color(0.670588, 0.337255, 0.458824, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1lm6m"]
+material = SubResource("StandardMaterial3D_30cfi")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pfm3f"]
+albedo_color = Color(0.933333, 0.415686, 0.486275, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c1f8i"]
+material = SubResource("StandardMaterial3D_pfm3f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_78a2p"]
+albedo_color = Color(1, 0.654902, 0.647059, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v6u30"]
+material = SubResource("StandardMaterial3D_78a2p")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cn8oi"]
+albedo_color = Color(1, 0.878431, 0.494118, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ql4sv"]
+material = SubResource("StandardMaterial3D_cn8oi")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ugfg0"]
+albedo_color = Color(0.447059, 0.862745, 0.733333, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hld0a"]
+material = SubResource("StandardMaterial3D_ugfg0")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mu7a"]
+albedo_color = Color(0.203922, 0.67451, 0.729412, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_otv1i"]
+material = SubResource("StandardMaterial3D_6mu7a")
+
+[node name="MeshLibrary" type="Node3D"]
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_1lm6m")
+
+[node name="Cube2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.43607, 0, 0)
+mesh = SubResource("BoxMesh_c1f8i")
+
+[node name="Cube3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.77392, 0, 0)
+mesh = SubResource("BoxMesh_v6u30")
+
+[node name="Cube4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15688, 0, 0)
+mesh = SubResource("BoxMesh_ql4sv")
+
+[node name="Cube5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.58344, 0, 0)
+mesh = SubResource("BoxMesh_hld0a")
+
+[node name="Cube6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.08574, 0, 0)
+mesh = SubResource("BoxMesh_otv1i")
