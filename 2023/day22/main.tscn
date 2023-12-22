@@ -4,12 +4,14 @@
 [ext_resource type="MeshLibrary" uid="uid://bmxh4dc7ww2f3" path="res://mesh_library.tres" id="2_pvb8v"]
 [ext_resource type="Script" path="res://camera.gd" id="3_gobgf"]
 
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_bvcxp"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wf5nb"]
 
 [sub_resource type="Sky" id="Sky_mjeio"]
-sky_material = SubResource("PhysicalSkyMaterial_bvcxp")
+sky_material = SubResource("ProceduralSkyMaterial_wf5nb")
 
 [sub_resource type="Environment" id="Environment_d5pnd"]
+background_mode = 2
+background_color = Color(1, 1, 1, 1)
 sky = SubResource("Sky_mjeio")
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)

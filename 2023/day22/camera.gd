@@ -68,11 +68,11 @@ var d = 0.0
 func _process(delta):
 	_update_mouselook()
 	_update_movement(delta)
-	d += delta
-	if d > 1:
-		print(position)
-		print(rotation_degrees)
-		d = 0
+	#d += delta
+	#if d > 1:
+		#print(position)
+		#print(rotation_degrees)
+		#d = 0
 
 # Updates camera movement
 func _update_movement(delta):
