@@ -90,6 +90,7 @@ func can_fall(brick: Brick):
 		return point.z > 1 and grid_map.get_cell_item(point + down) == grid_map.INVALID_CELL_ITEM
 
 func try_fall_once():
+	var has_fallen = false
 	for brick in data:
 		if can_fall(brick):
 			var old_pos = brick.points.duplicate()
@@ -99,8 +100,9 @@ func try_fall_once():
 			brick.tail.z -= 1
 			render_many(old_pos, grid_map.INVALID_CELL_ITEM)
 			render_many(brick.points, brick.id)
-			return
-	state = State.CountDesintegrate
+			has_fallen = true
+	if not has_fallen:
+		state = State.CountDesintegrate
 
 func can_desintegrate(brick: Brick, supported_by: Dictionary, supports: Dictionary):
 	for other in supports[brick.id].keys():
@@ -148,6 +150,9 @@ func tick_once():
 		State.CountDesintegrate:
 			count_desintegrate()
 			state = State.DoNothing
+		State.DoNothing:
+			if OS.has_feature("movie"):
+				get_tree().quit() 
 
 func _calculate_bounds():
 	bounds_low = Vector3i.ZERO
@@ -167,8 +172,10 @@ func _ready():
 	_calculate_bounds()
 	render_all()
 	
-	var pos = Vector3(8.2875, -364.8228, 180.5458)
-	var rot = Vector3(88.00012, 0, 0)
+	#var pos = Vector3(5.037897, -3.927676, 1.613264)
+	#var rot = Vector3(15.74983, 179.5, 180)
+	var pos = Vector3(5.741437, -207.1741, 89.25851)
+	var rot = Vector3(90, 0.249998, 0)
 	$Camera3D.position = pos
 	$Camera3D.rotation_degrees = rot
 	#$Camera3D.look_at_from_position(center_point - Vector3(0, 50, 50), center_point, Vector3.BACK)
@@ -177,7 +184,7 @@ func _ready():
 		paused = false
 
 const physics_process_per_tick = 1
-var fall_per_tick = 10
+var fall_per_tick = 1
 var current_tick = 0
 func _physics_process(_delta):
 	current_tick += 1
