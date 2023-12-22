@@ -1,0 +1,65 @@
+[gd_scene load_steps=11 format=3 uid="uid://c3w1dkg3eiwe8"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_xs482"]
+[ext_resource type="MeshLibrary" uid="uid://bmxh4dc7ww2f3" path="res://mesh_library.tres" id="2_pvb8v"]
+[ext_resource type="Script" path="res://camera.gd" id="3_gobgf"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_bvcxp"]
+
+[sub_resource type="Sky" id="Sky_mjeio"]
+sky_material = SubResource("PhysicalSkyMaterial_bvcxp")
+
+[sub_resource type="Environment" id="Environment_d5pnd"]
+sky = SubResource("Sky_mjeio")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_yxfn8"]
+frequency = 0.0217
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_83qqt"]
+width = 1000
+height = 1000
+seamless_blend_skirt = 0.353
+as_normal_map = true
+noise = SubResource("FastNoiseLite_yxfn8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_krxjb"]
+albedo_color = Color(0.0588235, 0.0588235, 0.137255, 1)
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_83qqt")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_feg18"]
+material = SubResource("StandardMaterial3D_krxjb")
+size = Vector2(10000, 10000)
+orientation = 2
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0162005, 0, -0.000424385)
+script = ExtResource("1_xs482")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("2_pvb8v")
+cell_size = Vector3(1, 1, 1)
+data = {
+"cells": PackedInt32Array(1, 4, 0, 2, 1, 0, 3, 1, 0)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.99999, -0.00420967, -0.00114768, 0, 0.26303, -0.964788, 0.00436331, 0.964779, 0.263027, 3.61514, -13.084, 7.6816)
+current = true
+fov = 50.0
+script = ExtResource("3_gobgf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d5pnd")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 1000)
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+mesh = SubResource("PlaneMesh_feg18")
