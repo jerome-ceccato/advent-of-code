@@ -10,12 +10,18 @@ var bounds_low: Vector3i
 var bounds_high: Vector3i
 var center_point: Vector3
 
+const down = Vector3i(0, 0, -1)
+var allPositions = {}
+var supported_by = {} # [brick -> bricks that supports it]
+var supports = {} # [brick -> brick that needs this brick as support]
+
 var paused = true
 var state = State.Start
 enum State {
 	Start,
 	Falling,
 	CountDesintegrate,
+	CountChainReaction,
 	DoNothing
 }
 
@@ -77,7 +83,6 @@ func render_all():
 			render_one(point, brick.id)
 
 func can_fall(brick: Brick):
-	var down = Vector3i(0, 0, -1)
 	# Horizontal
 	if brick.head.z == brick.tail.z:
 		for point in brick.points:
@@ -110,12 +115,7 @@ func can_desintegrate(brick: Brick, supported_by: Dictionary, supports: Dictiona
 			return false
 	return true
 
-func count_desintegrate():
-	var down = Vector3i(0, 0, -1)
-	var allPositions = {}
-	var supported_by = {} # [brick -> bricks that supports it]
-	var supports = {} # [brick -> brick that needs this brick as support]
-	
+func _map_support():
 	for brick in data:
 		supports[brick.id] = {}
 		supported_by[brick.id] = {}
@@ -129,12 +129,45 @@ func count_desintegrate():
 				var id = allPositions[below]
 				supported_by[brick.id][id] = 1
 				supports[id][brick.id] = 1
-	
+
+func count_desintegrate():
 	var desintegration_count = 0
 	for brick in data:
 		if can_desintegrate(brick, supported_by, supports):
 			desintegration_count += 1
 	print(desintegration_count)
+
+func should_fall(brick_id: int, falling: Dictionary):
+	if supported_by[brick_id].size() == 0:
+		return false # On the ground
+	for supp in supported_by[brick_id]:
+		if not falling.has(supp):
+			return false
+	return true
+
+func get_supported_deep(initial: Brick, memo: Dictionary) -> Dictionary:
+	var would_fall = {initial.id: 1}
+	var last_count = 0
+	while would_fall.size() != last_count:
+		last_count = would_fall.size()
+		for brick in data:
+			if not would_fall.has(brick.id):
+				if should_fall(brick.id, would_fall):
+					would_fall[brick.id] = 1
+					if memo.has(brick.id):
+						would_fall.merge(memo[brick.id]) 
+	return would_fall
+
+func count_chain_reaction():
+	var rev = data.duplicate()
+	var memo = {}
+	rev.reverse()
+	for brick in rev:
+		memo[brick.id] = get_supported_deep(brick, memo)
+	var total = 0
+	for key in memo:
+		total += memo[key].size() - 1 # Remove itself
+	print(total)
 
 func tick_once():
 	if paused:
@@ -148,7 +181,11 @@ func tick_once():
 				if state == State.Falling:
 					try_fall_once()
 		State.CountDesintegrate:
+			_map_support()
 			count_desintegrate()
+			state = State.CountChainReaction
+		State.CountChainReaction:
+			count_chain_reaction()
 			state = State.DoNothing
 		State.DoNothing:
 			if OS.has_feature("movie"):
