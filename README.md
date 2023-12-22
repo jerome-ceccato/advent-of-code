@@ -37,7 +37,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 19  | [Aplenty](https://adventofcode.com/2023/day/19)                         | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day19/main.nim)                                     |
 | 20  | [Pulse Propagation](https://adventofcode.com/2023/day/20)               | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day20/main.nim)                                     |
 | 21  | [Step Counter](https://adventofcode.com/2023/day/21)                    | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day21/main.nim)                                     |
-
+| 22  | [Sand Slabs](https://adventofcode.com/2023/day/22)                      | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day22/main.gd), [demo](./2023/day22/demo.mp4), [gif](./2023/day22/demo.gif) |
 
 ## 2022
 
