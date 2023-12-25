@@ -1,4 +1,5 @@
 from decimal import *
+from z3 import *
 
 class Vector3:
     def __init__(self, x: Decimal, y: Decimal, z: Decimal):
@@ -53,7 +54,27 @@ def count_intersect_2d(data):
                     total += 1
     print(total)
 
+def solvep2(data):
+    # position, velocity, the 3 dt for the 3 points considered
+    px,py,pz,vx,vy,vz,t0,t1,t2 = Reals('px py pz vx vy vz t0 t1 t2')
+    t = [t0, t1, t2]
+    s = Solver()
+    
+    # Only 3 points are needed to solve the equation
+    # For each coordinate, add equations to the solver stating that the researched origin + some delta time * the velocity 
+    # matches the known coordinate at the same point in time
+    for i in range(0, 3):
+        s.add(px + t[i] * vx == data[i].pos.x + t[i] * data[i].vel.x)
+        s.add(py + t[i] * vy == data[i].pos.y + t[i] * data[i].vel.y)
+        s.add(pz + t[i] * vz == data[i].pos.z + t[i] * data[i].vel.z)
+    
+    s.check()
+    model = s.model()
+    print(model[px].as_long() + model[py].as_long() + model[pz].as_long())
+
+
 if __name__ == '__main__':
     data = read_input()
     count_intersect_2d(data)
+    solvep2(data)
   
