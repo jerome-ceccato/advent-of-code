@@ -1,18 +1,20 @@
 # Advent of Code
 My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
-| Year          | Stars     | Language(s)           |
-| ---           | ---       | ---                   |
-| [2023](#2023) | ~         | ~                     |
-| [2022](#2022) | 50 :star: | Various (26 total)    |
-| [2021](#2021) | 50 :star: | Swift                 |
-| [2020](#2020) | 50 :star: | Racket                |
-| [2019](#2019) | 50 :star: | C                     |
-| [2018](#2018) | ~         | Haskell               |
+| Year          | Stars     | Language(s)                   |
+| ---           | ---       | ---                           |
+| [2023](#2023) | 50 :star: | Uiua, Nim, GDScript, Python   |
+| [2022](#2022) | 50 :star: | Various (26 total)            |
+| [2021](#2021) | 50 :star: | Swift                         |
+| [2020](#2020) | 50 :star: | Racket                        |
+| [2019](#2019) | 50 :star: | C                             |
+| [2018](#2018) | ~         | Haskell                       |
 
 ---
 ## 2023
 
+In 2023 I used some random languages, mostly Uiua for fun and Nim for harder problems, with Godot (GDScript) to make visualization.
+I managed to solve all problems within 24 hours.
 
 | Day | Problem                                                                 | Language                                          | Solution                                                              |
 | --- | ---                                                                     | ---                                               | ---                                                                   |
@@ -40,6 +42,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 22  | [Sand Slabs](https://adventofcode.com/2023/day/22)                      | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day22/main.gd), [demo](./2023/day22/demo.mp4), [gif](./2023/day22/demo.gif) |
 | 23  | [A Long Walk](https://adventofcode.com/2023/day/23)                     | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day23/main.gd), [demo](./2023/day23/demo.mp4), [gif](./2023/day23/demo.gif) |
 | 24  | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24)          | [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) | [main.py](./2023/day24/main.py)                   |
+| 25  | [Snowverload](https://adventofcode.com/2023/day/25)                     | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day25/main.nim)                                     |
 
 
 ## 2022
