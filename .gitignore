@@ -1,3 +1,8 @@
+# Aoc input files
+**/input
+**/input.txt
+**/day[0-9][0-9].txt
+
 # macOS files
 .DS_Store
 
