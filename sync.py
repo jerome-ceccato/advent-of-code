@@ -3,6 +3,7 @@ from os.path import isfile, join, exists, dirname
 from shutil import copy
 from dataclasses import dataclass
 from datetime import datetime
+import subprocess
 
 base_path = "."
 # verbose also logs when no changes are made
@@ -63,6 +64,8 @@ def sync_day(day: AocDay):
         else:
             trace(f'No input file available for {day.public_input_path()}')
 
+def delete_tracked_inputs(day: AocDay):
+    subprocess.call(['git', 'rm', '--cached', day.public_input_path()[2:]])
 
 def foreach_aoc_day(fct):
     for year in range(2015, datetime.now().year + 1):
@@ -77,3 +80,4 @@ def foreach_aoc_day(fct):
 
 if __name__ == "__main__":
     foreach_aoc_day(sync_day)
+    #foreach_aoc_day(delete_tracked_inputs)
