@@ -8,7 +8,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | [2021](#2021) | 50 :star: | Swift                         |
 | [2020](#2020) | 50 :star: | Racket                        |
 | [2019](#2019) | 50 :star: | C                             |
-| [2018](#2018) | ~         | Haskell                       |
+| [2018](#2018) | ~         |                               |
 
 ---
 ## 2023
@@ -186,9 +186,9 @@ I solved this year of AoC during 2023.
 
 ## 2018
 
-All problems were solved in [Haskell](https://en.wikipedia.org/wiki/Haskell).
+I started this year in 2018 but gave up around day 15.
 
-I solved this year of AoC during 2023.
+I restarted during 2023.
 
 | Day | Problem                                                             | Solution                          |
 | --- | ---                                                                 | ---                               |
