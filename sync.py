@@ -1,3 +1,20 @@
+# A small tool to help keep input files in git, but in a private submodule
+# The tool does a two-way sync between the public repo (with gitignored input files) and the private repo which holds the actual files
+# That way, you can easily grab all input files after a clean clone of the repo, or copy over all new inputs to the private submodule for later retrieval
+
+# If you've already committed your input files, follow these steps:
+# - Create a private repo and add it as a submodule in your public one (this script expects the name "inputs" for the submodule)
+# - Edit the functions at the top of the script to represent your repo structure
+# - Run the script
+# - Commit the input files in the private repo
+# - Add a .gitignore rule for your input files in the public repo
+# - Delete all tracked input files. You can do this by uncommenting "foreach_aoc_day(delete_tracked_inputs)" in this script
+# - Commit and push your changes
+# - Use a tool like BFG repo-cleaner to rewrite the whole repo history without the input files
+# - Do a clean clone of your repo, and run this script to reimport the input files
+# You now have all your input files as before, but they are no longer available on your public repo!
+# Each time you add new input files, run the script again and commit the changes in your private repo
+
 from os import makedirs
 from os.path import isfile, join, exists, dirname
 from shutil import copy
@@ -10,6 +27,7 @@ base_path = "."
 verbose = False
 
 # Change these functions to define a different folder structure
+# This repo uses `{year}/day{dd}/input` with some exceptions
 def public_year_path(year: int):
     return join(base_path, str(year))
 

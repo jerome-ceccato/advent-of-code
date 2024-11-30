@@ -16,6 +16,7 @@
 
 # vsc
 .vscode
+advent-of-code.sln
 
 # clojure
 .calva
