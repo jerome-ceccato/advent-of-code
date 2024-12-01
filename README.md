@@ -3,6 +3,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Year          | Stars     | Language(s)                   |
 | ---           | ---       | ---                           |
+| [2024](#2024) | :construction: | ?   |
 | [2023](#2023) | 50 :star: | Uiua, Nim, GDScript, Python   |
 | [2022](#2022) | 50 :star: | Various (26 total)            |
 | [2021](#2021) | 50 :star: | Swift                         |
@@ -11,6 +12,44 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | [2018](#2018) | ~         |                               |
 
 ---
+## 2024
+
+| Day | Problem                                                                 | Language                                          | Solution                             |
+| --- | ---                                                                     | ---                                               | ---                                  |
+| 1   | [Historian Hysteria](https://adventofcode.com/2024/day/1)               | [Uiua (0.14.0)](https://www.uiua.org/)            | [main.ua](./2024/day01/main.ua)      |
+<details>
+<summary>Not released yet</summary>
+
+| Day | Problem                                   | Language | Solution |
+| --- | ---                                       | ---      | ---      |
+| 2   | [?](https://adventofcode.com/2024/day/2)  | [?]() | [?](./2024/day02/main.?) |
+| 3   | [?](https://adventofcode.com/2024/day/3)  | [?]() | [?](./2024/day03/main.?) |
+| 4   | [?](https://adventofcode.com/2024/day/4)  | [?]() | [?](./2024/day04/main.?) |
+| 5   | [?](https://adventofcode.com/2024/day/5)  | [?]() | [?](./2024/day05/main.?) |
+| 6   | [?](https://adventofcode.com/2024/day/6)  | [?]() | [?](./2024/day06/main.?) |
+| 7   | [?](https://adventofcode.com/2024/day/7)  | [?]() | [?](./2024/day07/main.?) |
+| 8   | [?](https://adventofcode.com/2024/day/8)  | [?]() | [?](./2024/day08/main.?) |
+| 9   | [?](https://adventofcode.com/2024/day/9)  | [?]() | [?](./2024/day09/main.?) |
+| 10  | [?](https://adventofcode.com/2024/day/10) | [?]() | [?](./2024/day10/main.?) |
+| 11  | [?](https://adventofcode.com/2024/day/11) | [?]() | [?](./2024/day11/main.?) |
+| 12  | [?](https://adventofcode.com/2024/day/12) | [?]() | [?](./2024/day12/main.?) |
+| 13  | [?](https://adventofcode.com/2024/day/13) | [?]() | [?](./2024/day13/main.?) |
+| 14  | [?](https://adventofcode.com/2024/day/14) | [?]() | [?](./2024/day14/main.?) |
+| 15  | [?](https://adventofcode.com/2024/day/15) | [?]() | [?](./2024/day15/main.?) |
+| 16  | [?](https://adventofcode.com/2024/day/16) | [?]() | [?](./2024/day16/main.?) |
+| 17  | [?](https://adventofcode.com/2024/day/17) | [?]() | [?](./2024/day17/main.?) |
+| 18  | [?](https://adventofcode.com/2024/day/18) | [?]() | [?](./2024/day18/main.?) |
+| 19  | [?](https://adventofcode.com/2024/day/19) | [?]() | [?](./2024/day19/main.?) |
+| 20  | [?](https://adventofcode.com/2024/day/20) | [?]() | [?](./2024/day20/main.?) |
+| 21  | [?](https://adventofcode.com/2024/day/21) | [?]() | [?](./2024/day21/main.?) |
+| 22  | [?](https://adventofcode.com/2024/day/22) | [?]() | [?](./2024/day22/main.?) |
+| 23  | [?](https://adventofcode.com/2024/day/23) | [?]() | [?](./2024/day23/main.?) |
+| 24  | [?](https://adventofcode.com/2024/day/24) | [?]() | [?](./2024/day24/main.?) |
+| 25  | [?](https://adventofcode.com/2024/day/25) | [?]() | [?](./2024/day25/main.?) |
+
+</details>
+
+
 ## 2023
 
 In 2023 I used some random languages, mostly Uiua for fun and Nim for harder problems, with Godot (GDScript) to make visualization.
