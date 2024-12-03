@@ -1,24 +1,6 @@
-⬚∞⊜(⊜⋕ ≠@ .)≠@\n.&fras"input"
+FilterOne ← =2+⊃(=1⧻◴±)(=/+⟜⧻⊂≤3⟜(≥1)⌵)/-⍉◫2
+TestRow   ← >0/+⊂≡FilterOne◌:≡(⊸(⍜(↘)(↘1):)):⇡⧻.↯⧻.⟜FilterOne
+Run!      ← /+⊜(^0⊜⋕≠@ .)≠@\n.&fras"input"
 
-⬚∞≡(/-⍉◫2▽≠∞.) # Get differences
-
-# ♭↙1
-# =⌵/+± ⟜⧻ same as below
-SameSign ← =1⧻◴±
-
-FilterDifferentSign ← ▽≡(=1⧻◴±▽≠∞.).
-# FilterDifferentSign
-
-# ♭↙1
-# =/+⟜⧻⊂≤3⟜(≥1)⌵
-FilterCorrectValues ← ▽≡(=/+⟜⧻⊂≤3⟜(≥1)⌵).
-# FilterCorrectValues
-
-# ♭↙1↘3
-# ▽≠∞.
-# =2+⊃(=1⧻◴±)(=/+⟜⧻⊂≤3⟜(≥1)⌵)
-
-FilterOne ← =2+⊃(=1⧻◴±)(=/+⟜⧻⊂≤3⟜(≥1)⌵)▽≠∞.
-
-▽≡FilterOne .
-⧻
+Run!FilterOne # part 1
+Run!TestRow   # part 2
