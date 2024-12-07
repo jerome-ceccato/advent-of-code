@@ -20,13 +20,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 2   | [Red-Nosed Reports](https://adventofcode.com/2024/day/2)                | [Uiua](https://www.uiua.org/)                     | [main.ua](./2024/day02/main.ua)       |
 | 3   | [Mull It Over](https://adventofcode.com/2024/day/3)                     | [Uiua](https://www.uiua.org/)                     | [main.ua](./2024/day03/main.ua)       |
 | 4   | [Ceres Search](https://adventofcode.com/2024/day/4)                     | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day04/Main.hx)       |
+| 5   | [Print Queue](https://adventofcode.com/2024/day/5)                      | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day05/Main.hx)       |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-
-| 5   | [?](https://adventofcode.com/2024/day/5)  | [?]() | [?](./2024/day05/main.?) |
 | 6   | [?](https://adventofcode.com/2024/day/6)  | [?]() | [?](./2024/day06/main.?) |
 | 7   | [?](https://adventofcode.com/2024/day/7)  | [?]() | [?](./2024/day07/main.?) |
 | 8   | [?](https://adventofcode.com/2024/day/8)  | [?]() | [?](./2024/day08/main.?) |
