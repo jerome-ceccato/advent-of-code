@@ -22,22 +22,35 @@
             None))))
     points))
 
-(defn add-antinodes [antinodes ax ay bx by]
+(defn add-if-in-bounds [antinodes bounds x y]
+  (if (in-bounds? x y bounds)
+    (do (.add antinodes #(x y)) True)
+    False
+  ))
+
+(defn add-antinodes [antinodes bounds rec ax ay bx by]
   (let [dx (- ax bx)
         dy (- ay by)]
-    (.add antinodes #((+ ax dx) (+ ay dy)))
-    (.add antinodes #((- bx dx) (- by dy)))))
+    (if rec 
+      (do
+        (setv i 0)
+        (while (add-if-in-bounds antinodes bounds (+ ax (* dx i)) (+ ay (* dy i)))
+          (setv i (+ i 1)))
+        (setv i 0)
+        (while (add-if-in-bounds antinodes bounds (- bx (* dx i)) (- by (* dy i)))
+          (setv i (+ i 1))))
+    (do
+      (add-if-in-bounds antinodes bounds (+ ax dx) (+ ay dy))
+      (add-if-in-bounds antinodes bounds (- bx dx) (- by dy))))))
 
-(defn+ filter-inbounds [antinodes [bound-x bound-y]]
-  (lfor [x y] antinodes 
-    :if (and 
+(defn+ in-bounds? [x y [bound-x bound-y]]
+  (and 
       (>= x 0)
       (>= y 0)
       (< x bound-x)
-      (< y bound-y)) 
-    #(x y)))
+      (< y bound-y)))
 
-(defn list-antinodes [points]
+(defn list-antinodes [points bounds rec]
   (let [points-sz (len points)
         antinodes #{}]
     (for [i (range points-sz)]
@@ -45,9 +58,12 @@
         (let+ [[a ax ay] (get points i)
                [b bx by] (get points j)]
                (if (= a b)
-                (add-antinodes antinodes ax ay bx by)
+                (add-antinodes antinodes bounds rec ax ay bx by)
                 None))))
     antinodes))
 
-(-> input-data list-points list-antinodes (filter-inbounds (get-bounds input-data)) len print)
+(setv bounds (get-bounds input-data))
+(setv points (list-points input-data))
 
+(print (len (list-antinodes points bounds False)))
+(print (len (list-antinodes points bounds True)))
