@@ -41,3 +41,6 @@ dist
 *.o
 *.exe
 *.out
+
+# Python / Hy
+__pycache__

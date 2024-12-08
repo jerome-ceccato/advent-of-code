@@ -22,12 +22,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 4   | [Ceres Search](https://adventofcode.com/2024/day/4)                     | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day04/Main.hx)       |
 | 5   | [Print Queue](https://adventofcode.com/2024/day/5)                      | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day05/Main.hx)       |
 | 6   | [Guard Gallivant](https://adventofcode.com/2024/day/6)                  | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day06/Main.hx)       |
+| 7   | [Bridge Repair](https://adventofcode.com/2024/day/7)                    | [Hy](https://hylang.org/)                         | [main.hy](./2024/day07/main.hy)       |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 7   | [?](https://adventofcode.com/2024/day/7)  | [?]() | [?](./2024/day07/main.?) |
 | 8   | [?](https://adventofcode.com/2024/day/8)  | [?]() | [?](./2024/day08/main.?) |
 | 9   | [?](https://adventofcode.com/2024/day/9)  | [?]() | [?](./2024/day09/main.?) |
 | 10  | [?](https://adventofcode.com/2024/day/10) | [?]() | [?](./2024/day10/main.?) |
