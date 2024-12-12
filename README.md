@@ -25,6 +25,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 7   | [Bridge Repair](https://adventofcode.com/2024/day/7)                    | [Hy](https://hylang.org/)                         | [main.hy](./2024/day07/main.hy)       |
 | 8   | [Resonant Collinearity](https://adventofcode.com/2024/day/8)            | [Hy](https://hylang.org/)                         | [main.hy](./2024/day08/main.hy)       |
 | 9   | [Disk Fragmenter](https://adventofcode.com/2024/day/9)                  | [Swift](https://www.swift.org/)+[raylib](https://www.raylib.com/) | [main.swift](./2024/day09/main.swift), [demo.gif](./2024/day09/p1.gif) |
+| 10  | [Hoof It](https://adventofcode.com/2024/day/10)                         | [Swift](https://www.swift.org/)+[raylib](https://www.raylib.com/) | [main.swift](./2024/day10/main.swift), [demo.gif](./2024/day10/demo.gif) |
 <details>
 <summary>Not released yet</summary>
 
