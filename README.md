@@ -23,13 +23,13 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 5   | [Print Queue](https://adventofcode.com/2024/day/5)                      | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day05/Main.hx)       |
 | 6   | [Guard Gallivant](https://adventofcode.com/2024/day/6)                  | [Haxe](https://haxe.org/)                         | [Main.hx](./2024/day06/Main.hx)       |
 | 7   | [Bridge Repair](https://adventofcode.com/2024/day/7)                    | [Hy](https://hylang.org/)                         | [main.hy](./2024/day07/main.hy)       |
-| 7   | [Resonant Collinearity](https://adventofcode.com/2024/day/8)            | [Hy](https://hylang.org/)                         | [main.hy](./2024/day08/main.hy)       |
+| 8   | [Resonant Collinearity](https://adventofcode.com/2024/day/8)            | [Hy](https://hylang.org/)                         | [main.hy](./2024/day08/main.hy)       |
+| 9   | [Disk Fragmenter](https://adventofcode.com/2024/day/9)                  | [Swift](https://www.swift.org/)+[raylib](https://www.raylib.com/) | [main.swift](./2024/day09/main.swift), [demo.gif](./2024/day09/p1.gif) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 9   | [?](https://adventofcode.com/2024/day/9)  | [?]() | [?](./2024/day09/main.?) |
 | 10  | [?](https://adventofcode.com/2024/day/10) | [?]() | [?](./2024/day10/main.?) |
 | 11  | [?](https://adventofcode.com/2024/day/11) | [?]() | [?](./2024/day11/main.?) |
 | 12  | [?](https://adventofcode.com/2024/day/12) | [?]() | [?](./2024/day12/main.?) |
