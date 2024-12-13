@@ -28,12 +28,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 10  | [Hoof It](https://adventofcode.com/2024/day/10)                         | [Swift](https://www.swift.org/)+[raylib](https://www.raylib.com/) | [main.swift](./2024/day10/main.swift), [demo.gif](./2024/day10/demo.gif) |
 | 11  | [Plutonian Pebbles](https://adventofcode.com/2024/day/11)               | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day11/main.rs) |
 | 12  | [Garden Groups](https://adventofcode.com/2024/day/12)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day12/main.rs) |
+| 13  | [Claw Contraption](https://adventofcode.com/2024/day/13)                | [Rust](https://www.rust-lang.org/), [Python](https://www.python.org/) | [main.rs](./2024/day13/main.rs), [p2.py](./2024/day13/p2.py) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 13  | [?](https://adventofcode.com/2024/day/13) | [?]() | [?](./2024/day13/main.?) |
 | 14  | [?](https://adventofcode.com/2024/day/14) | [?]() | [?](./2024/day14/main.?) |
 | 15  | [?](https://adventofcode.com/2024/day/15) | [?]() | [?](./2024/day15/main.?) |
 | 16  | [?](https://adventofcode.com/2024/day/16) | [?]() | [?](./2024/day16/main.?) |
@@ -61,7 +61,7 @@ I managed to solve all problems within 24 hours.
 | 2   | [Cube Conundrum](https://adventofcode.com/2023/day/2)                   | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day02/main.ua), [golf.ua](./2023/day02/golf.ua)      |
 | 3   | [Gear Ratios](https://adventofcode.com/2023/day/3)                      | [Uiua (0.5.1)](https://www.uiua.org/)             | [main.ua](./2023/day03/main.ua), [golf.ua](./2023/day03/golf.ua)      |
 | 4   | [Scratchcards](https://adventofcode.com/2023/day/4)                     | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day04/main.ua), [golf.ua](./2023/day04/golf.ua)      |
-| 5   | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)  | [Uiua](https://www.uiua.org/), [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) | [part1.ua](./2023/day05/part1.ua), [part2.py](./2023/day05/part2.py) |
+| 5   | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)  | [Uiua](https://www.uiua.org/), [Python](https://www.python.org/) | [part1.ua](./2023/day05/part1.ua), [part2.py](./2023/day05/part2.py) |
 | 6   | [Wait For It](https://adventofcode.com/2023/day/6)                      | [Uiua](https://www.uiua.org/)                     | [main.ua](./2023/day06/main.ua), [golf.ua](./2023/day06/golf.ua)      |
 | 7   | [Camel Cards](https://adventofcode.com/2023/day/7)                      | [Uiua (0.6.1)](https://www.uiua.org/)             | [main.ua](./2023/day07/main.ua), [golf.ua](./2023/day07/golf.ua)      |
 | 8   | [Haunted Wasteland](https://adventofcode.com/2023/day/8)                | [Nim (2.0.0)](https://nim-lang.org/)              | [main.nim](./2023/day08/main.nim)                                     |
@@ -80,7 +80,7 @@ I managed to solve all problems within 24 hours.
 | 21  | [Step Counter](https://adventofcode.com/2023/day/21)                    | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day21/main.nim)                                     |
 | 22  | [Sand Slabs](https://adventofcode.com/2023/day/22)                      | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day22/main.gd), [demo](./2023/day22/demo.mp4), [gif](./2023/day22/demo.gif) |
 | 23  | [A Long Walk](https://adventofcode.com/2023/day/23)                     | [GDScript](https://godotengine.org/)              | [main.gd](./2023/day23/main.gd), [demo](./2023/day23/demo.mp4), [gif](./2023/day23/demo.gif) |
-| 24  | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24)          | [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) | [main.py](./2023/day24/main.py)                   |
+| 24  | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24)          | [Python](https://www.python.org/)                 | [main.py](./2023/day24/main.py)                                       |
 | 25  | [Snowverload](https://adventofcode.com/2023/day/25)                     | [Nim](https://nim-lang.org/)                      | [main.nim](./2023/day25/main.nim)                                     |
 
 
