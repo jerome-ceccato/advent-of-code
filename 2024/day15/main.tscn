@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://bsgobago7grcq"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_587em"]
+[ext_resource type="TileSet" uid="uid://drqivlhqake7" path="res://tileset.tres" id="2_a4dwv"]
+[ext_resource type="Script" path="res://camera.gd" id="3_ni3nq"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_587em")
+
+[node name="Floor" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_a4dwv")
+
+[node name="Walls" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_a4dwv")
+
+[node name="Entities" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_a4dwv")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("3_ni3nq")
