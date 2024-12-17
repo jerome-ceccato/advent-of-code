@@ -1,6 +1,6 @@
 use std::{
     cmp::Reverse,
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fs,
     ops::{self},
 };
@@ -38,6 +38,16 @@ impl ops::Add for &Point {
         Point {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
+        }
+    }
+}
+
+impl ops::Sub for &Point {
+    type Output = Point;
+    fn sub(self, rhs: &Point) -> Self::Output {
+        Point {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
         }
     }
 }
@@ -90,7 +100,50 @@ fn next_score(score: i32, old_dir: &Point, new_dir: &Point) -> i32 {
     }
 }
 
-fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> i32 {
+fn get_possible_paths(
+    best_scores: &HashMap<Point, (i32, Vec<Point>)>,
+    current: &Point,
+) -> HashSet<Vec<Point>> {
+    let mut all_paths: HashSet<Vec<Point>> = HashSet::new();
+    if best_scores.contains_key(current) {
+        for parent in best_scores[current].1.iter() {
+            let paths = get_possible_paths(best_scores, &parent);
+            for p in paths.iter() {
+                let mut next = p.clone();
+                next.push(current.clone());
+                all_paths.insert(next);
+            }
+        }
+        return all_paths;
+    } else {
+        let mut empty = HashSet::new();
+        empty.insert(vec![]);
+        return empty;
+    }
+}
+
+fn get_path_score(start: &Point, start_dir: &Point, path: Vec<Point>) -> i32 {
+    let mut dir = start_dir.clone();
+    let mut current = start.clone();
+    let mut score = 0;
+    for p in path {
+        if p == current {
+            continue;
+        }
+
+        let this_dir = &p - &current;
+        if this_dir == dir {
+            score += 1;
+        } else {
+            score += 1001;
+        }
+        dir = this_dir;
+        current = p;
+    }
+    return score;
+}
+
+fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> (i32, HashSet<Point>) {
     let mut queue = PriorityQueue::new();
     queue.push(
         Path {
@@ -101,11 +154,22 @@ fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> i32 {
         Reverse(0),
     );
 
-    let mut best_scores: HashMap<Point, i32> = HashMap::new();
+    let mut goal: Option<i32> = None;
+    let mut end = Point { x: -1, y: -1 };
+    let mut best_scores: HashMap<Point, (i32, Vec<Point>)> = HashMap::new();
 
+    // Run a priority queue to find the best score possible
+    // For P2, this also keeps track of all the best score to reach a given node and the parents that achieved that score
+    // Because of turning costing 1000 points, it's possible to have a second, equally as good path that has a score of exactly 1000 more than the best (because it's already in the correct orientation to proceed)
+    // Unfortunately it also leads to some false positive, so we then build all the possible paths (in reverse, starting from the end and taking all parents that got the lowest score)
+    // We then filter the paths that don't actually achieve the best score
+    // Finally, we collect all unique points from those paths and that's our p2 result
+    // Naturally, this is a horrible solution and it takes forever to get the result.
     while let Some((item, _)) = queue.pop() {
-        if best_scores.contains_key(&item.head) && best_scores[&item.head] < item.score {
-            continue;
+        if let Some(best) = goal {
+            if item.score > best {
+                continue;
+            }
         }
 
         for direction in Point::DIRECTIONS.iter() {
@@ -114,8 +178,23 @@ fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> i32 {
                 if let Some(neighbor) = get(world, &next) {
                     if neighbor == '.' || neighbor == 'E' {
                         let score = next_score(item.score, &item.direction, direction);
+                        if best_scores.contains_key(&next) {
+                            if score < best_scores[&next].0 {
+                                best_scores.insert(next, (score, vec![item.head.clone()]));
+                            } else if score == best_scores[&next].0
+                                || score == best_scores[&next].0 + 1000
+                            {
+                                best_scores
+                                    .get_mut(&next)
+                                    .unwrap()
+                                    .1
+                                    .push(item.head.clone());
+                            }
+                        } else {
+                            best_scores.insert(next, (score, vec![item.head.clone()]));
+                        }
+
                         if neighbor == '.' {
-                            best_scores.insert(next, score);
                             queue.push(
                                 Path {
                                     head: next,
@@ -125,7 +204,8 @@ fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> i32 {
                                 Reverse(score),
                             );
                         } else {
-                            return score;
+                            goal = Some(score);
+                            end = next.clone();
                         }
                     }
                 }
@@ -133,7 +213,20 @@ fn pathfind(world: &Vec<Vec<char>>, start: &Point, start_dir: &Point) -> i32 {
         }
     }
 
-    return -1;
+    let all_paths = get_possible_paths(&best_scores, &end);
+    let valid: Vec<&Vec<Point>> = all_paths
+        .iter()
+        .filter(|path| get_path_score(start, start_dir, path.to_vec()) == goal.unwrap())
+        .collect();
+    let mut visited: HashSet<Point> = HashSet::new();
+    visited.insert(start.clone());
+    for path in valid.into_iter() {
+        for p in path.into_iter() {
+            visited.insert(p.clone());
+        }
+    }
+
+    return (goal.unwrap(), visited);
 }
 
 fn main() {
@@ -141,7 +234,7 @@ fn main() {
     let start = find_start(&world);
     let direction = Point::EAST;
 
-    // Horribly slow because of the PriorityQueue hashing + the map is too large
-    // Can't work for p2 because saving the paths would take hours instead of seconds
-    println!("{}", pathfind(&world, &start, &direction));
+    let results = pathfind(&world, &start, &direction);
+    println!("{}", results.0);
+    println!("{}", results.1.len());
 }

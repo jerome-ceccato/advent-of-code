@@ -31,12 +31,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 13  | [Claw Contraption](https://adventofcode.com/2024/day/13)                | [Rust](https://www.rust-lang.org/), [Python](https://www.python.org/) | [main.rs](./2024/day13/main.rs), [p2.py](./2024/day13/p2.py) |
 | 14  | [Restroom Redoubt](https://adventofcode.com/2024/day/14)                | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day14/main.rs) |
 | 15  | [Warehouse Woes](https://adventofcode.com/2024/day/15)                  | [GDScript (Godot 4.3)](https://godotengine.org/)  | [main.gd](./2024/day15/main.gd), [demo.gif](./2024/day15/demo.gif) |
+| 16  | [Reindeer Maze](https://adventofcode.com/2024/day/16)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day16/main.rs) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 16  | [?](https://adventofcode.com/2024/day/16) | [?]() | [?](./2024/day16/main.?) |
 | 17  | [?](https://adventofcode.com/2024/day/17) | [?]() | [?](./2024/day17/main.?) |
 | 18  | [?](https://adventofcode.com/2024/day/18) | [?]() | [?](./2024/day18/main.?) |
 | 19  | [?](https://adventofcode.com/2024/day/19) | [?]() | [?](./2024/day19/main.?) |
