@@ -32,6 +32,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 14  | [Restroom Redoubt](https://adventofcode.com/2024/day/14)                | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day14/main.rs) |
 | 15  | [Warehouse Woes](https://adventofcode.com/2024/day/15)                  | [GDScript (Godot 4.3)](https://godotengine.org/)  | [main.gd](./2024/day15/main.gd), [demo.gif](./2024/day15/demo.gif) |
 | 16  | [Reindeer Maze](https://adventofcode.com/2024/day/16)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day16/main.rs) |
+| 17  | [Chronospatial Computer](https://adventofcode.com/2024/day/17)          | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day17/main.rs) |
 <details>
 <summary>Not released yet</summary>
 
