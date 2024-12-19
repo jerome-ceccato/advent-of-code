@@ -34,12 +34,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 16  | [Reindeer Maze](https://adventofcode.com/2024/day/16)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day16/main.rs) |
 | 17  | [Chronospatial Computer](https://adventofcode.com/2024/day/17)          | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day17/main.rs) |
 | 18  | [RAM Run](https://adventofcode.com/2024/day/18)                         | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day18/main.rs) |
+| 19  | [Linen Layout](https://adventofcode.com/2024/day/19)                    | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day19/main.rs) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 19  | [?](https://adventofcode.com/2024/day/19) | [?]() | [?](./2024/day19/main.?) |
 | 20  | [?](https://adventofcode.com/2024/day/20) | [?]() | [?](./2024/day20/main.?) |
 | 21  | [?](https://adventofcode.com/2024/day/21) | [?]() | [?](./2024/day21/main.?) |
 | 22  | [?](https://adventofcode.com/2024/day/22) | [?]() | [?](./2024/day22/main.?) |
