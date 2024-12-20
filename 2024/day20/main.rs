@@ -1,8 +1,5 @@
 use core::panic;
-use std::{
-    collections::{HashMap, HashSet},
-    fs, ops,
-};
+use std::{collections::HashMap, fs, ops};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord)]
 struct Point {
@@ -11,23 +8,12 @@ struct Point {
 }
 
 impl Point {
-    const ZERO: Point = Point { x: 0, y: 0 };
     const NORTH: Point = Point { x: 0, y: -1 };
     const EAST: Point = Point { x: 1, y: 0 };
     const SOUTH: Point = Point { x: 0, y: 1 };
     const WEST: Point = Point { x: -1, y: 0 };
 
     const DIRECTIONS: &'static [Point] = &[Point::NORTH, Point::EAST, Point::SOUTH, Point::WEST];
-    const DIAMOND: &'static [Point] = &[
-        Point { x: 0, y: -2 },
-        Point { x: -1, y: -1 },
-        Point { x: 1, y: -1 },
-        Point { x: 2, y: 0 },
-        Point { x: -2, y: 0 },
-        Point { x: 0, y: 2 },
-        Point { x: -1, y: 1 },
-        Point { x: 1, y: 1 },
-    ];
 }
 
 impl ops::Add for Point {
@@ -94,39 +80,46 @@ fn collect_distances(world: &Vec<Vec<char>>, end: Point) -> HashMap<Point, i32> 
     }
 }
 
-#[derive(Debug)]
-struct Cheat {
-    origin: Point,
-    end: Point,
-    score: i32,
+fn make_diamond(size: i32) -> Vec<(Point, i32)> {
+    let mut points: Vec<(Point, i32)> = vec![];
+    for x in -size..=size {
+        for y in -size..=size {
+            let distance = x.abs() + y.abs();
+            if distance <= size {
+                points.push((Point { x, y }, distance));
+            }
+        }
+    }
+    points
 }
 
 fn useful_cheats<'a>(
     distances: &'a HashMap<Point, i32>,
     point: &'a Point,
     distance: &'a i32,
-) -> impl Iterator<Item = (Point, i32)> + 'a {
-    Point::DIAMOND.iter().filter_map(|dir| {
+    diamond_offset: &'a Vec<(Point, i32)>,
+) -> impl Iterator<Item = i32> + 'a {
+    diamond_offset.iter().filter_map(|(dir, offset)| {
         let end = *point + *dir;
         if let Some(&other_value) = distances.get(&end) {
-            if other_value < (*distance - 2) {
-                return Some((end, (*distance - 2) - other_value));
+            if other_value < (*distance - offset) {
+                return Some((*distance - offset) - other_value);
             }
         }
         None
     })
 }
 
-fn all_cheating_options(distances: &HashMap<Point, i32>) -> Vec<Cheat> {
+fn all_cheating_scores(
+    distances: &HashMap<Point, i32>,
+    cheat_max_len: i32,
+    threshold: i32,
+) -> Vec<i32> {
+    let offset_map = make_diamond(cheat_max_len);
     distances
         .iter()
-        .flat_map(|(point, distance)| {
-            useful_cheats(distances, point, distance).map(|(end, score)| Cheat {
-                origin: *point,
-                end,
-                score,
-            })
-        })
+        .flat_map(|(point, distance)| useful_cheats(distances, point, distance, &offset_map))
+        .filter(|&c| c >= threshold)
         .collect()
 }
 
@@ -134,9 +127,10 @@ fn main() {
     let world = get_input("input");
     let end_pos = find_in_world(&world, 'E');
     let distances = collect_distances(&world, end_pos);
-    let all_cheats = all_cheating_options(&distances);
-    let part1 = all_cheats.iter().filter(|c| c.score >= 100).count();
 
-    println!("Total cheats: {:?}", all_cheats.len());
+    let part1 = all_cheating_scores(&distances, 2, 100).into_iter().count();
     println!("{:?}", part1);
+
+    let part2 = all_cheating_scores(&distances, 20, 100).into_iter().count();
+    println!("{:?}", part2);
 }
