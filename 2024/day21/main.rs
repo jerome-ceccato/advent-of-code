@@ -49,6 +49,7 @@ fn numeric_keypad(item: char) -> Point {
         '1' => Point { x: 0, y: 2 },
         '2' => Point { x: 1, y: 2 },
         '3' => Point { x: 2, y: 2 },
+        ' ' => Point { x: 0, y: 3 },
         '0' => Point { x: 1, y: 3 },
         'A' => Point { x: 2, y: 3 },
         _ => unreachable!(),
@@ -57,6 +58,7 @@ fn numeric_keypad(item: char) -> Point {
 
 fn directional_keypad(item: char) -> Point {
     match item {
+        ' ' => Point { x: 0, y: 0 },
         '^' => Point { x: 1, y: 0 },
         'A' => Point { x: 2, y: 0 },
         '<' => Point { x: 0, y: 1 },
@@ -76,135 +78,173 @@ fn encode_dir(dir: Point) -> char {
     }
 }
 
-fn any_direction(from: Point, to: Point) -> Point {
-    if from.x == to.x {
-        if from.y > to.y {
-            Point::UP
-        } else {
-            Point::DOWN
-        }
-    } else {
-        if from.x > to.x {
+fn all_paths(from: Point, to: Point, gap: Point, path: Vec<char>) -> Vec<Vec<char>> {
+    if from == to {
+        return vec![path];
+    }
+
+    let mut paths: Vec<Vec<char>> = vec![];
+    if from.x != to.x {
+        let mut current_path = path.clone();
+        let dir = if from.x > to.x {
             Point::LEFT
         } else {
             Point::RIGHT
+        };
+        let target = from + dir;
+        if target != gap {
+            current_path.push(encode_dir(dir));
+            paths.append(&mut all_paths(target, to, gap, current_path));
         }
     }
+    if from.y != to.y {
+        let mut current_path = path.clone();
+        let dir = if from.y > to.y {
+            Point::UP
+        } else {
+            Point::DOWN
+        };
+        let target = from + dir;
+        if target != gap {
+            current_path.push(encode_dir(dir));
+            paths.append(&mut all_paths(target, to, gap, current_path));
+        }
+    }
+
+    paths
 }
 
-fn get_moves(from: Point, to: Point, starting_dir: Point) -> Vec<char> {
-    let mut moves: Vec<char> = vec![];
-    let mut current = from;
-    let encoded_dir = encode_dir(starting_dir);
-    if starting_dir.x == 0 {
-        while current.y != to.y {
-            moves.push(encoded_dir);
-            current += starting_dir;
-        }
-    } else {
-        while current.x != to.x {
-            moves.push(encoded_dir);
-            current += starting_dir;
-        }
-    }
-
-    if current != to {
-        moves.append(&mut get_moves(current, to, any_direction(current, to)));
-    }
-    moves
-}
-
-fn nkeypad_get_moves<'a>(
-    memo: &'a mut HashMap<(char, char), Vec<char>>,
+fn keypad_get_moves<'a>(
+    memo: &'a mut HashMap<(char, char), Vec<Vec<char>>>,
     from: char,
     to: char,
-) -> &'a Vec<char> {
+    position_encoder: fn(char) -> Point,
+) -> &'a Vec<Vec<char>> {
     let key = (from, to);
     if !memo.contains_key(&key) {
-        let from_pos = numeric_keypad(from);
-        let to_pos = numeric_keypad(to);
-        let result = match (from, to) {
-            ('0', 'A') => vec!['>'],
-            ('A', '0') => vec!['<'],
-            ('0', _) | ('A', _) => get_moves(from_pos, to_pos, Point::UP),
-            _ => get_moves(from_pos, to_pos, any_direction(from_pos, to_pos)),
-        };
-        memo.insert((from, to), result);
+        let from_pos = position_encoder(from);
+        let to_pos = position_encoder(to);
+        let results = all_paths(from_pos, to_pos, position_encoder(' '), vec![]);
+        memo.insert((from, to), results);
     }
 
     &memo[&key]
 }
 
-fn dkeypad_get_moves<'a>(
-    memo: &'a mut HashMap<(char, char), Vec<char>>,
-    from: char,
-    to: char,
-) -> &'a Vec<char> {
-    let key = (from, to);
-    if !memo.contains_key(&key) {
-        let from_pos = directional_keypad(from);
-        let to_pos = directional_keypad(to);
-        let result = match (from, to) {
-            ('^', 'A') => vec!['>'],
-            ('A', '^') => vec!['<'],
-            ('^', _) | ('A', _) => get_moves(from_pos, to_pos, Point::DOWN),
-            _ => get_moves(from_pos, to_pos, any_direction(from_pos, to_pos)),
-        };
-        memo.insert((from, to), result);
+fn encode_message_rec(
+    mut paths: Vec<Vec<char>>,
+    message: &[char],
+    current: char,
+    memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
+    position_encoder: fn(char) -> Point,
+) -> Vec<Vec<char>> {
+    if message.is_empty() {
+        return paths;
     }
 
-    &memo[&key]
-}
-
-fn encode_message(
-    message: &Vec<char>,
-    initial: char,
-    memo: &mut HashMap<(char, char), Vec<char>>,
-    move_encoder: fn(&mut HashMap<(char, char), Vec<char>>, char, char) -> &Vec<char>,
-) -> Vec<char> {
-    let mut current = initial;
-    let mut result: Vec<char> = vec![];
-    for &c in message {
-        if c != current {
-            move_encoder(memo, current, c)
-                .iter()
-                .for_each(|&item| result.push(item));
+    let next_c = message[0];
+    if current != next_c {
+        let branches = keypad_get_moves(memo, current, next_c, position_encoder);
+        let mut combinations: Vec<Vec<char>> = vec![];
+        for branch in branches {
+            for p in paths.iter() {
+                let mut new_path = p.clone();
+                new_path.append(&mut branch.clone());
+                combinations.push(new_path);
+            }
         }
-        result.push('A');
-        current = c;
+        paths = combinations;
     }
-    result
+
+    for p in paths.iter_mut() {
+        p.push('A');
+    }
+
+    encode_message_rec(paths, &message[1..], next_c, memo, position_encoder)
 }
 
 fn code_complexity(
     code: &Vec<char>,
-    n_memo: &mut HashMap<(char, char), Vec<char>>,
-    d_memo: &mut HashMap<(char, char), Vec<char>>,
+    n_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
+    d_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
 ) -> i32 {
-    let first_pass = encode_message(&code, 'A', n_memo, nkeypad_get_moves);
-    let second_pass = encode_message(&first_pass, 'A', d_memo, dkeypad_get_moves);
-    let third_pass = encode_message(&second_pass, 'A', d_memo, dkeypad_get_moves);
+    let first_pass = encode_message_rec(vec![vec![]], &code, 'A', n_memo, numeric_keypad);
+    let second_pass: Vec<Vec<char>> = first_pass
+        .iter()
+        .flat_map(|p| encode_message_rec(vec![vec![]], &p, 'A', d_memo, directional_keypad))
+        .collect();
+
+    let third_pass: Vec<Vec<char>> = second_pass
+        .iter()
+        .flat_map(|p| encode_message_rec(vec![vec![]], &p, 'A', d_memo, directional_keypad))
+        .collect();
+
+    let min_len = third_pass.iter().map(|n| n.len()).min().unwrap();
     let code_number: i32 = code.iter().take(3).collect::<String>().parse().unwrap();
 
     println!(
         "{:?} -> {} * {}",
         code.iter().collect::<String>(),
-        third_pass.len(),
+        min_len,
         code_number
     );
-    code_number * third_pass.len() as i32
+    code_number * min_len as i32
 }
 
 fn main() {
     let codes = get_input("input");
-    let mut nkeypad_memo: HashMap<(char, char), Vec<char>> = HashMap::new();
-    let mut dkeypad_memo: HashMap<(char, char), Vec<char>> = HashMap::new();
+    let mut nkeypad_memo: HashMap<(char, char), Vec<Vec<char>>> = HashMap::new();
+    let mut dkeypad_memo: HashMap<(char, char), Vec<Vec<char>>> = HashMap::new();
 
     let result = codes
         .iter()
         .map(|code| code_complexity(code, &mut nkeypad_memo, &mut dkeypad_memo))
         .sum::<i32>();
     println!("{:?}", result);
+
+    // let possibilities = encode_message_rec(
+    //     vec![vec![]],
+    //     &codes[0],
+    //     'A',
+    //     &mut nkeypad_memo,
+    //     numeric_keypad,
+    // );
+    // let next: Vec<Vec<char>> = possibilities
+    //     .iter()
+    //     .flat_map(|p| {
+    //         encode_message_rec(vec![vec![]], &p, 'A', &mut dkeypad_memo, directional_keypad)
+    //     })
+    //     .collect();
+
+    // let next2: Vec<Vec<char>> = next
+    //     .iter()
+    //     .flat_map(|p| {
+    //         encode_message_rec(vec![vec![]], &p, 'A', &mut dkeypad_memo, directional_keypad)
+    //     })
+    //     .collect();
+    // println!(
+    //     "{:?}",
+    //     possibilities
+    //         .iter()
+    //         .map(|v| v.iter().collect::<String>())
+    //         .collect::<Vec<String>>()
+    // );
+
+    // println!(
+    //     "{:?}",
+    //     next.iter()
+    //         .map(|v| v.iter().collect::<String>())
+    //         .collect::<Vec<String>>()
+    // );
+
+    // println!("{:?}", possibilities.len());
+    // println!("{:?}", next.len());
+    // println!("{:?}", next2.len());
+    // println!("-> {:?}", next2.iter().map(|n| n.len()).min());
+
+    // let from = numeric_keypad('0');
+    // let to = numeric_keypad('1');
+    // println!("{:?}", all_paths(from, to, numeric_keypad(' '), vec![]));
 }
 
 // 165374 too high
