@@ -148,104 +148,46 @@ fn keypad_get_moves<'a>(
     &memo[&key]
 }
 
-// sequence is a list of directional inputs ending with A
-fn find_best_encoding(
-    sequence: Vec<char>,
-    current: char,
-    sequence_memo: &mut HashMap<Vec<char>, Vec<char>>,
-    n_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-    d_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-    level: i32,
-) -> Vec<char> {
-    let max_depth = 25;
-    if level > 0 && sequence_memo.contains_key(&sequence) {
-        return sequence_memo[&sequence].clone();
+type Sequence = Vec<char>;
+fn nkeypad_all_sequences(target: char, current: char) -> Vec<Sequence> {
+    let mut paths = all_paths(
+        numeric_keypad(current),
+        numeric_keypad(target),
+        numeric_keypad(' '),
+        vec![],
+    );
+    for p in paths.iter_mut() {
+        p.push('A');
     }
-
-    let possibilities = if level == 0 {
-        encode_sequence(&sequence, current, n_memo, numeric_keypad)
-    } else {
-        encode_sequence(&sequence, current, d_memo, directional_keypad)
-    };
-    let mut min_size = possibilities.iter().map(|p| p.len()).min().unwrap();
-    let filtered: Vec<Vec<char>> = possibilities
-        .into_iter()
-        .filter(|p| p.len() == min_size)
-        .collect();
-
-    if filtered.len() == 1 {
-        let item = filtered.into_iter().next().unwrap();
-        // println!("only {:?} -> {:?}", sequence, item);
-        if level > 0 {
-            println!("new seq {}", sequence.iter().collect::<String>());
-            sequence_memo.insert(sequence, item.clone());
-        }
-        return item;
-    }
-
-    let mut current: Vec<(Vec<char>, Vec<char>)> =
-        filtered.into_iter().map(|n| (n.clone(), n)).collect();
-
-    let mut depth = level + 1;
-    while current.len() > 1 && depth <= max_depth {
-        let deeper: Vec<(Vec<char>, Vec<char>)> = current
-            .into_iter()
-            .map(|(orig, f)| {
-                (
-                    orig.clone(),
-                    encode_sequence(&f, 'A', d_memo, directional_keypad)
-                        .into_iter()
-                        .next()
-                        .unwrap(),
-                )
-            })
-            .collect();
-
-        min_size = deeper.iter().map(|(_, p)| p.len()).min().unwrap();
-        current = deeper
-            .into_iter()
-            .filter(|(_, p)| p.len() == min_size)
-            .collect();
-        depth += 1;
-    }
-
-    let (item, _) = current.into_iter().next().unwrap();
-    // println!("best {:?} -> {:?}", sequence, item);
-    if level > 0 {
-        println!("new seq {}", sequence.iter().collect::<String>());
-        sequence_memo.insert(sequence, item.clone());
-    }
-
-    return item;
+    paths
 }
 
-fn encode_sequence(
+fn all_expanded_seq(
     sequence: &[char],
     current: char,
     move_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-    position_encoder: fn(char) -> Point,
-) -> Vec<Vec<char>> {
+) -> Vec<Vec<Sequence>> {
     if sequence.is_empty() {
         return vec![vec![]];
     }
 
     let next_c = sequence[0];
-    let mut paths = encode_sequence(&sequence[1..], next_c, move_memo, position_encoder);
+    let mut paths = all_expanded_seq(&sequence[1..], next_c, move_memo);
 
     if current == next_c {
         for p in paths.iter_mut() {
-            p.insert(0, 'A');
+            p.insert(0, vec!['A']);
         }
     } else {
-        let mut branches = keypad_get_moves(move_memo, current, next_c, position_encoder).clone();
+        let mut branches = keypad_get_moves(move_memo, current, next_c, directional_keypad).clone();
         for b in branches.iter_mut() {
             b.push('A');
         }
-        let mut combinations: Vec<Vec<char>> = vec![];
+        let mut combinations: Vec<Vec<Sequence>> = vec![];
         for branch in branches {
             for p in paths.iter() {
-                let mut new_path = branch.clone();
-                new_path.append(&mut p.clone());
+                let mut new_path = p.clone();
+                new_path.insert(0, branch.clone());
                 combinations.push(new_path);
             }
         }
@@ -254,187 +196,81 @@ fn encode_sequence(
     return paths;
 }
 
-fn split_seq(seq: &Vec<char>) -> Vec<Vec<char>> {
-    let mut res: Vec<Vec<char>> = vec![];
-    let mut current: Vec<char> = vec![];
-    for &c in seq {
-        current.push(c);
-        if c == 'A' {
-            res.push(current);
-            current = vec![];
-        }
-    }
-    res
-}
-
-fn split_message(message: &[char], level: i32) -> Vec<Vec<char>> {
-    if level == 0 {
-        message.chunks(1).map(|c| c.to_vec()).collect()
+fn min_size(
+    memo: &mut HashMap<(Sequence, i32), i64>,
+    move_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
+    seq: Sequence,
+    depth: i32,
+) -> i64 {
+    if depth == 0 {
+        return seq.len() as i64;
     } else {
-        split_seq(&message.to_vec())
-    }
-}
-
-fn encode_message2(
-    message: &[char],
-    level: i32,
-    sequence_memo: &mut HashMap<Vec<char>, Vec<char>>,
-    n_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-    d_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-) -> Vec<char> {
-    if level == 0 {
-        let mut current = 'A';
-        let mut res: Vec<char> = vec![];
-        for &c in message {
-            res.append(&mut find_best_encoding(
-                vec![c],
-                current,
-                sequence_memo,
-                d_memo,
-                n_memo,
-                level,
-            ));
-            current = c;
+        let key = (seq.clone(), depth);
+        if memo.contains_key(&key) {
+            return memo[&key];
         }
-        res
-    } else {
-        split_seq(&message.to_vec())
+        let next = all_expanded_seq(&seq, 'A', move_memo)
             .into_iter()
-            .flat_map(|chunk| find_best_encoding(chunk, 'A', sequence_memo, n_memo, d_memo, level))
-            .collect()
+            .map(|choice| {
+                choice
+                    .into_iter()
+                    .map(|subseq| min_size(memo, move_memo, subseq, depth - 1))
+                    .sum()
+            })
+            .min()
+            .unwrap();
+        memo.insert(key, next);
+        next
     }
+}
+
+fn solve(
+    code: &Vec<char>,
+    seq_memo: &mut HashMap<(Sequence, i32), i64>,
+    d_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
+    depth: i32,
+) -> i64 {
+    let mut current = 'A';
+    let mut total = 0;
+    for &c in code {
+        let sequences = nkeypad_all_sequences(c, current);
+        let best = sequences
+            .into_iter()
+            .map(|s| min_size(seq_memo, d_memo, s, depth))
+            .min()
+            .unwrap();
+        total += best;
+        current = c;
+    }
+    total
 }
 
 fn code_complexity(
     code: &Vec<char>,
-    sequence_memo: &mut HashMap<Vec<char>, Vec<char>>,
-    n_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
+    seq_memo: &mut HashMap<(Sequence, i32), i64>,
     d_memo: &mut HashMap<(char, char), Vec<Vec<char>>>,
-    directional_passes: i32,
-) -> i32 {
-    let mut current = encode_message2(&code, 0, sequence_memo, n_memo, d_memo);
+    depth: i32,
+) -> i64 {
+    let min_len = solve(code, seq_memo, d_memo, depth);
+    let code_number: i64 = code.iter().take(3).collect::<String>().parse().unwrap();
 
-    for level in 0..directional_passes {
-        use std::time::Instant;
-        let now = Instant::now();
-        println!("{} ({})", level, current.len());
-        current = encode_message2(&current, level + 1, sequence_memo, n_memo, d_memo);
-        let elapsed = now.elapsed();
-        println!("Elapsed: {:.2?}", elapsed);
-    }
-    // println!("{:?}", current.iter().collect::<String>());
-    // encode_message(&code, 'A', &mut message_memo, n_memo, numeric_keypad);
-    // let mut current = encode_message_rec(vec![vec![]], &code, 'A', n_memo, numeric_keypad);
-    // for _ in 0..directional_passes {
-    //     current = current
-    //         .into_iter()
-    //         .flat_map(|p| encode_message(&p, 'A', &mut message_memo, d_memo, directional_keypad))
-    //         .collect();
-    // }
-
-    let code_number: i32 = code.iter().take(3).collect::<String>().parse().unwrap();
-
-    println!(
-        "{:?} -> {} * {}",
-        code.iter().collect::<String>(),
-        current.len(),
-        code_number
-    );
-    code_number * current.len() as i32
+    code_number * min_len
 }
 
 fn main() {
     let codes = get_input("input");
-    let mut nkeypad_memo: HashMap<(char, char), Vec<Vec<char>>> = HashMap::new();
-    let mut dkeypad_memo: HashMap<(char, char), Vec<Vec<char>>> = HashMap::new();
-    let mut sequence_memo: HashMap<Vec<char>, Vec<char>> = HashMap::new();
+    let mut seq_memo: HashMap<(Sequence, i32), i64> = HashMap::new();
+    let mut d_memo: HashMap<(char, char), Vec<Vec<char>>> = HashMap::new();
 
-    let result = codes
+    let part1: i64 = codes
         .iter()
-        .map(|code| {
-            code_complexity(
-                code,
-                &mut sequence_memo,
-                &mut nkeypad_memo,
-                &mut dkeypad_memo,
-                25,
-            )
-        })
-        .sum::<i32>();
-    println!("{:?}", result);
+        .map(|code| code_complexity(code, &mut seq_memo, &mut d_memo, 2))
+        .sum();
+    println!("{:?}", part1);
 
-    // let test: Vec<char> = "AA<^A^^Av>AvvA".to_string().chars().collect();
-    // let split_test: Vec<Vec<char>> = split_seq(&test);
-    // println!("{:?}", split_test);
-    // let toto = encode_message(
-    //     &codes[0],
-    //     'A',
-    //     &mut message_memo,
-    //     &mut nkeypad_memo,
-    //     numeric_keypad,
-    // );
-    // println!(
-    //     "{:?}",
-    //     toto.iter()
-    //         .map(|n| n.iter().collect::<String>())
-    //         .collect::<Vec<String>>()
-    // );
-    // for path in toto {
-    //     println!("--- {:?}:", path.iter().collect::<String>());
-    //     let next = encode_message(
-    //         &path,
-    //         'A',
-    //         &mut message_memo,
-    //         &mut dkeypad_memo,
-    //         directional_keypad,
-    //     );
-    //     for p in next {
-    //         println!("- {:?}:", p.iter().collect::<String>());
-    //         let next2 = encode_message(
-    //             &p,
-    //             'A',
-    //             &mut message_memo,
-    //             &mut dkeypad_memo,
-    //             directional_keypad,
-    //         );
-    //         println!(
-    //             "{}:",
-    //             next2.first().unwrap().into_iter().collect::<String>()
-    //         );
-    //     }
-    // }
-    // let from = numeric_keypad('0');
-    // let to = numeric_keypad('1');
-    // println!("{:?}", all_paths(from, to, numeric_keypad(' '), vec![]));
+    let part2: i64 = codes
+        .iter()
+        .map(|code| code_complexity(code, &mut seq_memo, &mut d_memo, 25))
+        .sum();
+    println!("{:?}", part2);
 }
-
-/*
-   look at all the ways to write 029A, why are some slower
-   once we have the optimal way to write 029A, the rest should all be infinite recursive patterns, we don't need to list them just count, if their pos doesn't matter because they rest in A, can we pop count?
-*/
-
-/*
-"286A" -> 68 * 286
-"480A" -> 74 * 480
-"140A" -> 70 * 140
-"413A" -> 70 * 413
-"964A" -> 72 * 964
-163086
- */
-
-/*
-286A
-
---- "<^A^^A [v>A] vvA":
-- "v<<A>^A>A<AA>A[<vA.>A.^A]<vAA>^A" better
--> <vA<AA>>^AvA<^A>AvA^Av<<A>>^AAvA^A| v<<A>A>^A.vA^A.<A>A |v<<A>A>^AAvA<^A>A
-
---- "<^A^^A [>vA] vvA"
-- "v<<A>^A>A<AA>A [vA.<A.>^A] <vAA>^A" worse
--> <vA<AA>>^AvA<^A>AvA^Av<<A>>^AAvA^A| <vA>^A.v<<A>>^A.vA<^A>A |v<<A>A>^AAvA<^A>A
-
-All alternatives have the same len
-Test just one path from an alternative to find the one(s) with the best len, and grab all of them to continue further? still slow af
-Try to figure out WHY, what is the heuristic to only have 1 path
-
- */
