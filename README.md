@@ -37,12 +37,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 19  | [Linen Layout](https://adventofcode.com/2024/day/19)                    | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day19/main.rs) |
 | 20  | [Race Condition](https://adventofcode.com/2024/day/20)                  | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day20/main.rs) |
 | 21  | [Keypad Conundrum](https://adventofcode.com/2024/day/21)                | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day21/main.rs) |
+| 22  | [Monkey Market](https://adventofcode.com/2024/day/22)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day22/main.rs) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 22  | [?](https://adventofcode.com/2024/day/22) | [?]() | [?](./2024/day22/main.?) |
 | 23  | [?](https://adventofcode.com/2024/day/23) | [?]() | [?](./2024/day23/main.?) |
 | 24  | [?](https://adventofcode.com/2024/day/24) | [?]() | [?](./2024/day24/main.?) |
 | 25  | [?](https://adventofcode.com/2024/day/25) | [?]() | [?](./2024/day25/main.?) |
