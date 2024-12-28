@@ -3,7 +3,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Year          | Stars     | Language(s)                   |
 | ---           | ---       | ---                           |
-| [2024](#2024) | :construction: | ?   |
+| [2024](#2024) | 50 :star: | Rust, Uiua, others...         |
 | [2023](#2023) | 50 :star: | Uiua, Nim, GDScript, Python   |
 | [2022](#2022) | 50 :star: | Various (26 total)            |
 | [2021](#2021) | 50 :star: | Swift                         |
@@ -13,6 +13,8 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 ---
 ## 2024
+
+This year I started with random languages, but ended up doing most of the year in Rust.
 
 | Day | Problem                                                                 | Language                                          | Solution                              |
 | --- | ---                                                                     | ---                                               | ---                                   |
@@ -40,14 +42,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 22  | [Monkey Market](https://adventofcode.com/2024/day/22)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day22/main.rs) |
 | 23  | [LAN Party](https://adventofcode.com/2024/day/23)                       | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day23/main.rs) |
 | 24  | [Crossed Wires](https://adventofcode.com/2024/day/24)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day24/main.rs) |
-<details>
-<summary>Not released yet</summary>
-
-| Day | Problem                                   | Language | Solution |
-| --- | ---                                       | ---      | ---      |
-| 25  | [?](https://adventofcode.com/2024/day/25) | [?]() | [?](./2024/day25/main.?) |
-
-</details>
+| 25  | [Code Chronicle](https://adventofcode.com/2024/day/25)                  | [Uiua](https://www.uiua.org/)                     | [main.ua](./2024/day25/main.ua) |
 
 
 ## 2023
