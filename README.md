@@ -39,12 +39,12 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 21  | [Keypad Conundrum](https://adventofcode.com/2024/day/21)                | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day21/main.rs) |
 | 22  | [Monkey Market](https://adventofcode.com/2024/day/22)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day22/main.rs) |
 | 23  | [LAN Party](https://adventofcode.com/2024/day/23)                       | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day23/main.rs) |
+| 24  | [Crossed Wires](https://adventofcode.com/2024/day/24)                   | [Rust](https://www.rust-lang.org/)                | [main.rs](./2024/day24/main.rs) |
 <details>
 <summary>Not released yet</summary>
 
 | Day | Problem                                   | Language | Solution |
 | --- | ---                                       | ---      | ---      |
-| 24  | [?](https://adventofcode.com/2024/day/24) | [?]() | [?](./2024/day24/main.?) |
 | 25  | [?](https://adventofcode.com/2024/day/25) | [?]() | [?](./2024/day25/main.?) |
 
 </details>
