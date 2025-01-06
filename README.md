@@ -233,3 +233,4 @@ I restarted during 2023.
 | 5   | [Alchemical Reduction](https://adventofcode.com/2018/day/5)         | [Zig](https://ziglang.org/)           | [main.zig](./2018/day05/main.zig) |
 | 6   | [Chronal Coordinates](https://adventofcode.com/2018/day/6)          | [Zig](https://ziglang.org/)           | [main.zig](./2018/day06/main.zig) |
 | 7   | [The Sum of Its Parts](https://adventofcode.com/2018/day/7)         | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day07/main.rs)   |
+| 8   | [Memory Maneuver](https://adventofcode.com/2018/day/8)              | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day08/main.rs)   |
