@@ -1,4 +1,7 @@
-use std::{collections::HashMap, fs};
+#![feature(linked_list_cursors)]
+#![feature(linked_list_remove)]
+
+use std::{collections::{HashMap, LinkedList}, fs};
 
 use regex::Regex;
 
@@ -10,22 +13,32 @@ fn get_input(path: &str) -> (i64, i64) {
 }
 
 fn run(player_count: i64, last: i64) -> i64 {
-    let mut circle: Vec<i64> = Vec::with_capacity(last as usize + 1);
+    let mut circle: LinkedList<i64> = LinkedList::new();
     let mut players: HashMap<i64, i64> = HashMap::new();
-    let mut current: usize = 0;
 
-    circle.push(0);
+    circle.push_front(0);
+    let mut current = circle.cursor_front_mut();
     for turn in 1..=last {
         if turn % 23 == 0 {
-            let pos = (current + circle.len() - 7) % circle.len();
-            let removed = circle.remove(pos);
+            for _ in 0..7 {
+                current.move_prev();
+                if current.current() == None {
+                    current.move_prev();
+                }
+            }
+            let removed = current.remove_current().unwrap();
+            if current.current() == None {
+                current.move_next();
+            }
             let current_player = turn % player_count;
             *players.entry(current_player).or_default() += turn + removed;
-            current = pos;
         } else {
-            let pos = ((current + 1) % circle.len()) + 1;
-            circle.insert(pos, turn);
-            current = pos;
+            current.move_next();
+            if current.current() == None {
+                current.move_next();
+            }
+            current.insert_after(turn);
+            current.move_next();
         }
     }
 
