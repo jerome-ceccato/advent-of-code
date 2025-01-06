@@ -224,9 +224,10 @@ I started this year in 2018 but gave up around day 15.
 
 I restarted during 2023.
 
-| Day | Problem                                                             | Solution                          |
-| --- | ---                                                                 | ---                               |
-| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)          | [main.hs](./2018/day01/main.hs)   |
-| 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)  | [main.hs](./2018/day02/main.hs)   |
-| 3   | [No Matter How You Slice It](https://adventofcode.com/2018/day/3)   | [main.hs](./2018/day03/main.hs)   |
-| 4   | [Repose Record](https://adventofcode.com/2018/day/4)                | [main.hs](./2018/day04/main.hs)   |
+| Day | Problem                                                             | Language                              | Solution                          |
+| --- | ---                                                                 | ---                                   | ---                               |
+| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)          | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day01/main.hs)   |
+| 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)  | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day02/main.hs)   |
+| 3   | [No Matter How You Slice It](https://adventofcode.com/2018/day/3)   | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day03/main.hs)   |
+| 4   | [Repose Record](https://adventofcode.com/2018/day/4)                | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day04/main.hs)   |
+| 5   | [Alchemical Reduction](https://adventofcode.com/2018/day/5)         | [Zig](https://ziglang.org/)           | [main.zig](./2018/day05/main.zig) |
