@@ -28,6 +28,7 @@ atlas = ExtResource("1_k5jgd")
 region = Rect2(24, 0, 8, 8)
 
 [node name="Day11" type="Day11"]
+ticksPerPhysicsTicks = 2048
 position = Vector2(0, -1)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]

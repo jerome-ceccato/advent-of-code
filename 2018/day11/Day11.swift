@@ -88,7 +88,7 @@ class Day11: Node2D, @unchecked Sendable {
         guard let resultLabel else { return }
         
         if scheduler.hasStarted {
-            resultLabel.text = "\(bestRect.position.x),\(bestRect.position.y) (\(bestScore))"
+            resultLabel.text = "\(bestRect.position.x),\(bestRect.position.y),\(bestRect.size.y) (\(bestScore))"
         } else {
             resultLabel.text = "Serial number: \(serialNumber)"
         }
@@ -153,13 +153,17 @@ private extension Day11 {
     
     func getNextRect(from rect: Rect2i) -> Rect2i? {
         let possibilities: [Rect2i] = [
-            Rect2i(position: rect.position + .right, size: rect.size),
-            Rect2i(position: Vector2i(x: 0, y: rect.position.y + 1), size: rect.size)
+            Rect2i(position: rect.position, size: rect.size + .one),
+            Rect2i(position: rect.position + .right, size: .one),
+            Rect2i(position: Vector2i(x: 0, y: rect.position.y + 1), size: .one)
         ]
         
         for next in possibilities {
-            if gridRect.encloses(b: next) {
-                return next
+            // Remove for the real result, this helps the display not lag too much
+            if next.size.y < 20 {
+                if gridRect.encloses(b: next) {
+                    return next
+                }
             }
         }
         return nil
