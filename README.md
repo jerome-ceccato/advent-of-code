@@ -237,3 +237,4 @@ I restarted during 2023.
 | 9   | [Marble Mania](https://adventofcode.com/2018/day/9)                 | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day09/main.rs)   |
 | 10  | [The Stars Align](https://adventofcode.com/2018/day/10)             | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day10.swift](./2018/day10/Day10.swift), [demo.gif](./2018/day10/demo.gif) |
 | 11  | [Chronal Charge](https://adventofcode.com/2018/day/11)              | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day10.swift](./2018/day11/Day11.swift) |
+| 12  | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day10.swift](./2018/day12/Day12.swift), [demo.gif](./2018/day12/demo.gif) |

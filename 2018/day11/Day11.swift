@@ -75,7 +75,7 @@ class Day11: Node2D, @unchecked Sendable {
     }
     
     private func updateCursor() {
-        guard let cursor, let tilemap, scheduler.hasStarted else { return }
+        guard let cursor, let tilemap, scheduler.state != .loading else { return }
         
         let pos = tilemap.mapToLocal(mapPosition: currentRect.position)
         let end = tilemap.mapToLocal(mapPosition: currentRect.end)
@@ -87,10 +87,11 @@ class Day11: Node2D, @unchecked Sendable {
     private func updateResultLabel() {
         guard let resultLabel else { return }
         
-        if scheduler.hasStarted {
-            resultLabel.text = "\(bestRect.position.x),\(bestRect.position.y),\(bestRect.size.y) (\(bestScore))"
-        } else {
+        switch scheduler.state {
+        case .loading:
             resultLabel.text = "Serial number: \(serialNumber)"
+        default:
+            resultLabel.text = "\(bestRect.position.x),\(bestRect.position.y),\(bestRect.size.y) (\(bestScore))"
         }
     }
     
@@ -179,29 +180,9 @@ private extension Day11 {
         if let next = getNextRect(from: currentRect) {
             currentRect = next
         } else {
-            scheduler.done = true
+            scheduler.end()
         }
 
         renderAll(reload: false)
-    }
-}
-
-private extension [[Int]] {
-    func at(point: Vector2i) -> Int {
-        self[Int(point.y)][Int(point.x)]
-    }
-    
-    mutating func set(at point: Vector2i, value: Int) {
-        self[Int(point.y)][Int(point.x)] = value
-    }
-}
-
-private extension Rect2i {
-    func foreach(block: (Vector2i) -> Void) {
-        for y in position.y ..< end.y {
-            for x in position.x ..< end.x {
-                block(Vector2i(x: x, y: y))
-            }
-        }
     }
 }

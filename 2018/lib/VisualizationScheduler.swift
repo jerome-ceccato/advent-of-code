@@ -1,29 +1,40 @@
 @preconcurrency import SwiftGodot
 
-enum TickSchedule {
-    case everyNPhysicsTicks(n: Int)
-    case multipleTimesPerPhysicsTicks(n: Int)
-}
+
 
 final class VisualizationScheduler {
+    enum Schedule {
+        case everyNPhysicsTicks(n: Int)
+        case multipleTimesPerPhysicsTicks(n: Int)
+    }
+    
+    enum State: Equatable {
+        case loading
+        case running
+        case paused
+        case done
+    }
+    
     private static let physicsProcessTicksPerSecond = 60
-    private let tickSchedule: TickSchedule
+    private let tickSchedule: Schedule
     private let tick: () -> Void
     private let render: () -> Void
     
     private var pendingTicks = 0
-    public private(set) var running = false // Currently ticking
-    public private(set) var hasStarted = false // Has been started at least once, remains true if paused afterwards
-    public var done = false // Should stop ticking no matter if the user tries to unpause
+    public private(set) var state = State.loading
     
-    init(schedule: TickSchedule, tick: @escaping () -> Void, render: @escaping () -> Void) {
+    init(schedule: Schedule, tick: @escaping () -> Void, render: @escaping () -> Void) {
         self.tickSchedule = schedule
         self.tick = tick
         self.render = render
     }
     
+    func end() {
+        state = .done
+    }
+    
     func onPhysicsProcess(delta: Double) {
-        guard running && !done else { return }
+        guard state == .running else { return }
         
         switch tickSchedule {
         case .everyNPhysicsTicks(let n):
@@ -45,9 +56,15 @@ final class VisualizationScheduler {
         guard let event else { return }
         
         if event.isActionPressed(action: "start") {
-            running = !running
-            if running {
-                hasStarted = true
+            switch state {
+            case .loading:
+                state = .running
+            case .running:
+                state = .paused
+            case .paused:
+                state = .running
+            case .done:
+                break
             }
         } else if event.isActionPressed(action: "exit") {
             node.getTree()?.changeSceneToFile(path: "res://main.tscn")

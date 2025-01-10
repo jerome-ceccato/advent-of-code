@@ -44,7 +44,7 @@ class Day10: Node2D, @unchecked Sendable {
 
         tilemap.clear()
         for light in lights {
-            let tile: Tile = scheduler.done ? .done : .light
+            let tile: Tile = scheduler.state == .done ? .done : .light
             tilemap.setCell(coords: light.position, sourceId: 0, atlasCoords: tile.atlastCoords)
         }
     }
@@ -52,10 +52,11 @@ class Day10: Node2D, @unchecked Sendable {
     private func updateTickLabel() {
         guard let tickCountLabel else { return }
         
-        if scheduler.hasStarted {
-            tickCountLabel.text = "Time elapsed: \(tickCount)"
-        } else {
+        switch scheduler.state {
+        case .loading:
             tickCountLabel.text = "Fast forwarded \(tickCount) seconds"
+        default:
+            tickCountLabel.text = "Time elapsed: \(tickCount)"
         }
     }
     
@@ -143,7 +144,7 @@ private extension Day10 {
         let nextArea = getBounds(lights: nextLightsPosition)
         
         if nextArea.size.x > currentArea.size.x || nextArea.size.y > currentArea.size.y {
-            scheduler.done = true
+            scheduler.end()
             zoomOnAnswer()
         } else {
             tickCount += speed
