@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cejg1si4jryps"]
+
+[ext_resource type="Script" path="res://utils/day_button.gd" id="1_hva0o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d7t6f"]
+bg_color = Color(0.194027, 0.1496, 0.34, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbyn7"]
+bg_color = Color(0.22358, 0.1638, 0.42, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q6rdr"]
+bg_color = Color(0.168307, 0.1404, 0.26, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="DayButton" type="Button"]
+custom_minimum_size = Vector2(200, 100)
+theme_override_styles/hover = SubResource("StyleBoxFlat_d7t6f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_lbyn7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_q6rdr")
+script = ExtResource("1_hva0o")

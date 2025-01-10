@@ -1,11 +1,11 @@
 @preconcurrency import SwiftGodot
 
-struct Light {
+private struct Light {
     var position: Vector2i
     var velocity: Vector2i
 }
 
-enum Tile {
+private enum Tile {
     case light
     case done
     
@@ -22,19 +22,22 @@ enum Tile {
 @Godot
 class Day10: Node2D, @unchecked Sendable {
     @Export(.nodeType, "TileMapLayer") var tilemap: TileMapLayer?
-    @Export(.nodeType, "Camera2D") var camera: Camera2D?
+    @Export(.nodeType, "AocCamera") var camera: AocCamera?
     @Export(.nodeType, "Label") var tickCountLabel: Label?
     
     private lazy var scheduler = VisualizationScheduler(
         schedule: .everyNPhysicsTicks(n: 3),
-        tick: { [weak self] in
-            self?.tick()
-        }
+        tick: { [weak self] in self?.tick() },
+        render: { [weak self] in self?.renderAll() }
     )
     private var lights: [Light] = []
     private var speed = 200
     private var tickCount = 0
-    private var hasStarted = false
+    
+    private func renderAll() {
+        updateTileMap()
+        updateTickLabel()
+    }
     
     private func updateTileMap() {
         guard let tilemap else { return }
@@ -49,7 +52,7 @@ class Day10: Node2D, @unchecked Sendable {
     private func updateTickLabel() {
         guard let tickCountLabel else { return }
         
-        if hasStarted {
+        if scheduler.hasStarted {
             tickCountLabel.text = "Time elapsed: \(tickCount)"
         } else {
             tickCountLabel.text = "Fast forwarded \(tickCount) seconds"
@@ -60,9 +63,11 @@ class Day10: Node2D, @unchecked Sendable {
         lights = readInput()
         fastForward()
         
-        updateTileMap()
-        updateTickLabel()
-        centerCamera()
+        renderAll()
+        
+        if let tilemap, let camera {
+            camera.center(on: tilemap)
+        }
 
         super._ready()
     }
@@ -72,7 +77,7 @@ class Day10: Node2D, @unchecked Sendable {
     }
     
     override func _unhandledInput(event: InputEvent?) {
-        scheduler.onInput(event: event)
+        scheduler.onInput(event: event, node: self)
     }
 }
 
@@ -90,16 +95,6 @@ private extension Day10 {
                 velocity: Vector2i(x: Int32(match.3)!, y: Int32(match.4)!)
             )
         }
-    }
-    
-    func centerCamera() {
-        guard let tilemap, let camera else { return }
-        
-        let bounds = tilemap.getUsedRect()
-        let topLeft = tilemap.mapToLocal(mapPosition: bounds.position)
-        let bottomRight = tilemap.mapToLocal(mapPosition: bounds.end)
-        let center = topLeft + (bottomRight - topLeft) / 2
-        camera.position = center
     }
     
     func getBounds(lights: [Light]) -> Rect2i {
@@ -154,10 +149,6 @@ private extension Day10 {
             tickCount += speed
             lights = nextLightsPosition
         }
-        
-        hasStarted = true
-        updateTileMap()
-        updateTickLabel()
     }
     
     func zoomOnAnswer() {

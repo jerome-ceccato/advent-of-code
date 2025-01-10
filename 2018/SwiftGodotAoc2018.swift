@@ -1,7 +1,10 @@
 import SwiftGodot
 
 let allNodes: [Wrapped.Type] = [
-    Day10.self
+    AocCamera.self,
+    
+    Day10.self,
+    Day11.self,
 ]
 
 
