@@ -39,10 +39,11 @@ class Day12: Node2D, @unchecked Sendable {
     @SceneTree(path: "Camera2D") var camera: AocCamera?
     @SceneTree(path: "UI/Label") var resultLabel: Label?
     
-    @Export var generationTarget: Int = 20
+    @Export var columnSize: Int = 12
+    @Export var generationTarget: Int = 50000000000
     
     private lazy var scheduler = VisualizationScheduler(
-        schedule: .everyNPhysicsTicks(n: 2),
+        schedule: .everyNPhysicsTicks(n: 1),
         tick: { [weak self] in self?.tick() },
         render: { [weak self] in self?.renderAll() }
     )
@@ -64,7 +65,7 @@ class Day12: Node2D, @unchecked Sendable {
 
         tilemap.clear()
         for (x, tile) in tiles.enumerated() {
-            tilemap.setCell(coords: Vector2i(x: Int32(x), y: 0), sourceId: 0, atlasCoords: tile.atlasCoords)
+            tilemap.setCell(coords: Vector2i(x: Int32(x % columnSize), y: Int32(x / columnSize)), sourceId: 0, atlasCoords: tile.atlasCoords)
         }
     }
     
@@ -82,17 +83,6 @@ class Day12: Node2D, @unchecked Sendable {
         if let tilemap, let camera {
             camera.center(on: tilemap)
         }
-    }
-    
-    private var zoomStarted = false
-    private func zoomCameraSmooth() {
-        guard !zoomStarted else { return }
-        zoomStarted = true
-        
-        getTree()?
-            .createTween()?
-            .tweenProperty(object: camera, property: "zoom", finalVal: Variant(Vector2(x: 1, y: 1)), duration: 15)?
-            .setEase(.inOut)
     }
     
     override func _ready() {
@@ -206,9 +196,9 @@ private extension Day12 {
             return
         }
         
-        zoomCameraSmooth()
         if isTransitionTick {
-            isTransitionTick = updateTransitionState()
+            updateTransitionState()
+            isTransitionTick = false
         } else {
             if isStable && (generationTarget - generation) > 10 {
                 let steps = getFastForwardSteps()
@@ -220,17 +210,20 @@ private extension Day12 {
                 generation += 1
                 let representation = flatRepresentation(of: board)
                 
-                
-                if let previousGen = history[representation] {
-                    isStable = true
-                    cyclePeriod = generation - previousGen
-                    cycleOffset = board.min()! - oldBoard.min()!
+                if (generationTarget - generation) > 2 {
+                    if let previousGen = history[representation] {
+                        isStable = true
+                        cyclePeriod = generation - previousGen
+                        cycleOffset = board.min()! - oldBoard.min()!
+                    } else {
+                        history[representation] = generation
+                    }
+                    
+                    isTransitionTick = true
+                    tiles = buildTileDiff(prev: oldBoard, next: board)
                 } else {
-                    history[representation] = generation
+                    tiles = buildTiles()
                 }
-                
-                isTransitionTick = true
-                tiles = buildTileDiff(prev: oldBoard, next: board)
             }
         }
     }

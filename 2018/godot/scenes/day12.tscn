@@ -10,16 +10,17 @@ texture = ExtResource("1_i7iqi")
 3:1/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_io826"]
+tile_size = Vector2i(16, 20)
 sources/0 = SubResource("TileSetAtlasSource_w5ewf")
 
 [node name="Day12" type="Day12"]
-generationTarget = 50000000000
+columnSize = 19
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 tile_set = SubResource("TileSet_io826")
 
 [node name="Camera2D" type="AocCamera" parent="."]
-zoom = Vector2(1.3, 1.3)
+zoom = Vector2(3, 3)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
