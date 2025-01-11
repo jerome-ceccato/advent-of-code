@@ -33,6 +33,15 @@ final class VisualizationScheduler {
         state = .done
     }
     
+    var ticksLengthInSeconds: Double {
+        switch tickSchedule {
+        case .everyNPhysicsTicks(let n):
+            return Double(n) / Double(Self.physicsProcessTicksPerSecond)
+        case .multipleTimesPerPhysicsTicks(let n):
+            return 1.0 / Double(Self.physicsProcessTicksPerSecond * n)
+        }
+    }
+    
     func onPhysicsProcess(delta: Double) {
         guard state == .running else { return }
         

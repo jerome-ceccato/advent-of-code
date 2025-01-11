@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://clpwvg4c3fbcd"]
+
+[ext_resource type="Texture2D" uid="uid://cjj383s1n2k4k" path="res://assets/tiles.png" id="1_uqw7a"]
+
+[node name="Day13Cart" type="Day13Cart"]
+verticalRect = Rect2(64, 32, 16, 16)
+horizontalRect = Rect2(64, 48, 16, 16)
+crashRect = Rect2(0, 48, 16, 16)
+texture = ExtResource("1_uqw7a")
+region_enabled = true
+region_rect = Rect2(64, 48, 16, 16)
+region_filter_clip_enabled = true
