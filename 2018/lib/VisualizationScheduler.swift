@@ -55,7 +55,9 @@ final class VisualizationScheduler {
             }
         case .multipleTimesPerPhysicsTicks(let n):
             for _ in 0 ..< n {
-                tick()
+                if state != .done {
+                    tick()
+                }
             }
             render()
         }

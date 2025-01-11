@@ -72,20 +72,19 @@ class Day13: Node2D, @unchecked Sendable {
     @SceneTree(path: "Camera2D") var camera: AocCamera?
     @SceneTree(path: "UI/Label") var resultLabel: Label?
     
-    @Export var tickSpeed: Int = 30
+    @Export var tickSpeed: Int = 1
     @Export var cartScene: PackedScene?
     
     private lazy var scheduler = VisualizationScheduler(
-        schedule: .everyNPhysicsTicks(n: tickSpeed),
+        schedule: .multipleTimesPerPhysicsTicks(n: tickSpeed),
         tick: { [weak self] in self?.tick() },
-        render: { [weak self] in self?.render(animated: true) }
+        render: { [weak self] in self?.render(animated: false) }
     )
     
     private var world: [[Tile]] = []
     private var carts: [Cart] = []
     private var cartNodes: [Day13Cart] = []
     private var tickCount = 0
-    private var crashLocation: Vector2i = Vector2i(x: -1, y: -1)
     
     private func updateTileMap() {
         guard let tilemap else { return }
@@ -113,20 +112,12 @@ class Day13: Node2D, @unchecked Sendable {
                         duration: scheduler.ticksLengthInSeconds - 0.01
                     )?
                     .finished.connect {
-                        self.updateCartDirection(cart: cart, node: node)
+                        node.updateSprite(direction: cart.direction)
                     }
             } else {
                 node.position = tilemap.mapToLocal(mapPosition: cart.position)
-                updateCartDirection(cart: cart, node: node)
+                node.updateSprite(direction: cart.direction)
             }
-        }
-    }
-    
-    private func updateCartDirection(cart: Cart, node: Day13Cart) {
-        if cart.position == crashLocation {
-            node.setCrashed()
-        } else {
-            node.updateSprite(direction: cart.direction)
         }
     }
     
@@ -137,9 +128,9 @@ class Day13: Node2D, @unchecked Sendable {
         case .loading:
             resultLabel.text = "\(carts.count) carts"
         case .running, .paused:
-            resultLabel.text = "Ticks: \(tickCount)"
+            resultLabel.text = "Carts: \(carts.count), ticks: \(tickCount)"
         case .done:
-            resultLabel.text = "Collision: \(crashLocation.x),\(crashLocation.y)"
+            resultLabel.text = "Remaining cart: \(carts.first!.position.x),\(carts.first!.position.y)"
         }
     }
     
@@ -226,27 +217,47 @@ private extension Day13 {
         }
     }
     
-    func hasCollision(cart: Cart) -> Bool {
+    func hasCollision(cart: Cart) -> Cart? {
         for other in carts {
             if other !== cart && other.position == cart.position {
-                return true
+                return other
             }
         }
-        return false
+        return nil
+    }
+    
+    func cleanupCrashes(crashes: [Cart]) {
+        for cart in crashes {
+            let index = carts.firstIndex { $0 === cart }!
+            carts.remove(at: index)
+            let node = cartNodes.remove(at: index)
+            cartsContainer?.removeChild(node: node)
+        }
     }
   
     func tick() {
         let turnOrder = carts.sorted { lhs, rhs in
             lhs.position < rhs.position
         }
+        
+        var crashedCarts: [Cart] = []
         for cart in turnOrder {
+            if crashedCarts.contains { $0 === cart } {
+                continue
+            }
+            
             move(cart: cart)
-            if hasCollision(cart: cart) {
-                crashLocation = cart.position
-                scheduler.end()
-                return
+            if let other = hasCollision(cart: cart) {
+                crashedCarts.append(cart)
+                crashedCarts.append(other)
             }
         }
+        
+        cleanupCrashes(crashes: crashedCarts)
+        if carts.count == 1 {
+            scheduler.end()
+        }
+        
         tickCount += 1
     }
 }

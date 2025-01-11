@@ -18,7 +18,7 @@ texture = ExtResource("1_ky8hj")
 sources/0 = SubResource("TileSetAtlasSource_0nj12")
 
 [node name="Day13" type="Day13"]
-tickSpeed = 1
+tickSpeed = 10
 cartScene = ExtResource("1_b1iuw")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
