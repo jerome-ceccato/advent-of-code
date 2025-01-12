@@ -3,18 +3,21 @@
 @Godot
 class Day14: Node2D, @unchecked Sendable {
     @SceneTree(path: "Label") var resultLabel: Label?
+    
+    @Export var tickSpeed: Int = 10_000
   
     private lazy var scheduler = VisualizationScheduler(
-        schedule: .multipleTimesPerPhysicsTicks(n: 10_000),
+        schedule: .multipleTimesPerPhysicsTicks(n: tickSpeed),
         tick: { [weak self] in self?.tick() },
         render: { [weak self] in self?.render() }
     )
     
-    private var target = -1
+    private var target = ""
+    private var targetDigits: [Int] = []
     private var board: [Int] = [3, 7]
     private var firstElf = 0
     private var secondElf = 1
-    private var result = ""
+    private var result = -1
     
     private func render() {
         guard let resultLabel else { return }
@@ -47,37 +50,45 @@ class Day14: Node2D, @unchecked Sendable {
 }
 
 private extension Day14 {
-    func readInput() -> Int {
+    func readInput() -> String {
         let input = FileAccess.getFileAsString(path: "res://input/day14.txt")
-        return Int(input.trimmingCharacters(in: .whitespacesAndNewlines)) ?? 0
+        return input.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     func setup() {
-        board.reserveCapacity(target + 12)
+        board.reserveCapacity(1_000_000)
+        targetDigits = target.map { Int("\($0)")! }
     }
     
-    func extractResult() -> String {
-        var res = ""
-        for i in target ..< (target + 10) {
-            res.append("\(board[i])")
+    func checkTarget() -> Bool {
+        for i in 0 ..< targetDigits.count {
+            if i >= board.count {
+                return false
+            }
+            if targetDigits[targetDigits.count - 1 - i] != board[board.count - 1 - i] {
+                return false
+            }
         }
-        return res
+        return true
+    }
+    
+    func endIfTargetIsFound() {
+        if scheduler.state != .done, checkTarget() {
+            scheduler.end()
+            result = board.count - targetDigits.count
+            GD.print(result)
+        }
     }
   
     func tick() {
-        if board.count >= (target + 10) {
-            scheduler.end()
-            result = extractResult()
-            GD.print(result)
-        } else {
-            let nextRecipe = board[firstElf] + board[secondElf]
-            if (nextRecipe / 10) > 0 {
-                board.append(nextRecipe / 10)
-            }
-            board.append(nextRecipe % 10)
-            firstElf = (firstElf + board[firstElf] + 1) % board.count
-            secondElf = (secondElf + board[secondElf] + 1) % board.count
+        let nextRecipe = board[firstElf] + board[secondElf]
+        if (nextRecipe / 10) > 0 {
+            board.append(nextRecipe / 10)
+            endIfTargetIsFound()
         }
-//        GD.print(firstElf, secondElf, board)
+        board.append(nextRecipe % 10)
+        endIfTargetIsFound()
+        firstElf = (firstElf + board[firstElf] + 1) % board.count
+        secondElf = (secondElf + board[secondElf] + 1) % board.count
     }
 }
