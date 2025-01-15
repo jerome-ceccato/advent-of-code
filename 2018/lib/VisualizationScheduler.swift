@@ -29,6 +29,12 @@ final class VisualizationScheduler {
         self.render = render
     }
     
+    func pause() {
+        if state == .running {
+            state = .paused
+        }
+    }
+    
     func end() {
         state = .done
     }

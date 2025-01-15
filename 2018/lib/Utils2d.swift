@@ -44,9 +44,13 @@ extension Vector2i {
     }
     
     func turn(offset: Int) -> Vector2i {
-        let directions: [Vector2i] = [.up, .right, .down, .left]
+        let directions = Vector2i.directions()
         let current = directions.firstIndex(of: self)!
         let next = (current + offset + directions.count) % directions.count
         return directions[next]
+    }
+    
+    static func directions() -> [Vector2i] {
+        [.up, .right, .down, .left]
     }
 }
