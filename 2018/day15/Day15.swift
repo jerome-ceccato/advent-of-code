@@ -60,6 +60,14 @@ private final class Unit {
     }
 }
 
+private struct State {
+    var round: Int = 0
+
+    var currentAttackPower: Int = 3
+    var elfAttackPowerLow: Int = 3
+    var elfAttackPowerHigh: Int = 200
+}
+
 @Godot
 class Day15: Node2D, @unchecked Sendable {
     @SceneTree(path: "World") var worldTilemap: TileMapLayer?
@@ -77,7 +85,7 @@ class Day15: Node2D, @unchecked Sendable {
     
     private var world: [[Tile]] = []
     private var units: [Unit] = []
-    private var rounds = 0
+    private var state = State()
     
     private func renderWorld() {
         guard let worldTilemap else { return }
@@ -107,10 +115,10 @@ class Day15: Node2D, @unchecked Sendable {
         case .loading:
             resultLabel.text = "\(goblins.count) goblins, \(elves.count) elves"
         case .running, .paused:
-            resultLabel.text = "Round \(rounds): \(goblins.count) goblins, \(elves.count) elves"
+            resultLabel.text = "Power: \(state.currentAttackPower), Round \(state.round): \(goblins.count) goblins, \(elves.count) elves"
         case .done:
             let hpLeft = goblins.map(\.health).reduce(0, +) + elves.map(\.health).reduce(0, +)
-            resultLabel.text = "Result: \(rounds * hpLeft) (\(rounds) * \(hpLeft))"
+            resultLabel.text = "Result: \(state.round * hpLeft) (\(state.round) * \(hpLeft)), power: \(state.currentAttackPower)"
         }
     }
     
@@ -152,7 +160,7 @@ private extension Day15 {
                 if c == "G" {
                     units.append(Unit(kind: .goblin, position: Vector2i(x: x, y: y)))
                 } else if c == "E" {
-                    units.append(Unit(kind: .elf, position: Vector2i(x: x, y: y)))
+                    units.append(Unit(kind: .elf, position: Vector2i(x: x, y: y), attackPower: state.currentAttackPower))
                 } else {
                     world[y][x] = c == "#" ? .wall : .empty
                 }
@@ -234,11 +242,10 @@ private extension Day15 {
             .first
     }
     
-    func move(unit: Unit, allUnits: [Vector2i: Unit]) {
+    func move(unit: Unit, allUnits: [Vector2i: Unit]) -> Bool {
         let enemies = allUnits.values.filter { $0.kind != unit.kind }
         if enemies.isEmpty {
-            scheduler.end()
-            return
+            return false
         }
         
         let validTargets = Set(enemies.flatMap { emptyAdjacentTiles(to: $0.position, allUnits: allUnits) })
@@ -255,6 +262,15 @@ private extension Day15 {
         if let bestPath {
             unit.position = bestPath.first
         }
+        return true
+    }
+    
+    func restartGame() {
+        units = []
+        state.round = 0
+        readInput()
+        renderWorld()
+        render()
     }
 
     func tick() {
@@ -263,6 +279,7 @@ private extension Day15 {
             partialResult[unit.position] = unit
         }
         
+        var gameEnded = false
         for unit in sorted {
             if unit.health <= 0 {
                 continue
@@ -271,7 +288,10 @@ private extension Day15 {
             var enemy = firstEnemyInRange(unit: unit, allUnits: allUnits)
             if enemy == nil {
                 let previousPos = unit.position
-                move(unit: unit, allUnits: allUnits)
+                if !move(unit: unit, allUnits: allUnits) {
+                    gameEnded = true
+                    break
+                }
                 if unit.position != previousPos {
 //                    GD.print("\(previousPos) moves to \(unit.position)")
                     allUnits.removeValue(forKey: previousPos)
@@ -287,14 +307,32 @@ private extension Day15 {
                     units.remove(at: units.firstIndex(where: { $0.position == enemy.position })!)
                     world.set(at: enemy.position, value: .deadBody)
                     worldTilemap?.setCell(coords: enemy.position, sourceId: 0, atlasCoords: Tile.deadBody.atlasCoords(for: enemy.position))
+
+                    if enemy.kind == .elf {
+                        gameEnded = true
+                        break
+                    }
                 }
             }
         }
         
-        GD.print("round \(rounds) finishes")
-        if scheduler.state != .done {
-            rounds += 1
-//            scheduler.pause()
+        if gameEnded {
+            let victory = !units.contains(where: { $0.kind == .goblin })
+            if victory {
+                state.elfAttackPowerHigh = state.currentAttackPower
+            } else {
+                state.elfAttackPowerLow = state.currentAttackPower
+            }
+            if state.currentAttackPower == (state.elfAttackPowerLow + 1) {
+                scheduler.end()
+//                GD.print("Best attack power: \(state.currentAttackPower)")
+                return
+            }
+            state.currentAttackPower = state.elfAttackPowerLow + (state.elfAttackPowerHigh - state.elfAttackPowerLow) / 2
+            restartGame()
+        } else {
+//            GD.print("round \(state.round) finishes")
+            state.round += 1
         }
     }
 }

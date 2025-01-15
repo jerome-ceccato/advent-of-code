@@ -22,7 +22,19 @@ let package = Package(
             dependencies: [
                 "SwiftGodot",
             ],
-            path: ".",
+            path: "",
+            sources: [
+                "SwiftGodotAoc2018.swift",
+                "lib",
+                
+                "day10/Day10.swift",
+                "day11/Day11.swift",
+                "day12/Day12.swift",
+                "day13/Day13.swift",
+                "day13/Day13Cart.swift",
+                "day14/Day14.swift",
+                "day15/Day15.swift",
+            ],
             swiftSettings: [
 //                .swiftLanguageMode(.v5),
                 .unsafeFlags(["-suppress-warnings"])
