@@ -35,6 +35,7 @@ let package = Package(
                 "day14/Day14.swift",
                 "day15/Day15.swift",
                 "day17/Day17.swift",
+                "day18/Day18.swift",
             ],
             swiftSettings: [
 //                .swiftLanguageMode(.v5),

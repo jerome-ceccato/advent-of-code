@@ -243,3 +243,4 @@ I restarted during 2023.
 | 15  | [Beverage Bandits](https://adventofcode.com/2018/day/15)            | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day15.swift](./2018/day15/Day15.swift), [demo.gif](./2018/day15/demo.gif) |
 | 16  | [Chronal Classification](https://adventofcode.com/2018/day/16)      | [Swift](https://www.swift.org/)       | [main.swift](./2018/day16/main.swift) |
 | 17  | [Reservoir Research](https://adventofcode.com/2018/day/17)          | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day17.swift](./2018/day17/Day17.swift), [demo.gif](./2018/day17/demo.gif) |
+| 18  | [Settlers of The North Pole](https://adventofcode.com/2018/day/18)  | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day17.swift](./2018/day18/Day18.swift), [demo.gif](./2018/day18/demo.gif) |

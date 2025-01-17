@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bl105vstqmhgy"]
+[gd_scene load_steps=11 format=3 uid="uid://bl105vstqmhgy"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_fb7pg"]
 [ext_resource type="PackedScene" uid="uid://cejg1si4jryps" path="res://utils/day_button.tscn" id="2_dr0dh"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bvqe23avpe5x4" path="res://scenes/day14.tscn" id="7_1mlhi"]
 [ext_resource type="PackedScene" uid="uid://dmjavgv61dvj0" path="res://scenes/day15.tscn" id="8_1i3p6"]
 [ext_resource type="PackedScene" uid="uid://b53ny1q6hvhda" path="res://scenes/day17.tscn" id="9_gwy5p"]
+[ext_resource type="PackedScene" uid="uid://dfwec2oboj435" path="res://scenes/day18.tscn" id="10_57dfo"]
 
 [node name="Day selection" type="Control"]
 layout_mode = 3
@@ -87,3 +88,8 @@ layout_mode = 2
 text = "Day 17
 "
 day_scene = ExtResource("9_gwy5p")
+
+[node name="Day18" parent="MarginContainer/VBoxContainer/GridContainer" instance=ExtResource("2_dr0dh")]
+layout_mode = 2
+text = "Day 18"
+day_scene = ExtResource("10_57dfo")

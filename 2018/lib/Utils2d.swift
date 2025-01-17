@@ -26,6 +26,18 @@ extension Array {
             }
         }
     }
+    
+    func mapCoords<T>(block: (Vector2i) -> T) -> [[T]] where Element == [T] {
+        var result = [[T]]()
+        for y in 0 ..< self.count {
+            var line = [T]()
+            for x in 0 ..< self[y].count {
+                line.append(block(Vector2i(x: Int32(x), y: Int32(y))))
+            }
+            result.append(line)
+        }
+        return result
+    }
 }
 
 extension Rect2i {
@@ -52,5 +64,9 @@ extension Vector2i {
     
     static func directions() -> [Vector2i] {
         [.up, .right, .down, .left]
+    }
+    
+    static func directionsAndDiagonals() -> [Vector2i] {
+        [.up, .right, .down, .left, (.up + .left), (.up + .right), (.down + .left), (.down + .right)]
     }
 }
