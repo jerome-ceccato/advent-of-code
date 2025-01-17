@@ -10,6 +10,7 @@ let allNodes: [Wrapped.Type] = [
     Day13.self,
     Day14.self,
     Day15.self,
+    Day17.self,
 ]
 
 

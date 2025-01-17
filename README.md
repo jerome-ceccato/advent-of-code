@@ -242,3 +242,4 @@ I restarted during 2023.
 | 14  | [Chocolate Charts](https://adventofcode.com/2018/day/14)            | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day14.swift](./2018/day14/Day14.swift) |
 | 15  | [Beverage Bandits](https://adventofcode.com/2018/day/15)            | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day15.swift](./2018/day15/Day15.swift), [demo.gif](./2018/day15/demo.gif) |
 | 16  | [Chronal Classification](https://adventofcode.com/2018/day/16)      | [Swift](https://www.swift.org/)       | [main.swift](./2018/day16/main.swift) |
+| 17  | [Reservoir Research](https://adventofcode.com/2018/day/17)          | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day17.swift](./2018/day17/Day17.swift), [demo.gif](./2018/day17/demo.gif) |

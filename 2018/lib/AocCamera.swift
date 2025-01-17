@@ -45,6 +45,7 @@ class AocCamera: Camera2D, @unchecked Sendable {
             }
         } else if let event = event as? InputEventMouseMotion, isDragging {
             position = Vector2(x: 1.0 / zoom.x, y: 1.0 / zoom.y) * (mouseStartPos - event.position) + dragOriginalPos
+//            GD.print(position)
         }
     }
 }

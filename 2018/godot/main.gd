@@ -7,6 +7,9 @@ func _ready() -> void:
 		if button is DayButton:
 			button.pressed.connect(_on_day_pressed.bind(button.day_scene))
 
+func _draw() -> void:
+	RenderingServer.set_default_clear_color(Color("181425"))
+
 func _on_day_pressed(scene: PackedScene):
 	get_tree().change_scene_to_packed(scene)
 
