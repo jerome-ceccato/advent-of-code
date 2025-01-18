@@ -36,9 +36,10 @@ let package = Package(
                 "day15/Day15.swift",
                 "day17/Day17.swift",
                 "day18/Day18.swift",
+                "day20/Day20.swift",
             ],
+
             swiftSettings: [
-//                .swiftLanguageMode(.v5),
                 .unsafeFlags(["-suppress-warnings"])
             ]
         ),
