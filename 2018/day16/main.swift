@@ -1,23 +1,5 @@
 import Foundation
-
-enum Instruction: Equatable, CaseIterable {
-    case addr
-    case addi
-    case mulr
-    case muli
-    case banr
-    case bani
-    case borr
-    case bori
-    case setr
-    case seti
-    case gtir
-    case gtri
-    case gtrr
-    case eqir
-    case eqri
-    case eqrr
-}
+import Device
 
 struct Example {
     let before: [Int]
@@ -47,47 +29,10 @@ func readInput() -> ([Example], [[Int]]) {
     return (examples, program)
 }
 
-func process(instruction: Instruction, arguments: [Int], registers: inout [Int]) {
-    switch instruction {
-    case .addr:
-        registers[arguments[2]] = registers[arguments[0]] + registers[arguments[1]]
-    case .addi:
-        registers[arguments[2]] = registers[arguments[0]] + arguments[1]
-    case .mulr:
-        registers[arguments[2]] = registers[arguments[0]] * registers[arguments[1]]
-    case .muli:
-        registers[arguments[2]] = registers[arguments[0]] * arguments[1]
-    case .banr:
-        registers[arguments[2]] = registers[arguments[0]] & registers[arguments[1]]
-    case .bani:
-        registers[arguments[2]] = registers[arguments[0]] & arguments[1]
-    case .borr:
-        registers[arguments[2]] = registers[arguments[0]] | registers[arguments[1]]
-    case .bori:
-        registers[arguments[2]] = registers[arguments[0]] | arguments[1]
-    case .setr:
-        registers[arguments[2]] = registers[arguments[0]]
-    case .seti:
-        registers[arguments[2]] = arguments[0]
-    case .gtir:
-        registers[arguments[2]] = arguments[0] > registers[arguments[1]] ? 1 : 0
-    case .gtri:
-        registers[arguments[2]] = registers[arguments[0]] > arguments[1] ? 1 : 0
-    case .gtrr:
-        registers[arguments[2]] = registers[arguments[0]] > registers[arguments[1]] ? 1 : 0
-    case .eqir:
-        registers[arguments[2]] = arguments[0] == registers[arguments[1]] ? 1 : 0
-    case .eqri:
-        registers[arguments[2]] = registers[arguments[0]] == arguments[1] ? 1 : 0
-    case .eqrr:
-        registers[arguments[2]] = registers[arguments[0]] == registers[arguments[1]] ? 1 : 0
-    }
-}
-
 func possibleInstructions(for example: Example) -> Set<Instruction> {
     Set(Instruction.allCases.filter({ instruction in
         var registers = example.before
-        process(instruction: instruction, arguments: Array(example.instructions[1...]), registers: &registers)
+        instruction.process(arguments: Array(example.instructions[1...]), registers: &registers)
         return registers == example.after
     }))
 }
@@ -138,7 +83,7 @@ func part2(examples: [Example], program: [[Int]]) -> Int {
     let opcodeMapping = findOpcodes(examples: examples)
     var registers = [0, 0, 0, 0]
     for instruction in program {
-        process(instruction: opcodeMapping[instruction[0]]!, arguments: Array(instruction[1...]), registers: &registers)
+        opcodeMapping[instruction[0]]!.process(arguments: Array(instruction[1...]), registers: &registers)
     }
     return registers[0]
 }

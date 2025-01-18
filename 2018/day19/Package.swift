@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "day16",
+    name: "day19",
     platforms: [.macOS(.v15)],
     products: [
-        .executable(name: "day16", targets: ["day16"]),
+        .executable(name: "day19", targets: ["day19"]),
     ],
     dependencies: [
         .package(path: "../Device"),
     ],
     targets: [
         .executableTarget(
-            name: "day16",
+            name: "day19",
             dependencies: ["Device"],
             path: ".",
             resources: [.copy("./input")]
