@@ -1,7 +1,9 @@
 import Foundation
 import Device
 
-func runDecodedProgram() -> UInt64 {
+func runDecodedProgram(returnFirstZ: Bool) -> UInt64 {
+    var zHistory: [UInt64] = []
+    
     var b: UInt64 = 0
     var c: UInt64 = 0
     var y: UInt64 = 0
@@ -17,7 +19,18 @@ func runDecodedProgram() -> UInt64 {
         z *= 65899
         z &= 16777215
         if 256 > y {
-            return z
+            if returnFirstZ {
+                return z
+            }
+            
+            if zHistory.contains(z) {
+                return zHistory.last!
+            }
+            zHistory.append(z)
+
+            y = z | 65536
+            z = 8858047
+            continue
         }
         
         c = 0
@@ -32,7 +45,8 @@ func runDecodedProgram() -> UInt64 {
     }
 }
 
-print(runDecodedProgram())
+print(runDecodedProgram(returnFirstZ: true))
+print(runDecodedProgram(returnFirstZ: false))
 
 /*
  
