@@ -56,3 +56,16 @@ public extension Instruction {
         }
     }
 }
+
+public struct Command {
+    public let instruction: Instruction
+    public let parameters: [Int]
+    
+    public init(input: String) {
+        let re = /([a-z]+) (\d+) (\d+) (\d+)/
+        let match = try! re.wholeMatch(in: input)!
+        
+        self.instruction = Instruction(rawValue: String(match.1))!
+        self.parameters = [Int(match.2)!, Int(match.3)!, Int(match.4)!]
+    }
+}

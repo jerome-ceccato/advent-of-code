@@ -1,19 +1,6 @@
 import Foundation
 import Device
 
-struct Command {
-    let instruction: Instruction
-    let parameters: [Int]
-    
-    init(input: String) {
-        let re = /([a-z]+) (\d+) (\d+) (\d+)/
-        let match = try! re.wholeMatch(in: input)!
-        
-        self.instruction = Instruction(rawValue: String(match.1))!
-        self.parameters = [Int(match.2)!, Int(match.3)!, Int(match.4)!]
-    }
-}
-
 func processCommands(
     ipRegister: Int,
     firstRegisterValue: Int,
