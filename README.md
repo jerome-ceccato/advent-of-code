@@ -246,4 +246,5 @@ I restarted during 2023.
 | 18  | [Settlers of The North Pole](https://adventofcode.com/2018/day/18)  | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day18.swift](./2018/day18/Day18.swift), [demo.gif](./2018/day18/demo.gif) |
 | 19  | [Go With The Flow](https://adventofcode.com/2018/day/19)            | [Swift](https://www.swift.org/)       | [main.swift](./2018/day19/main.swift), [device.swift](./2018/Device/device.swift) |
 | 20  | [A Regular Map](https://adventofcode.com/2018/day/20)               | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day20.swift](./2018/day20/Day20.swift), [demo.gif](./2018/day20/demo.gif) |
-| 21  | [Chronal Conversion](https://adventofcode.com/2018/day/21)            | [Swift](https://www.swift.org/)       | [main.swift](./2018/day21/main.swift), [device.swift](./2018/Device/device.swift) |
+| 21  | [Chronal Conversion](https://adventofcode.com/2018/day/21)          | [Swift](https://www.swift.org/)       | [main.swift](./2018/day21/main.swift), [device.swift](./2018/Device/device.swift) |
+| 22  | [Mode Maze](https://adventofcode.com/2018/day/22)                   | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day22/main.rs)   |
