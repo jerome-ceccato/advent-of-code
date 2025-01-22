@@ -249,3 +249,4 @@ I restarted during 2023.
 | 21  | [Chronal Conversion](https://adventofcode.com/2018/day/21)                      | [Swift](https://www.swift.org/)       | [main.swift](./2018/day21/main.swift), [device.swift](./2018/Device/device.swift) |
 | 22  | [Mode Maze](https://adventofcode.com/2018/day/22)                               | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day22/main.rs)   |
 | 23  | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23)    | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day23/main.rs)   |
+| 24  | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24)            | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day24/main.rs)   |
