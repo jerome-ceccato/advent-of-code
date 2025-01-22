@@ -224,27 +224,28 @@ I started this year in 2018 but gave up around day 15.
 
 I restarted during 2023.
 
-| Day | Problem                                                             | Language                              | Solution                          |
-| --- | ---                                                                 | ---                                   | ---                               |
-| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)          | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day01/main.hs)   |
-| 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)  | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day02/main.hs)   |
-| 3   | [No Matter How You Slice It](https://adventofcode.com/2018/day/3)   | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day03/main.hs)   |
-| 4   | [Repose Record](https://adventofcode.com/2018/day/4)                | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day04/main.hs)   |
-| 5   | [Alchemical Reduction](https://adventofcode.com/2018/day/5)         | [Zig](https://ziglang.org/)           | [main.zig](./2018/day05/main.zig) |
-| 6   | [Chronal Coordinates](https://adventofcode.com/2018/day/6)          | [Zig](https://ziglang.org/)           | [main.zig](./2018/day06/main.zig) |
-| 7   | [The Sum of Its Parts](https://adventofcode.com/2018/day/7)         | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day07/main.rs)   |
-| 8   | [Memory Maneuver](https://adventofcode.com/2018/day/8)              | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day08/main.rs)   |
-| 9   | [Marble Mania](https://adventofcode.com/2018/day/9)                 | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day09/main.rs)   |
-| 10  | [The Stars Align](https://adventofcode.com/2018/day/10)             | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day10.swift](./2018/day10/Day10.swift), [demo.gif](./2018/day10/demo.gif) |
-| 11  | [Chronal Charge](https://adventofcode.com/2018/day/11)              | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day11.swift](./2018/day11/Day11.swift) |
-| 12  | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day12.swift](./2018/day12/Day12.swift), [demo.gif](./2018/day12/demo.gif) |
-| 13  | [Mine Cart Madness](https://adventofcode.com/2018/day/13)           | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day13.swift](./2018/day13/Day13.swift), [demo.gif](./2018/day13/demo.gif) |
-| 14  | [Chocolate Charts](https://adventofcode.com/2018/day/14)            | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day14.swift](./2018/day14/Day14.swift) |
-| 15  | [Beverage Bandits](https://adventofcode.com/2018/day/15)            | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day15.swift](./2018/day15/Day15.swift), [demo.gif](./2018/day15/demo.gif) |
-| 16  | [Chronal Classification](https://adventofcode.com/2018/day/16)      | [Swift](https://www.swift.org/)       | [main.swift](./2018/day16/main.swift), [device.swift](./2018/Device/device.swift) |
-| 17  | [Reservoir Research](https://adventofcode.com/2018/day/17)          | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day17.swift](./2018/day17/Day17.swift), [demo.gif](./2018/day17/demo.gif) |
-| 18  | [Settlers of The North Pole](https://adventofcode.com/2018/day/18)  | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day18.swift](./2018/day18/Day18.swift), [demo.gif](./2018/day18/demo.gif) |
-| 19  | [Go With The Flow](https://adventofcode.com/2018/day/19)            | [Swift](https://www.swift.org/)       | [main.swift](./2018/day19/main.swift), [device.swift](./2018/Device/device.swift) |
-| 20  | [A Regular Map](https://adventofcode.com/2018/day/20)               | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day20.swift](./2018/day20/Day20.swift), [demo.gif](./2018/day20/demo.gif) |
-| 21  | [Chronal Conversion](https://adventofcode.com/2018/day/21)          | [Swift](https://www.swift.org/)       | [main.swift](./2018/day21/main.swift), [device.swift](./2018/Device/device.swift) |
-| 22  | [Mode Maze](https://adventofcode.com/2018/day/22)                   | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day22/main.rs)   |
+| Day | Problem                                                                         | Language                              | Solution                          |
+| --- | ---                                                                             | ---                                   | ---                               |
+| 1   | [Chronal Calibration](https://adventofcode.com/2018/day/1)                      | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day01/main.hs)   |
+| 2   | [Inventory Management System](https://adventofcode.com/2018/day/2)              | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day02/main.hs)   |
+| 3   | [No Matter How You Slice It](https://adventofcode.com/2018/day/3)               | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day03/main.hs)   |
+| 4   | [Repose Record](https://adventofcode.com/2018/day/4)                            | [Haskell](https://www.haskell.org/)   | [main.hs](./2018/day04/main.hs)   |
+| 5   | [Alchemical Reduction](https://adventofcode.com/2018/day/5)                     | [Zig](https://ziglang.org/)           | [main.zig](./2018/day05/main.zig) |
+| 6   | [Chronal Coordinates](https://adventofcode.com/2018/day/6)                      | [Zig](https://ziglang.org/)           | [main.zig](./2018/day06/main.zig) |
+| 7   | [The Sum of Its Parts](https://adventofcode.com/2018/day/7)                     | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day07/main.rs)   |
+| 8   | [Memory Maneuver](https://adventofcode.com/2018/day/8)                          | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day08/main.rs)   |
+| 9   | [Marble Mania](https://adventofcode.com/2018/day/9)                             | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day09/main.rs)   |
+| 10  | [The Stars Align](https://adventofcode.com/2018/day/10)                         | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day10.swift](./2018/day10/Day10.swift), [demo.gif](./2018/day10/demo.gif) |
+| 11  | [Chronal Charge](https://adventofcode.com/2018/day/11)                          | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day11.swift](./2018/day11/Day11.swift) |
+| 12  | [Subterranean Sustainability](https://adventofcode.com/2018/day/12)             | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day12.swift](./2018/day12/Day12.swift), [demo.gif](./2018/day12/demo.gif) |
+| 13  | [Mine Cart Madness](https://adventofcode.com/2018/day/13)                       | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day13.swift](./2018/day13/Day13.swift), [demo.gif](./2018/day13/demo.gif) |
+| 14  | [Chocolate Charts](https://adventofcode.com/2018/day/14)                        | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day14.swift](./2018/day14/Day14.swift) |
+| 15  | [Beverage Bandits](https://adventofcode.com/2018/day/15)                        | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day15.swift](./2018/day15/Day15.swift), [demo.gif](./2018/day15/demo.gif) |
+| 16  | [Chronal Classification](https://adventofcode.com/2018/day/16)                  | [Swift](https://www.swift.org/)       | [main.swift](./2018/day16/main.swift), [device.swift](./2018/Device/device.swift) |
+| 17  | [Reservoir Research](https://adventofcode.com/2018/day/17)                      | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day17.swift](./2018/day17/Day17.swift), [demo.gif](./2018/day17/demo.gif) |
+| 18  | [Settlers of The North Pole](https://adventofcode.com/2018/day/18)              | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day18.swift](./2018/day18/Day18.swift), [demo.gif](./2018/day18/demo.gif) |
+| 19  | [Go With The Flow](https://adventofcode.com/2018/day/19)                        | [Swift](https://www.swift.org/)       | [main.swift](./2018/day19/main.swift), [device.swift](./2018/Device/device.swift) |
+| 20  | [A Regular Map](https://adventofcode.com/2018/day/20)                           | [Swift](https://www.swift.org/)+[Godot](https://github.com/migueldeicaza/SwiftGodot) | [Day20.swift](./2018/day20/Day20.swift), [demo.gif](./2018/day20/demo.gif) |
+| 21  | [Chronal Conversion](https://adventofcode.com/2018/day/21)                      | [Swift](https://www.swift.org/)       | [main.swift](./2018/day21/main.swift), [device.swift](./2018/Device/device.swift) |
+| 22  | [Mode Maze](https://adventofcode.com/2018/day/22)                               | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day22/main.rs)   |
+| 23  | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23)    | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day23/main.rs)   |
