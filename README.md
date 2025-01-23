@@ -9,7 +9,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | [2021](#2021) | 50 :star: | Swift                         |
 | [2020](#2020) | 50 :star: | Racket                        |
 | [2019](#2019) | 50 :star: | C                             |
-| [2018](#2018) | ~         |                               |
+| [2018](#2018) | 50 :star: | Swift, Rust, others...        |
 
 ---
 ## 2024
@@ -222,7 +222,7 @@ I solved this year of AoC during 2023.
 
 I started this year in 2018 but gave up around day 15.
 
-I restarted during 2023.
+I restarted during 2023 and finished in 2025.
 
 | Day | Problem                                                                         | Language                              | Solution                          |
 | --- | ---                                                                             | ---                                   | ---                               |
@@ -250,3 +250,4 @@ I restarted during 2023.
 | 22  | [Mode Maze](https://adventofcode.com/2018/day/22)                               | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day22/main.rs)   |
 | 23  | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23)    | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day23/main.rs)   |
 | 24  | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24)            | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day24/main.rs)   |
+| 25  | [Four-Dimensional Adventure](https://adventofcode.com/2018/day/25)              | [Rust](https://www.rust-lang.org/)    | [main.rs](./2018/day25/main.rs)   |
