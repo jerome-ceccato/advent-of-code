@@ -21,6 +21,8 @@ advent-of-code.sln
 
 # clojure
 .calva
+.clj-kondo
+.lsp
 
 # kotlin
 out
