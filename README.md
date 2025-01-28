@@ -260,4 +260,5 @@ I started this year in 2025.
 
 | Day | Problem                                                                         | Language                              | Solution                          |
 | --- | ---                                                                             | ---                                   | ---                               |
-| 1   | [Inverse Captcha](https://adventofcode.com/2017/day/1)                          | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day01/main.ml) |
+| 1   | [Inverse Captcha](https://adventofcode.com/2017/day/1)                          | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day01/main.ml)   |
+| 2   | [Corruption Checksum](https://adventofcode.com/2017/day/2)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day02/main.ml)   |
