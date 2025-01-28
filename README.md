@@ -263,3 +263,4 @@ I started this year in 2025.
 | 1   | [Inverse Captcha](https://adventofcode.com/2017/day/1)                          | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day01/main.ml)   |
 | 2   | [Corruption Checksum](https://adventofcode.com/2017/day/2)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day02/main.ml)   |
 | 3   | [Spiral Memory](https://adventofcode.com/2017/day/3)                            | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day03/main.ml)   |
+| 4   | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4)                 | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day04/main.ml)   |
