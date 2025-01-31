@@ -267,3 +267,4 @@ I started this year in 2025.
 | 5   | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5)  | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day05/main.ml)   |
 | 6   | [Memory Reallocation](https://adventofcode.com/2017/day/6)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day06/main.ml)   |
 | 7   | [Recursive Circus](https://adventofcode.com/2017/day/7)                         | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day07/main.ml)   |
+| 8   | [I Heard You Like Registers](https://adventofcode.com/2017/day/8)               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day08/main.ml)   |
