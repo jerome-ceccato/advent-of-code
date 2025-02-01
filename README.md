@@ -269,3 +269,4 @@ I started this year in 2025.
 | 7   | [Recursive Circus](https://adventofcode.com/2017/day/7)                         | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day07/main.ml)   |
 | 8   | [I Heard You Like Registers](https://adventofcode.com/2017/day/8)               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day08/main.ml)   |
 | 9   | [Stream Processing](https://adventofcode.com/2017/day/9)                        | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day09/main.ml)   |
+| 10  | [Knot Hash](https://adventofcode.com/2017/day/10)                               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day10/main.ml)   |
