@@ -271,3 +271,4 @@ I started this year in 2025.
 | 9   | [Stream Processing](https://adventofcode.com/2017/day/9)                        | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day09/main.ml)       |
 | 10  | [Knot Hash](https://adventofcode.com/2017/day/10)                               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day10/main.ml)       |
 | 11  | [Hex Ed](https://adventofcode.com/2017/day/11)                                  | [Swift](https://www.swift.org/)       | [main.swift](./2017/day11/main.swift) |
+| 12  | [Digital Plumber](https://adventofcode.com/2017/day/12)                         | [Swift](https://www.swift.org/)       | [main.swift](./2017/day12/main.swift) |
