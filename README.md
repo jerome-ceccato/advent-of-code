@@ -258,15 +258,16 @@ I restarted during 2023 and finished in 2025.
 
 I started this year in 2025.
 
-| Day | Problem                                                                         | Language                              | Solution                          |
-| --- | ---                                                                             | ---                                   | ---                               |
-| 1   | [Inverse Captcha](https://adventofcode.com/2017/day/1)                          | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day01/main.ml)   |
-| 2   | [Corruption Checksum](https://adventofcode.com/2017/day/2)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day02/main.ml)   |
-| 3   | [Spiral Memory](https://adventofcode.com/2017/day/3)                            | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day03/main.ml)   |
-| 4   | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4)                 | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day04/main.ml)   |
-| 5   | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5)  | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day05/main.ml)   |
-| 6   | [Memory Reallocation](https://adventofcode.com/2017/day/6)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day06/main.ml)   |
-| 7   | [Recursive Circus](https://adventofcode.com/2017/day/7)                         | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day07/main.ml)   |
-| 8   | [I Heard You Like Registers](https://adventofcode.com/2017/day/8)               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day08/main.ml)   |
-| 9   | [Stream Processing](https://adventofcode.com/2017/day/9)                        | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day09/main.ml)   |
-| 10  | [Knot Hash](https://adventofcode.com/2017/day/10)                               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day10/main.ml)   |
+| Day | Problem                                                                         | Language                              | Solution                              |
+| --- | ---                                                                             | ---                                   | ---                                   |
+| 1   | [Inverse Captcha](https://adventofcode.com/2017/day/1)                          | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day01/main.ml)       |
+| 2   | [Corruption Checksum](https://adventofcode.com/2017/day/2)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day02/main.ml)       |
+| 3   | [Spiral Memory](https://adventofcode.com/2017/day/3)                            | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day03/main.ml)       |
+| 4   | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4)                 | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day04/main.ml)       |
+| 5   | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5)  | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day05/main.ml)       |
+| 6   | [Memory Reallocation](https://adventofcode.com/2017/day/6)                      | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day06/main.ml)       |
+| 7   | [Recursive Circus](https://adventofcode.com/2017/day/7)                         | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day07/main.ml)       |
+| 8   | [I Heard You Like Registers](https://adventofcode.com/2017/day/8)               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day08/main.ml)       |
+| 9   | [Stream Processing](https://adventofcode.com/2017/day/9)                        | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day09/main.ml)       |
+| 10  | [Knot Hash](https://adventofcode.com/2017/day/10)                               | [Ocaml](https://ocaml.org/)           | [main.ml](./2017/day10/main.ml)       |
+| 11  | [Hex Ed](https://adventofcode.com/2017/day/11)                                  | [Swift](https://www.swift.org/)       | [main.swift](./2017/day11/main.swift) |
