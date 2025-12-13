@@ -11,13 +11,6 @@
   [arr]
   (array/push (range ;arr) (last arr)))
 
-(defn is-valid?
-  [n]
-  (def s (string n))
-  (or
-    (= (% (length s) 2) 1)
-    (not= ;(partition (/ (length s) 2) s))))
-
 (defn is-invalid?
   [n]
   (def s (string n))
