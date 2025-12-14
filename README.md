@@ -3,7 +3,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Year          | Stars     | Language(s)                   |
 | ---           | ---       | ---                           |
-| [2025](#2025) | 8 :star:  | Janet                         |
+| [2025](#2025) | 10 :star: | Janet                         |
 | [2024](#2024) | 50 :star: | Rust, Uiua, others...         |
 | [2023](#2023) | 50 :star: | Uiua, Nim, GDScript, Python   |
 | [2022](#2022) | 50 :star: | Various (26 total)            |
@@ -22,6 +22,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 2   | [Gift Shop](https://adventofcode.com/2025/day/2)                        | [Janet](https://janet-lang.org/)                  | [main.janet](./2025/day02/main.janet) |
 | 3   | [Lobby](https://adventofcode.com/2025/day/3)                            | [Janet](https://janet-lang.org/)                  | [main.janet](./2025/day03/main.janet) |
 | 4   | [Printing Department](https://adventofcode.com/2025/day/4)              | [Janet](https://janet-lang.org/)                  | [main.janet](./2025/day04/main.janet) |
+| 5   | [Cafeteria](https://adventofcode.com/2025/day/5)                        | [Janet](https://janet-lang.org/)                  | [main.janet](./2025/day05/main.janet) |
 
 
 ## 2024
