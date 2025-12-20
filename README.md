@@ -3,7 +3,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 
 | Year          | Stars     | Language(s)                   |
 | ---           | ---       | ---                           |
-| [2025](#2025) | 16 :star: | Janet, Swift                  |
+| [2025](#2025) | 18 :star: | Janet, Swift                  |
 | [2024](#2024) | 50 :star: | Rust, Uiua, others...         |
 | [2023](#2023) | 50 :star: | Uiua, Nim, GDScript, Python   |
 | [2022](#2022) | 50 :star: | Various (26 total)            |
@@ -26,7 +26,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 6   | [Trash Compactor](https://adventofcode.com/2025/day/6)                  | [Janet](https://janet-lang.org/)                  | [main.janet](./2025/day06/main.janet) |
 | 7   | [Laboratories](https://adventofcode.com/2025/day/7)                     | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day07/main.swift) |
 | 8   | [Playground](https://adventofcode.com/2025/day/8)                       | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day08/main.swift) |
-
+| 9   | [Movie Theater](https://adventofcode.com/2025/day/9)                    | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day09/main.swift) |
 
 ## 2024
 
