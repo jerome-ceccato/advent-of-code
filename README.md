@@ -28,6 +28,7 @@ My solutions throughtout the years doing [AoC](https://adventofcode.com/).
 | 8   | [Playground](https://adventofcode.com/2025/day/8)                       | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day08/main.swift) |
 | 9   | [Movie Theater](https://adventofcode.com/2025/day/9)                    | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day09/main.swift) |
 | 10  | [Factory](https://adventofcode.com/2025/day/10)                         | [Swift](https://www.swift.org/), [Python](https://www.python.org/)                   | [main.swift](./2025/day10/main.swift), [solver.py](./2025/day10/solver.py) |
+| 11  | [Reactor](https://adventofcode.com/2025/day/11)                         | [Swift](https://www.swift.org/)                   | [main.swift](./2025/day11/main.swift) |
 
 
 ## 2024
